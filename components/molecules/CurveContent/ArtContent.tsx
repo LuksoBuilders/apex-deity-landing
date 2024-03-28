@@ -16,7 +16,7 @@ export const ArtContent = () => {
     <div>
       <Paragraph>
         Even though art is not the main purpose of the{" "}
-        <Important>Apex Deities</Important>, it's an important part of it.
+        <Important>Apex Deities</Important>, it&apos;s an important part of it.
       </Paragraph>
       <Paragraph>
         Each NFT represents a completely different{" "}

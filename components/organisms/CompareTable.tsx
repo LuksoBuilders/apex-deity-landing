@@ -124,7 +124,7 @@ export const CompareTable = () => {
             </StyledTable>
           </TableContainer>
         </Col>
-        <Visible md lg xl>
+        <Visible md lg xl xxl>
           <Col lg={1} md={1} sm={2}>
             <PositionedImage
               width={143}
