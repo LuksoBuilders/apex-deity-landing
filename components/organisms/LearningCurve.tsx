@@ -17,6 +17,7 @@ import {
   EndorsementContent,
   ContributeContent,
   ApexDeitiesContent,
+  ArtContent,
   FeeDistributionContent,
   FoundingSlotsContent,
   VotingPowerContent,
@@ -62,6 +63,11 @@ export const LearningCurve = () => {
       label: "Apex Deities",
       title: "Apex Deities",
       content: <ApexDeitiesContent />,
+    },
+    {
+      label: "Art",
+      title: "What about the Art?",
+      content: <ArtContent />,
     },
     {
       label: "Fee Distribution",

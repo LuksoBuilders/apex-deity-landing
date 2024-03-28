@@ -5,6 +5,7 @@ export * from "./BackerBuckContent";
 export * from "./EndorsementContent";
 export * from "./ContributeContent";
 export * from "./ApexDeitiesContent";
+export * from "./ArtContent";
 export * from "./FeeDistributionContent";
 export * from "./FoundingSlotsContent";
 export * from "./VotingPowerContent";
