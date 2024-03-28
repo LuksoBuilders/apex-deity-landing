@@ -16,11 +16,7 @@ const HeroCardsContainer = styled.div`
 
 export const Hero = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div>
       <HeroContainer>
         <Row>
           <Col md={6}>
@@ -35,6 +31,6 @@ export const Hero = () => {
           </Col>
         </Row>
       </HeroContainer>
-    </motion.div>
+    </div>
   );
 };

@@ -39,9 +39,9 @@ export const FoundingSlotsContent = () => {
         slot.
       </Paragraph>
       <Paragraph>
-        It's expected that high-tier deities level up faster, as they have more
-        initial slots and collect more fees. However, a lower-level deity with
-        better decisions can also compete with them.
+        It&apos;s expected that high-tier deities level up faster, as they have
+        more initial slots and collect more fees. However, a lower-level deity
+        with better decisions can also compete with them.
       </Paragraph>
     </div>
   );

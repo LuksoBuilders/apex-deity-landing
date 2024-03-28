@@ -43,8 +43,8 @@ export const BackerBuckContent = () => {
     <div>
       <Paragraph>
         After an <Important>Artisan</Important> has its own{" "}
-        <Important>Fellowship</Important>, users can mint Artisan's personal
-        token, which is called <Important>Backer Buck</Important>.
+        <Important>Fellowship</Important>, users can mint Artisan&apos;s
+        personal token, which is called <Important>Backer Buck</Important>.
       </Paragraph>
 
       <Paragraph>

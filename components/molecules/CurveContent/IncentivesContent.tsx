@@ -29,7 +29,7 @@ export const IncentivesContent = () => {
         <Important>Luksta</Important>.
       </Paragraph>
       <Paragraph>
-        Currently, we're working on two funding projects called{" "}
+        Currently, we&apos;re working on two funding projects called{" "}
         <Important>Luksta</Important> and <Important>FundUP</Important>, both of
         which will have their own token.
       </Paragraph>

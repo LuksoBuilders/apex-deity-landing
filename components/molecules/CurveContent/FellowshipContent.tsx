@@ -37,8 +37,8 @@ export const FellowshipContent = () => {
       </Paragraph>
 
       <Paragraph>
-        Then, Artisan's backers can mint <Important>Backer Buck</Important> to
-        show their support.
+        Then, Artisan&apos;s backers can mint <Important>Backer Buck</Important>{" "}
+        to show their support.
       </Paragraph>
     </div>
   );

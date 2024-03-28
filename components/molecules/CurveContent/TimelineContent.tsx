@@ -19,7 +19,7 @@ export const TimelineContent = () => {
   return (
     <div>
       <Paragraph>
-        We're planning to initiate the minting of deities on{" "}
+        We&apos;re planning to initiate the minting of deities on{" "}
         <Important>April 1st</Important>.
       </Paragraph>
       <Paragraph>
@@ -28,9 +28,9 @@ export const TimelineContent = () => {
       </Paragraph>
 
       <Paragraph>
-        We are working hard to make this vision a reality, and we're putting a
-        deadline to hold ourselves accountable, so take these dates with a grain
-        of salt.
+        We are working hard to make this vision a reality, and we&apos;re
+        putting a deadline to hold ourselves accountable, so take these dates
+        with a grain of salt.
       </Paragraph>
     </div>
   );

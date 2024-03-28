@@ -32,7 +32,7 @@ export const WhyContent = () => {
       </Paragraph>
       <Paragraph>
         But what about the projects that are just starting and does not have an
-        MVP or a community? That's why we're building{" "}
+        MVP or a community? That&apos;s why we&apos;re building{" "}
         <Important>ArtisanAlly</Important>.
       </Paragraph>
     </div>
