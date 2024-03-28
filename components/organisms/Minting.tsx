@@ -30,7 +30,7 @@ const LinksContainer = styled.div`
 
 export const Minting = () => {
   return (
-    <div>
+    <div id="mint">
       <Title>Minting</Title>
       <div style={{ marginTop: "3em" }}></div>
       <Row>

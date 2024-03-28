@@ -71,12 +71,12 @@ export const HeroInfo = () => {
 
       <ButtonsContainer>
         <ButtonHolder>
-          <Button color="primary" variant="contained">
+          <Button href="#mint" color="primary" variant="contained">
             Mint a Deity
           </Button>
         </ButtonHolder>
 
-        <Button>Learn More</Button>
+        <Button href="#learn">Learn More</Button>
       </ButtonsContainer>
     </HeroContainer>
   );

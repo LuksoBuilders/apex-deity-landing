@@ -91,7 +91,7 @@ export const LearningCurve = () => {
   ];
 
   return (
-    <Row>
+    <Row id="learn">
       <Col md={12}>
         <LearningCurveInfo />
       </Col>
