@@ -21,12 +21,13 @@ export const LearningCurveInfo = () => {
   return (
     <LearningCurveInfoContainer>
       <Title>Learning Curve</Title>
+
       <LearningCurveDescription>
         <SemiBold>Apex Deities</SemiBold> is not just an art collection. They
         have lots of utilities, including <SemiBold>making money</SemiBold> and{" "}
-        <SemiBold>voting power</SemiBold>. Because of that there’s a bit of
-        learning curve. We suggest to read in order, but if you already know
-        <SemiBold> ArtisanAlly</SemiBold> just jump into the{" "}
+        <SemiBold>voting power</SemiBold>. Because of that, there’s a bit of a
+        learning curve. We suggest reading in order, but if you already know{" "}
+        <SemiBold>ArtisanAlly</SemiBold>, just jump into the{" "}
         <SemiBold>Apex Deities</SemiBold> section.
       </LearningCurveDescription>
     </LearningCurveInfoContainer>
