@@ -7,6 +7,7 @@ import {
   LearningCurve,
   CompareTable,
   Minting,
+  Links,
 } from "../components/organisms";
 
 const Home: NextPage = () => {
@@ -20,15 +21,19 @@ const Home: NextPage = () => {
         <Hero />
 
         <div style={{ marginTop: "2em" }}></div>
+
+        <Minting />
+
+        <div style={{ marginTop: "4em" }}></div>
+
         <LearningCurve />
 
         <div style={{ marginTop: "2em" }}></div>
 
         <CompareTable />
 
-        <div style={{ marginTop: "4em" }}></div>
-
-        <Minting />
+        <div style={{ marginTop: "2em" }}></div>
+        <Links />
 
         <div style={{ marginTop: "4em" }}></div>
       </Container>

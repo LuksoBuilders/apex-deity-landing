@@ -1,31 +1,18 @@
 import styled from "styled-components";
 import { Title } from "../atoms";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
 import { Row, Col } from "react-grid-system";
 
+import { CountDown } from "./CountDown";
+
 const Paragraph = styled.p`
   font-weight: 300;
-  font-size: 19px;
+  font-size: 36px;
   color: #222;
-  margin-bottom: 3em;
-  margin-top: 3em;
-`;
-
-const SocialLink = styled.a`
-  border: 2px solid black;
-  height: 90px;
-  width: 90px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100px;
-  //padding: 1em;
-  margin-right: 1em;
-`;
-
-const LinksContainer = styled.div`
-  display: flex;
+  margin-bottom: 2em;
+  margin-top: 0em;
 `;
 
 export const Minting = () => {
@@ -44,33 +31,11 @@ export const Minting = () => {
           />
         </Col>
         <Col md={8}>
-          <Paragraph>
-            Minting haven’t started yet but it will start soon. Subscribe to our
-            discord or twitter to get notified.
-          </Paragraph>
-          <LinksContainer>
-            <SocialLink
-              href="https://twitter.com/LukstaOnLukso"
-              target="_blank"
-            >
-              <Image
-                width={60}
-                height={60}
-                unoptimized={true}
-                alt={"erato"}
-                src={"/icons/twitter-icon.png"}
-              />
-            </SocialLink>
-            <SocialLink href="https://discord.gg/cxKpYV6e" target="_blank">
-              <Image
-                width={60}
-                height={60}
-                unoptimized={true}
-                alt={"erato"}
-                src={"/icons/discord-icon.png"}
-              />
-            </SocialLink>
-          </LinksContainer>
+          <div>
+            <Paragraph>Minting will start soon, fasten your belts:</Paragraph>
+          </div>
+          <CountDown //@ts-ignore
+          />
         </Col>
       </Row>
     </div>

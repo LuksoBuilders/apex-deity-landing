@@ -7,3 +7,6 @@ export * from "./LearningCurve";
 export * from "./CompareTable";
 
 export * from "./Minting";
+export * from "./CountDown";
+
+export * from "./Links";
