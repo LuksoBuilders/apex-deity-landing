@@ -32,7 +32,7 @@ export const Minting = () => {
         </Col>
         <Col md={8}>
           <div>
-            <Paragraph>Minting will start soon, fasten your belts:</Paragraph>
+            <Paragraph>Minting will start soon, Fasten your belts:</Paragraph>
           </div>
           <CountDown //@ts-ignore
           />

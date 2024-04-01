@@ -23,18 +23,7 @@ export const CountDown = () => {
     setIsClient(true);
   }, []);
 
-  const {
-    totalSeconds,
-    seconds,
-    minutes,
-    hours,
-    days,
-    isRunning,
-    start,
-    pause,
-    resume,
-    restart,
-  } = useTimer({
+  const { seconds, minutes, hours } = useTimer({
     expiryTimestamp: new Date(1712073600000),
     onExpire: () => console.warn("onExpire called"),
   });
