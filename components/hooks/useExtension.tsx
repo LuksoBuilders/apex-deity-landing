@@ -12,6 +12,19 @@ interface ExtentionContextType {
   isConnected: boolean;
   availableBalances: Array<number>;
   userBalances: Array<number>;
+  mint: (order: Array<number>, value: ethers.BigNumber) => Promise<void>;
+}
+
+function bytes32ToNumber(bytes: string): bigint {
+  // Ensure the input string represents a valid bytes32 (64 characters)
+  if (bytes.length !== 66) {
+    throw new Error("Invalid bytes32 format");
+  }
+
+  // Parse the input string as a BigInt in base 16
+  const numberValue = BigInt(bytes);
+
+  return numberValue;
 }
 
 const MAINNET_CHAIN_ID = "0x2a";
@@ -29,6 +42,7 @@ const ExtentionContext = createContext<ExtentionContextType>({
   isConnected: false,
   availableBalances: [],
   userBalances: [],
+  mint: async (order: Array<Number>, value: ethers.BigNumber) => {},
 });
 
 export const useExtention = () => {
@@ -40,10 +54,16 @@ export const ExtentionProvider = ({ children }) => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [accounts, setAccounts] = useState([]);
-  const [availableBalances, setAvailableBalances] = useState<Array<number>>([]);
+  const [availableBalances, setAvailableBalances] = useState<Array<number>>([
+    25, 25, 25, 25,
+  ]);
   const [userBalances, setUserBalances] = useState<Array<number>>([]);
 
-  console.log(accounts);
+  const [refetchCounter, setRefetch] = useState(0);
+
+  const refetch = () => {
+    setRefetch(refetchCounter + 1);
+  };
 
   const connectedAccount = accounts[0];
 
@@ -51,10 +71,6 @@ export const ExtentionProvider = ({ children }) => {
     if (connectedAccount) {
       console.log("connecting ...");
       connect();
-
-      if (signer) {
-        getUserBalance(signer, connectedAccount);
-      }
     }
   }, [connectedAccount]);
 
@@ -64,7 +80,7 @@ export const ExtentionProvider = ({ children }) => {
         getAvaiableBalance(provider);
       }
 
-      if (signer) {
+      if (signer && connectedAccount) {
         getUserBalance(signer, connectedAccount);
       }
     };
@@ -73,11 +89,11 @@ export const ExtentionProvider = ({ children }) => {
 
     const intervalId = setInterval(() => {
       getData();
-    }, 10000); // 10 seconds in milliseconds
+    }, 100000); // 10 seconds in milliseconds
 
     // Clear the interval when the component unmounts or when the dependencies change
     return () => clearInterval(intervalId);
-  }, [signer, connectedAccount, provider]);
+  }, [signer, connectedAccount, provider, refetchCounter]);
 
   // @ts-ignore
   const getAccounts = async (provider) => {
@@ -91,9 +107,7 @@ export const ExtentionProvider = ({ children }) => {
         window.ethereum && window.ethereum.isUniversalProfileExtension
           ? // @ts-ignore
             new ethers.providers.Web3Provider(window.ethereum)
-          : new ethers.providers.JsonRpcProvider(
-              "https://rpc.testnet.lukso.network"
-            );
+          : new ethers.providers.JsonRpcProvider("https://42.rpc.thirdweb.com");
       // @ts-ignore
       setProvider(web3Provider);
       getAccounts(web3Provider);
@@ -112,7 +126,7 @@ export const ExtentionProvider = ({ children }) => {
           method: "wallet_switchEthereumChain",
           params: [
             {
-              chainId: TESTNET_CHAIN_ID,
+              chainId: MAINNET_CHAIN_ID,
             },
           ],
         });
@@ -170,7 +184,34 @@ export const ExtentionProvider = ({ children }) => {
     );
 
     const userTokenIds = await deities.tokenIdsOf(connectedAccount);
-    setUserBalances(userTokenIds);
+    setUserBalances(
+      userTokenIds.map((tokenId: string) => bytes32ToNumber(tokenId))
+    );
+  };
+
+  const mint = async (order: Array<number>, value: ethers.BigNumber) => {
+    if (signer) {
+      const deities = new ethers.Contract(
+        APEX_DEITIES_CONTRACT_ADDRESS,
+        ApexDeities,
+        signer
+      );
+
+      console.log(
+        ethers.utils.formatEther(await deities.getOrderPrice(order)),
+        ethers.utils.formatEther(value)
+      );
+
+      try {
+        const tx = await deities.mint(order, { value });
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   return (
@@ -184,6 +225,7 @@ export const ExtentionProvider = ({ children }) => {
         isConnected,
         availableBalances,
         userBalances,
+        mint,
       }}
     >
       <DataProvider>{children}</DataProvider>
