@@ -3,7 +3,14 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from "styled-components";
 import { lightTheme } from "../components/theme";
 import Head from "next/head";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import { ExtentionProvider } from "../components/hooks/useExtension";
 
+declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+}
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
@@ -16,9 +23,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         />{" "}
       </Head>
 
-      <ThemeProvider theme={lightTheme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <ExtentionProvider>
+        <ThemeProvider theme={lightTheme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </ExtentionProvider>
     </>
   );
 }
