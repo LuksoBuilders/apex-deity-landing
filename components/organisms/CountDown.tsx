@@ -24,7 +24,7 @@ export const CountDown = () => {
   }, []);
 
   const { seconds, minutes, hours } = useTimer({
-    expiryTimestamp: new Date(1712073600000),
+    expiryTimestamp: new Date(1712073600000 + 3600 * 1000),
     onExpire: () => console.warn("onExpire called"),
   });
 
