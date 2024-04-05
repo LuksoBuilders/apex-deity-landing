@@ -107,7 +107,9 @@ export const ExtentionProvider = ({ children }) => {
         window.ethereum && window.ethereum.isUniversalProfileExtension
           ? // @ts-ignore
             new ethers.providers.Web3Provider(window.ethereum)
-          : new ethers.providers.JsonRpcProvider("https://42.rpc.thirdweb.com");
+          : new ethers.providers.JsonRpcProvider(
+              "https://rpc.testnet.lukso.network"
+            );
       // @ts-ignore
       setProvider(web3Provider);
       getAccounts(web3Provider);
@@ -126,7 +128,7 @@ export const ExtentionProvider = ({ children }) => {
           method: "wallet_switchEthereumChain",
           params: [
             {
-              chainId: MAINNET_CHAIN_ID,
+              chainId: TESTNET_CHAIN_ID,
             },
           ],
         });

@@ -10,3 +10,5 @@ export * from "./Minting";
 export * from "./CountDown";
 
 export * from "./Links";
+
+export * from "./Header";

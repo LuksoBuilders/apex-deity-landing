@@ -8,6 +8,7 @@ import {
   CompareTable,
   Minting,
   Links,
+  Header,
 } from "../components/organisms";
 
 const Home: NextPage = () => {
@@ -18,22 +19,7 @@ const Home: NextPage = () => {
       transition={{ duration: 0.5 }}
     >
       <Container>
-        <Hero />
-
-        <div style={{ marginTop: "2em" }}></div>
-
-        <Minting />
-
-        <div style={{ marginTop: "4em" }}></div>
-
-        <CompareTable />
-
-        <div style={{ marginTop: "4em" }}></div>
-        <LearningCurve />
-
-        <Links />
-
-        <div style={{ marginTop: "4em" }}></div>
+        <Header />
       </Container>
     </motion.div>
   );
