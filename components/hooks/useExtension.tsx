@@ -161,9 +161,7 @@ export const ExtentionProvider = ({ children }) => {
         window.lukso && window.lukso.isUniversalProfileExtension
           ? // @ts-ignore
             new ethers.providers.Web3Provider(window.lukso)
-          : new ethers.providers.JsonRpcProvider(
-              "https://rpc.testnet.lukso.network"
-            );
+          : new ethers.providers.JsonRpcProvider("https://42.rpc.thirdweb.com");
       // @ts-ignore
       setProvider(web3Provider);
       getAccounts(web3Provider);
