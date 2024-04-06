@@ -3,6 +3,7 @@ import { Container } from "react-grid-system";
 import { motion } from "framer-motion";
 
 import {
+  Header,
   Hero,
   LearningCurve,
   CompareTable,
@@ -18,6 +19,7 @@ const Home: NextPage = () => {
       transition={{ duration: 0.5 }}
     >
       <Container>
+        <Header />
         <Hero />
 
         <div style={{ marginTop: "2em" }}></div>

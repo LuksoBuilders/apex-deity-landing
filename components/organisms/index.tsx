@@ -12,3 +12,5 @@ export * from "./CountDown";
 export * from "./Links";
 
 export * from "./Header";
+
+export * from "./HolyShit";

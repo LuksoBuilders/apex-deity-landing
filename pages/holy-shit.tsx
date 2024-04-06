@@ -9,6 +9,8 @@ import {
   Minting,
   Links,
   Header,
+  HolyShitInfo,
+  FarmingSection,
 } from "../components/organisms";
 
 const Home: NextPage = () => {
@@ -20,6 +22,15 @@ const Home: NextPage = () => {
     >
       <Container>
         <Header />
+        <div style={{ marginTop: "2em" }}></div>
+        <HolyShitInfo />
+        <div style={{ marginTop: "2em" }}></div>
+        <FarmingSection />
+        <div style={{ marginTop: "4em" }}></div>
+
+        <Links />
+
+        <div style={{ marginTop: "4em" }}></div>
       </Container>
     </motion.div>
   );

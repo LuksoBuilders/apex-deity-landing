@@ -29,7 +29,7 @@ export const Links = () => {
           src={"/icons/twitter-icon.png"}
         />
       </SocialLink>
-      <SocialLink href="https://discord.gg/cxKpYV6e" target="_blank">
+      <SocialLink href="https://discord.gg/HqftmHqP58" target="_blank">
         <Image
           width={60}
           height={60}

@@ -7,9 +7,19 @@ export interface ButtonProps {
   variant?: "contained" | "outlined";
   href?: string;
   onClick?: Function;
+  fullwidth?: boolean;
 }
 
-const ButtonContainer = styled.a<ButtonProps>`
+export interface ButtonContainerProps {
+  children: string | ReactNode;
+  color?: "primary" | "black";
+  variant?: "contained" | "outlined";
+  href?: string;
+  onClick?: Function;
+  $fullwidth?: boolean;
+}
+
+const ButtonContainer = styled.a<ButtonContainerProps>`
   background-color: ${({ variant, color, theme }) =>
     variant === "contained"
       ? color === "primary"
@@ -33,7 +43,7 @@ const ButtonContainer = styled.a<ButtonProps>`
       : "black"};
 
   display: inline-block;
-  min-width: 200px;
+  min-width: ${({ $fullwidth }) => ($fullwidth ? "100%" : "200px")};
   padding: 8px;
   text-align: center;
   font-size: 19px;
@@ -54,6 +64,7 @@ export const Button = ({
   children,
   color = "black",
   variant = "outlined",
+  fullwidth,
   href,
   onClick,
 }: ButtonProps) => {
@@ -63,6 +74,7 @@ export const Button = ({
       href={href}
       color={color}
       variant={variant}
+      $fullwidth={fullwidth}
     >
       {children}
     </ButtonContainer>

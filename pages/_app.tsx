@@ -9,6 +9,7 @@ import { ExtentionProvider } from "../components/hooks/useExtension";
 declare global {
   interface Window {
     ethereum?: MetaMaskInpageProvider;
+    lukso?: MetaMaskInpageProvider;
   }
 }
 function MyApp({ Component, pageProps }: AppProps) {
