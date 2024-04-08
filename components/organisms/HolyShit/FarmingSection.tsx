@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { useExtention } from "../../hooks/useExtension";
+import { useExtension } from "../../hooks/useExtension";
+
 import { Row, Col } from "react-grid-system";
 import { ethers } from "ethers";
 import { DeityShitCard } from "./DeityShitCard";
@@ -83,7 +84,7 @@ export const FarmingSection = () => {
     batchShit,
     lastShitTime,
     shitBalance,
-  } = useExtention();
+  } = useExtension();
 
   const userTokens = categorizeTokens(userBalances);
 

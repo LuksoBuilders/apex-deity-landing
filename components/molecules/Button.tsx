@@ -10,16 +10,7 @@ export interface ButtonProps {
   fullwidth?: boolean;
 }
 
-export interface ButtonContainerProps {
-  children: string | ReactNode;
-  color?: "primary" | "black";
-  variant?: "contained" | "outlined";
-  href?: string;
-  onClick?: Function;
-  $fullwidth?: boolean;
-}
-
-const ButtonContainer = styled.a<ButtonContainerProps>`
+const ButtonContainer = styled.a<ButtonProps>`
   background-color: ${({ variant, color, theme }) =>
     variant === "contained"
       ? color === "primary"
@@ -39,11 +30,11 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
         ? "white"
         : "white"
       : color === "primary"
-      ? theme.primary
-      : "black"};
+        ? theme.primary
+        : "black"};
 
   display: inline-block;
-  min-width: ${({ $fullwidth }) => ($fullwidth ? "100%" : "200px")};
+  min-width: ${({ fullwidth }) => (fullwidth ? "100%" : "200px")};
   padding: 8px;
   text-align: center;
   font-size: 19px;
@@ -52,11 +43,11 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
   transition: 200ms;
   &:hover {
     background-color: ${({ variant, color, theme }) =>
-      variant === "contained"
-        ? color === "primary"
-          ? "#C81F49"
-          : "#393939"
-        : "#e8e8e8"};
+    variant === "contained"
+      ? color === "primary"
+        ? "#C81F49"
+        : "#393939"
+      : "#e8e8e8"};
   }
 `;
 
@@ -74,7 +65,7 @@ export const Button = ({
       href={href}
       color={color}
       variant={variant}
-      $fullwidth={fullwidth}
+      fullwidth={fullwidth}
     >
       {children}
     </ButtonContainer>
