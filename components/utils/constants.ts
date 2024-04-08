@@ -1,0 +1,18 @@
+const MAINNET_CHAIN_ID = "0x2a";
+const TESTNET_CHAIN_ID = "0x1069";
+
+const APEX_DEITIES_CONTRACT_ADDRESS = "0xb4E32a20aa27B5891Bfa592c392c9858A1DD3945";
+const HOLY_SHIT_CONTRACT_ADDRESS = "0x2fF8dF5F47Cd67AfE425a2acb28d6506838495Ee";
+
+const RPC_URL = "https://rpc.testnet.lukso.network";
+const IPFS_GATEWAY = "https://cloudflare-ipfs.com/ipfs";
+
+
+export {
+    MAINNET_CHAIN_ID,
+    TESTNET_CHAIN_ID,
+    APEX_DEITIES_CONTRACT_ADDRESS,
+    HOLY_SHIT_CONTRACT_ADDRESS,
+    RPC_URL,
+    IPFS_GATEWAY
+};

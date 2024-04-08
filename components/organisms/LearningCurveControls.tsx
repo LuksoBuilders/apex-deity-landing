@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Button } from "../molecules";
 import { GrLinkPrevious, GrLinkNext } from "react-icons/gr";
+import { LearningCurveControlsProps } from "../utils/interfaces";
 
 const ControlContainer = styled.div`
   display: flex;
@@ -13,12 +14,6 @@ const ButtonLabel = styled.div`
   align-items: center;
 `;
 
-export interface LearningCurveControlsProps {
-  nextName: string | undefined;
-  backName: string | undefined;
-  onNext: Function | undefined;
-  onBack: Function | undefined;
-}
 
 export const LearningCurveControls = ({
   nextName,

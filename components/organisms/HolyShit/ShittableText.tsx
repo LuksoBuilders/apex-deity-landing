@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import { useTimer } from "react-timer-hook";
-
-interface ShittableTextProps {
-  expiryTimestamp: Date;
-  refetch: () => void;
-}
+import { ShittableTextProps } from "../../utils/interfaces";
 
 const MainText = styled.span``;
 
