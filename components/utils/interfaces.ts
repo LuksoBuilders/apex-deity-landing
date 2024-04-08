@@ -26,5 +26,69 @@ interface ExtensionContextType {
     mint: (order: Array<number>, value: ethers.BigNumber) => Promise<void>;
 }
 
+interface NumberRanges {
+    S: number;
+    A: number;
+    B: number;
+    C: number;
+}
 
-export type { DataProviderProps, DataContextType, ExtensionContextType };
+interface LearningCurveNavigatorProps {
+    items: Array<string>;
+    selectedItem: number;
+    setSelectedItem: (item: number) => void;
+}
+
+
+interface LearningCurveDataProps {
+    title: string;
+    children?: React.ReactNode;
+}
+
+interface LearningCurveControlsProps {
+    nextName: string | undefined;
+    backName: string | undefined;
+    onNext: Function | undefined;
+    onBack: Function | undefined;
+}
+
+interface ShittableTextProps {
+    expiryTimestamp: Date;
+    refetch: () => void;
+}
+
+interface DeityCardProps {
+    tier: string;
+    name: string;
+    owner: string;
+    image: string;
+    shitAmount: number;
+    lastShitTime: ethers.BigNumber | undefined;
+    onShit: () => Promise<void>;
+}
+
+interface MintSelectorProps {
+    value: number;
+    setValue: (n: number) => void;
+    available: number;
+    tier: string;
+}
+
+interface CountDownProps {
+    identifier: string;
+    amount: number;
+}
+
+export type {
+    DataProviderProps,
+    DataContextType,
+    ExtensionContextType,
+    NumberRanges,
+    LearningCurveNavigatorProps,
+    LearningCurveDataProps,
+    LearningCurveControlsProps,
+    ShittableTextProps,
+    DeityCardProps,
+    MintSelectorProps,
+    CountDownProps
+};

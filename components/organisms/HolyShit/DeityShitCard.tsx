@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "../../molecules";
 
 import { ShittableText } from "./ShittableText";
+import { DeityCardProps } from "../../utils/interfaces";
 
 export const DeityCardContainer = styled.div`
   display: inline-block;
@@ -61,16 +62,6 @@ export const DeitySecondaryInfo = styled.p`
   font-size: 13px;
 `;
 
-export interface DeityCardProps {
-  tier: string;
-  name: string;
-  owner: string;
-  image: string;
-  shitAmount: number;
-  lastShitTime: ethers.BigNumber | undefined;
-  onShit: () => Promise<void>;
-}
-
 export const DeityShitCard = ({
   tier,
   name,
@@ -119,7 +110,7 @@ export const DeityShitCard = ({
       } else {
         return (
           <Button onClick={() => onShit()} fullwidth={true}>
-            Shittable in: 
+            Shittable in:
             <ShittableText
               expiryTimestamp={
                 new Date(Number(lastShitTimeDate) + 24 * 3600 * 1000)

@@ -3,12 +3,7 @@ import { Button } from "../molecules/Button";
 import { motion } from "framer-motion";
 import { BsChevronBarExpand } from "react-icons/bs";
 import { BsChevronContract } from "react-icons/bs";
-
-export interface LearningCurveNavigatorProps {
-  items: Array<string>;
-  selectedItem: number;
-  setSelectedItem: (item: number) => void;
-}
+import { LearningCurveNavigatorProps } from "../utils/interfaces";
 
 export const LearningCurveNavigator = ({
   items,

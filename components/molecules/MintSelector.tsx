@@ -1,12 +1,6 @@
 import styled from "styled-components";
 import { useEffect } from "react";
-
-interface MintSelectorProps {
-  value: number;
-  setValue: (n: number) => void;
-  available: number;
-  tier: string;
-}
+import { MintSelectorProps } from "../utils/interfaces";
 
 const Container = styled.div`
   border: 2px solid black;

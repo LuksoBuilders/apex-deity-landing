@@ -1,9 +1,5 @@
 import styled from "styled-components";
-
-interface CountDownProps {
-  identifier: string;
-  amount: number;
-}
+import { CountDownProps } from "../utils/interfaces";
 
 const Container = styled.div`
   border: 3px solid black;
