@@ -4,15 +4,7 @@ import LSP3 from "@erc725/erc725.js/schemas/LSP3ProfileMetadata.json";
 import LSP4 from "@erc725/erc725.js/schemas/LSP4DigitalAsset.json";
 import { ERC725 } from "@erc725/erc725.js";
 import Web3 from "web3";
-
-interface DataProviderProps {
-  children: React.ReactNode;
-}
-
-interface DataContextType {
-  getUPData: (address: string) => Promise<any>;
-  getLSP4Data: (address: string) => Promise<any>;
-}
+import { DataContextType, DataProviderProps } from "../utils/interfaces";
 
 const DataContext = createContext<DataContextType>({
   getUPData: async () => {},

@@ -11,7 +11,7 @@ import { Row, Col } from "react-grid-system";
 import { CountDown } from "./CountDown";
 import { MintSelector, CountDownBox } from "../molecules";
 
-import { useExtention } from "../hooks/useExtension";
+import { useExtension } from "../hooks/useExtension";
 
 const Paragraph = styled.p`
   font-weight: 300;
@@ -150,7 +150,7 @@ export const Minting = () => {
     userBalances,
     availableBalances,
     mint,
-  } = useExtention();
+  } = useExtension();
 
   const basePrice = ethers.utils.parseEther("1"); //ethers.utils.parseEther("0.0001");
 
