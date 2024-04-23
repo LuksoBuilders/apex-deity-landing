@@ -14,3 +14,7 @@ export * from "./Links";
 export * from "./Header";
 
 export * from "./HolyShit";
+
+/////////////////
+
+export * from "./general";

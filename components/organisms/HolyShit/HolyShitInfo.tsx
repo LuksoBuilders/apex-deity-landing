@@ -41,9 +41,9 @@ export const HolyShitInfo = () => {
             Each deity based on their class can create{" "}
             <Important>S-&gt;400</Important>,<Important>A-&gt;300</Important>,{" "}
             <Important>B-&gt;200</Important>, <Important>C-&gt;100</Important>{" "}
-            $HolyShit <Important>per day</Important>. After you farmed your holy
-            shits, your deities will going to rest for a day so they can get
-            shit more tomorrow.
+            $HolyShit <Important>per d ay</Important>. After you farmed your
+            holy shits, your deities will going to rest for a day so they can
+            get shit more tomorrow.
           </Paragraph>
 
           <Paragraph>

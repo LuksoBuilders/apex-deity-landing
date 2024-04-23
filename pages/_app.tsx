@@ -24,11 +24,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         />{" "}
       </Head>
 
-      <ExtentionProvider>
-        <ThemeProvider theme={lightTheme}>
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </ExtentionProvider>
+      <ThemeProvider theme={lightTheme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   );
 }
