@@ -24,14 +24,14 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
     variant === "contained"
       ? color === "primary"
         ? theme.primary
-        : "#191919"
+        : "#1E1E1E"
       : "white"};
 
   border-style: solid;
   border-width: ${({ variant, theme }) =>
     variant === "contained" ? "2px" : "2px"};
   border-color: ${({ variant, color, theme }) =>
-    color === "primary" ? theme.primary : "black"};
+    color === "primary" ? theme.primary : "#1E1E1E"};
 
   color: ${({ variant, color, theme }) =>
     variant === "contained"
@@ -40,7 +40,7 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
         : "white"
       : color === "primary"
       ? theme.primary
-      : "black"};
+      : "#1E1E1E"};
 
   display: inline-block;
   min-width: ${({ $fullwidth }) => ($fullwidth ? "100%" : "200px")};

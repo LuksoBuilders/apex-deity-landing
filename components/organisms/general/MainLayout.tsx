@@ -2,9 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-//import { Container, Row, Col } from "react-grid-system";
 import { Header } from "./Header";
-import { relative } from "path";
+import { SideMenu } from "./SideMenu";
 
 const menuWidth = 320;
 
@@ -16,6 +15,7 @@ const SidePanel = styled.div`
   height: 100vh;
   background-image: url("background.png");
   background-size: 600px 2546px;
+  border-right: 1px solid #c8c8c8;
 `;
 
 const SidePanelOverlay = styled.div`
@@ -47,7 +47,9 @@ export const MainLayout = () => {
         }}
       >
         <SidePanel>
-          <SidePanelOverlay></SidePanelOverlay>
+          <SidePanelOverlay>
+            <SideMenu />
+          </SidePanelOverlay>
         </SidePanel>
       </motion.div>
       <motion.div
