@@ -18,6 +18,8 @@ const SuperSpacing = styled.div`
   margin-top: 5em;
 `;
 
+const ButtonText = styled.b``;
+
 const WTF = styled.span`
   font-style: italic;
   font-weight: 700;
@@ -29,11 +31,11 @@ export const SideMenu = () => {
       <UserMenu />
       <SuperSpacing></SuperSpacing>
       <Button href="#mint" color="black" variant="outlined">
-        Home
+        <ButtonText>Home</ButtonText>
       </Button>
       <Spacing />
       <Button href="#mint" color="black" variant="outlined">
-        <WTF>What's this??!!</WTF>
+        <ButtonText>What's this??!!</ButtonText>
       </Button>
       <Spacing />
 

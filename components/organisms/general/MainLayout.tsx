@@ -5,14 +5,14 @@ import { motion } from "framer-motion";
 import { Header } from "./Header";
 import { SideMenu } from "./SideMenu";
 
-const menuWidth = 320;
+const menuWidth = 390;
 
 const AppContainer = styled.div`
   position: relative;
 `;
 
 const SidePanel = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   background-image: url("background.png");
   background-size: 600px 2546px;
   border-right: 1px solid #c8c8c8;
@@ -21,6 +21,8 @@ const SidePanel = styled.div`
 const SidePanelOverlay = styled.div`
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+
   background-color: rgba(136, 136, 136, 0.2);
 `;
 
@@ -34,7 +36,7 @@ export const MainLayout = () => {
   return (
     <AppContainer>
       <motion.div
-        initial={{ left: -1 * menuWidth }}
+        initial={{ left: 0 }}
         animate={{
           left: isMenuOpen ? 0 : -1 * menuWidth,
         }} // Target opacity based on isOpen state
@@ -43,7 +45,6 @@ export const MainLayout = () => {
           width: menuWidth,
           position: "absolute",
           left: -1 * menuWidth,
-          background: "red",
         }}
       >
         <SidePanel>
@@ -53,7 +54,7 @@ export const MainLayout = () => {
         </SidePanel>
       </motion.div>
       <motion.div
-        initial={{ width: "100%" }}
+        initial={{ width: `calc(100% - ${menuWidth}px)` }}
         animate={{
           width: !isMenuOpen ? `100%` : `calc(100% - ${menuWidth}px)`,
         }} // Target opacity based on isOpen state
