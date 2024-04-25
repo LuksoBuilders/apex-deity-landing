@@ -6,23 +6,25 @@ interface DeityInfo {}
 
 export const useDeities = (
   deitiesId: Array<number>
-): FetchingData<Record<string, Deity>> => {
-  const deities: Record<string, Deity> = {
-    "0": {
-      tier: "S",
+): FetchingData<Record<number, Deity>> => {
+  const deities: Record<number, Deity> = {
+    0: {
+      id: 0,
+      tier: "s",
       name: "Zeus",
       image:
         "https://artisanally.io/_next/image?url=%2Fdeities%2Fzeus.png&w=256&q=75",
       level: 5,
       xp: 153,
-      availableSlots: 3,
+      availableSlots: 2,
       slots: 9,
       fellowships: 18,
       rank: 2,
       harvestableAmount: 121,
     },
-    "78": {
-      tier: "C",
+    78: {
+      id: 78,
+      tier: "c",
       name: "Erato",
       image: "https://artisanally.io/deities/erato.png",
       level: 2,

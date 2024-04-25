@@ -19,14 +19,14 @@ const TextFieldLabel = styled.label<LabelProps>`
   position: absolute;
   border: ${(props) => (props.$isFocused ? "1px solid #393939" : "0px")};
   background: ${(props) => (props.$isFocused ? "#393939" : "white")};
-  color: ${(props) => (props.$isFocused ? "white" : "#393939")};
-  top: ${(props) => (props.$isFocused ? "-20px" : "4px")};
+  color: ${(props) => (props.$isFocused ? "white" : "#696969")};
+  top: ${(props) => (props.$isFocused ? "-20px" : "8px")};
   left: ${(props) => (props.$isFocused ? "20px" : "0px")};
-  font-size: ${(props) => (props.$isFocused ? "1em" : "1.4em")};
+  font-size: ${(props) => (props.$isFocused ? "1em" : "1.2em")};
   transition: all 0.3s;
   padding: 0.2em 1em;
   border-radius: 100px;
-  font-weight: 200;
+  font-weight: ${(props) => (props.$isFocused ? "200" : "200")};
 `;
 
 const TextFieldInput = styled.input`

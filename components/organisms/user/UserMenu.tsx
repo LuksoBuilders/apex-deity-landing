@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Spacing } from "../../atoms";
+import { BounceLoader } from "react-spinners";
+import { Spacing, CenteredDiv } from "../../atoms";
 import { Button, SidebarList } from "../../molecules";
 import { UserUPBasicInfo } from "./UserUPBasicInfo";
 import { UserDeitiesSidebarMenu } from "./UserDeitiesSidebarMenu";
@@ -16,6 +17,15 @@ export const UserMenu = () => {
   const deities = useDeities([0, 78]);
 
   const [connected, setIsConnected] = useState(false);
+
+  const loading = deities.loading;
+
+  if (loading)
+    return (
+      <CenteredDiv>
+        <BounceLoader />
+      </CenteredDiv>
+    );
 
   const userAddress = "qwed";
 

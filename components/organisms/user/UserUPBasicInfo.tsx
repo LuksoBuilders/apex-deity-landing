@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { BounceLoader } from "react-spinners";
 import { useUPBasicInfo } from "../../hooks";
 import { CenteredDiv, CircledImage, Spacing } from "../../atoms";
-import { Button } from "../../molecules";
 
 const UPName = styled.h4`
   font-size: 28px;
@@ -24,8 +23,6 @@ export const UserUPBasicInfo = ({ userAddress }: UserUPBasicInfoProps) => {
   if (error) {
     console.error(error);
   }
-
-  console.log(data, loading, error);
 
   if (loading)
     return (

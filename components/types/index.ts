@@ -5,6 +5,7 @@ export interface FetchingData<DataType> {
 }
 
 export interface Deity {
+  id: number;
   tier: string;
   name: string;
   image: string;

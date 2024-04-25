@@ -1,7 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 import { Spacing } from "../../atoms";
 import { TextField } from "../../molecules";
-import { useState } from "react";
+
+import { DeitySelector } from "./DeitySelector";
 
 const FoundFellowshipFormContainer = styled.div`
   //border: 1px solid #f1f1f1;
@@ -47,8 +49,11 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
         Your deity will use one of its <Important>slots</Important>. The slot
         will go on a cooldown for a week.
       </Paragraph>
-
       <Spacing spacing="2em" />
+
+      <DeitySelector />
+
+      <Spacing spacing="5em" />
       <TextField
         value={universalProfileAddress}
         onChange={(v: string) => {
