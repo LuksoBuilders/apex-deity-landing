@@ -27,10 +27,18 @@ const SidePanelOverlay = styled.div`
 `;
 
 const MainPanel = styled.div`
-  padding: 1em;
+  //  padding: 1em 2em;
 `;
 
-export const MainLayout = () => {
+const Content = styled.div`
+  padding: 1em 2em;
+`;
+
+interface MainLayoutProps {
+  children: React.ReactNode;
+}
+
+export const MainLayout = ({ children }: MainLayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
@@ -66,6 +74,7 @@ export const MainLayout = () => {
             isMenuOpen={isMenuOpen}
             onMenuButton={() => setIsMenuOpen(!isMenuOpen)}
           />
+          <Content>{children}</Content>
         </MainPanel>
       </motion.div>
     </AppContainer>

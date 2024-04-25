@@ -7,3 +7,4 @@ export * from "./CountDownBox";
 export * from "./MintSelector";
 
 export * from "./general";
+export * from "./inputs";

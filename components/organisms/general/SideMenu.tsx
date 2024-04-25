@@ -35,7 +35,7 @@ export const SideMenu = () => {
       </Button>
       <Spacing />
       <Button href="#mint" color="black" variant="outlined">
-        <ButtonText>What's this??!!</ButtonText>
+        <ButtonText>Learning Curve</ButtonText>
       </Button>
       <Spacing />
 
