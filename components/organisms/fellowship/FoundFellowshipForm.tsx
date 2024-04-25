@@ -1,9 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Spacing } from "../../atoms";
+import { ethers } from "ethers";
+import { BounceLoader } from "react-spinners";
+
+import { CenteredDiv, Spacing, CircledImage } from "../../atoms";
 import { TextField } from "../../molecules";
+import { Button } from "../../molecules";
 
 import { DeitySelector } from "./DeitySelector";
+import { useUPBasicInfo } from "../../hooks";
 
 const FoundFellowshipFormContainer = styled.div`
   //border: 1px solid #f1f1f1;
@@ -24,10 +29,57 @@ const Important = styled.span`
   font-weight: 500;
 `;
 
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.primary};
+`;
+
+const ArtisanDataContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ArtisanUsername = styled.h4`
+  margin-left: 0.5em;
+`;
+
+const FoundButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 interface FoundFellowshipFormProps {}
 
 export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
+  const [selectedDeity, setSelectedDeity] = useState<number | null>(null);
   const [universalProfileAddress, setUPA] = useState("");
+  const artisan = useUPBasicInfo(universalProfileAddress);
+
+  const renderArtisanProfile = () => {
+    if (artisan.loading)
+      return (
+        <CenteredDiv>
+          <BounceLoader />
+        </CenteredDiv>
+      );
+
+    if (artisan.error)
+      return (
+        <ErrorMessage>
+          Are you sure this address is a proper Universal Profile? We can not
+          find the profile :(
+        </ErrorMessage>
+      );
+
+    if (artisan.data)
+      return (
+        <ArtisanDataContainer>
+          <CircledImage height="60px" width="60px" src={artisan.data.avatar} />
+          <ArtisanUsername>{artisan.data.name}</ArtisanUsername>
+        </ArtisanDataContainer>
+      );
+  };
+
+  const canFound = artisan.data && selectedDeity !== null;
 
   return (
     <FoundFellowshipFormContainer>
@@ -51,9 +103,12 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
       </Paragraph>
       <Spacing spacing="2em" />
 
-      <DeitySelector />
+      <DeitySelector
+        selectedDeity={selectedDeity}
+        setSelectedDeity={setSelectedDeity}
+      />
 
-      <Spacing spacing="5em" />
+      <Spacing spacing="2em" />
       <TextField
         value={universalProfileAddress}
         onChange={(v: string) => {
@@ -61,6 +116,26 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
         }}
         label="Artisan Universal Profile Address"
       />
+      <Spacing spacing="1em" />
+
+      {ethers.utils.isAddress(universalProfileAddress.toLowerCase()) ? (
+        renderArtisanProfile()
+      ) : (
+        <ErrorMessage>
+          Artisan Universal Profile Address is required. A fellowship is
+          meaningless without an Artisan.
+        </ErrorMessage>
+      )}
+
+      <Spacing spacing="5em" />
+
+      <FoundButtonContainer>
+        {canFound ? (
+          <Button variant="contained" color="primary">
+            Found
+          </Button>
+        ) : null}
+      </FoundButtonContainer>
     </FoundFellowshipFormContainer>
   );
 };

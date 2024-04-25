@@ -27,7 +27,7 @@ export const UserMenu = () => {
       </CenteredDiv>
     );
 
-  const userAddress = "qwed";
+  const userAddress = "";
 
   const availableSlots = Object.values(deities.data).reduce((pV, cV) => {
     return pV + cV.availableSlots;

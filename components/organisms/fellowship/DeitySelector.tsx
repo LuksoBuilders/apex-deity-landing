@@ -82,8 +82,6 @@ const NotSelectedDeity = styled.p`
 
 const SelectedDeityInfo = styled.p``;
 
-interface DeitySelectorProps {}
-
 const getDirectFeeBasedOnTier = (tier: string) => {
   switch (tier) {
     case "s":
@@ -97,11 +95,16 @@ const getDirectFeeBasedOnTier = (tier: string) => {
   }
 };
 
-export const DeitySelector = ({}: DeitySelectorProps) => {
-  const [selectedDeity, setSelectedDeity] = useState<number | null>(null);
-  const deities = useDeities([0, 78]);
+interface DeitySelectorProps {
+  selectedDeity: number | null;
+  setSelectedDeity: Function;
+}
 
-  console.log(selectedDeity);
+export const DeitySelector = ({
+  selectedDeity,
+  setSelectedDeity,
+}: DeitySelectorProps) => {
+  const deities = useDeities([0, 78]);
 
   if (deities.loading)
     return (
