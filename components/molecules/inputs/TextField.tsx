@@ -3,22 +3,38 @@ import styled from "styled-components";
 
 interface LabelProps {
   $isFocused: boolean;
+  $isError: boolean;
 }
 
 const TextFieldContainer = styled.div<LabelProps>`
   position: relative;
   height: 56px;
   border: ${(props) =>
-    props.$isFocused ? "2px solid #393939" : "2px solid #393939"};
+    props.$isError
+      ? `2px solid ${props.theme.error}`
+      : props.$isFocused
+      ? "2px solid #393939"
+      : "2px solid #393939"};
   margin-top: 20px;
   border-radius: 0px;
-  box-shadow: 3px 3px #393939;
+  box-shadow: ${(props) =>
+    props.$isError ? `3px 3px ${props.theme.error}` : "3px 3px #393939"};
 `;
 
 const TextFieldLabel = styled.label<LabelProps>`
   position: absolute;
-  border: ${(props) => (props.$isFocused ? "1px solid #393939" : "0px")};
-  background: ${(props) => (props.$isFocused ? "#393939" : "white")};
+  border: ${(props) =>
+    props.$isError && props.$isFocused
+      ? `1px solid ${props.theme.error}`
+      : props.$isFocused
+      ? "1px solid #393939"
+      : "0px"};
+  background: ${(props) =>
+    props.$isError && props.$isFocused
+      ? `${props.theme.error}`
+      : props.$isFocused
+      ? "#393939"
+      : "white"};
   color: ${(props) => (props.$isFocused ? "white" : "#696969")};
   top: ${(props) => (props.$isFocused ? "-20px" : "8px")};
   left: ${(props) => (props.$isFocused ? "20px" : "0px")};
@@ -42,18 +58,27 @@ const TextFieldInput = styled.input`
   border-radius: 0px;
 `;
 
+const HelperText = styled.p<LabelProps>`
+  color: ${(props) => (props.$isError ? props.theme.error : "#383838")};
+  position: absolute;
+  bottom: -36px;
+`;
+
 interface TextFieldProps {
   color?: "primary" | "black";
   value: string;
   label: string;
   onChange: Function;
+  error?: boolean;
+  helperText?: string;
 }
 
 export const TextField = ({
-  color = "black",
   value,
   label,
   onChange,
+  error = false,
+  helperText,
 }: TextFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -63,8 +88,13 @@ export const TextField = ({
     }
   }, [value]);
 
+  console.log(helperText, label);
+
   return (
-    <TextFieldContainer $isFocused={isFocused || Boolean(value)}>
+    <TextFieldContainer
+      $isError={error}
+      $isFocused={isFocused || Boolean(value)}
+    >
       <TextFieldInput
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -75,11 +105,18 @@ export const TextField = ({
         value={value}
       />
       <TextFieldLabel
+        $isError={error}
         onClick={() => setIsFocused(true)}
         $isFocused={isFocused || Boolean(value)}
       >
         {label}
       </TextFieldLabel>
+
+      {helperText && (
+        <HelperText $isFocused={isFocused || Boolean(value)} $isError={error}>
+          {helperText}
+        </HelperText>
+      )}
     </TextFieldContainer>
   );
 };

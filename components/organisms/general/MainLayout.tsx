@@ -13,7 +13,7 @@ const AppContainer = styled.div`
 
 const SidePanel = styled.div`
   min-height: 100vh;
-  background-image: url("background.png");
+  background-image: url("/background.png");
   background-size: 600px 2546px;
   border-right: 1px solid #c8c8c8;
 `;
@@ -28,10 +28,15 @@ const SidePanelOverlay = styled.div`
 
 const MainPanel = styled.div`
   //  padding: 1em 2em;
+  margin-left: ${menuWidth}px;
 `;
 
 const Content = styled.div`
   padding: 1em 2em;
+  position: absolute;
+  top: 80px;
+  //overflow-y: auto; /* Enable vertical scrolling if content exceeds viewport */
+  //max-height: calc(100vh - 2em); /* Adjust height to fit viewport */
 `;
 
 interface MainLayoutProps {
@@ -39,21 +44,26 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <AppContainer>
       <motion.div
-        initial={{ left: 0 }}
-        animate={{
+        initial={{
+          position: `fixed`,
+          top: 0,
+          bottom: 0,
           left: isMenuOpen ? 0 : -1 * menuWidth,
-        }} // Target opacity based on isOpen state
-        transition={{ duration: 0.2 }} // Transition duration
-        style={{
-          width: menuWidth,
-          position: "absolute",
-          left: -1 * menuWidth,
+          width: ` ${menuWidth}px`,
         }}
+        animate={{
+          position: `fixed`,
+          top: 0,
+          bottom: 0,
+          left: isMenuOpen ? 0 : -1 * menuWidth,
+          width: ` ${menuWidth}px`,
+        }}
+        transition={{ duration: 0.2 }}
       >
         <SidePanel>
           <SidePanelOverlay>
@@ -62,12 +72,9 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </SidePanel>
       </motion.div>
       <motion.div
-        initial={{ width: `calc(100% - ${menuWidth}px)` }}
-        animate={{
-          width: !isMenuOpen ? `100%` : `calc(100% - ${menuWidth}px)`,
-        }} // Target opacity based on isOpen state
-        transition={{ duration: 0.2 }} // Transition duration
-        style={{ position: "absolute", right: 0 }}
+        initial={{ marginLeft: !isMenuOpen ? -1 * menuWidth : 0 }}
+        animate={{ marginLeft: !isMenuOpen ? -1 * menuWidth : 0 }}
+        transition={{ duration: 0.2 }}
       >
         <MainPanel>
           <Header

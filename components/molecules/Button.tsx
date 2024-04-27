@@ -1,15 +1,6 @@
-import { ReactNode } from "react";
-import styled from "styled-components";
+import { ReactNode, ChangeEventHandler } from "react";
+import styled, { css } from "styled-components";
 import Link from "next/link";
-
-export interface ButtonProps {
-  children: string | ReactNode;
-  color?: "primary" | "black";
-  variant?: "contained" | "outlined";
-  href?: string;
-  onClick?: Function;
-  fullwidth?: boolean;
-}
 
 export interface ButtonContainerProps {
   children: string | ReactNode;
@@ -18,7 +9,21 @@ export interface ButtonContainerProps {
   href?: string;
   onClick?: Function;
   $fullwidth?: boolean;
+  disabled?: boolean;
 }
+
+const buttonStyles = css<ButtonContainerProps>`
+  /* Your existing styles */
+
+  /* New disabled styles */
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.6;
+      pointer-events: none;
+      cursor: not-allowed;
+    `}
+`;
 
 const ButtonContainer = styled.a<ButtonContainerProps>`
   background-color: ${({ variant, color, theme }) =>
@@ -51,6 +56,7 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
   font-weight: 500;
   cursor: pointer;
   transition: 200ms;
+  ${buttonStyles}
   &:hover {
     background-color: ${({ variant, color, theme }) =>
       variant === "contained"
@@ -92,6 +98,8 @@ const ButtonLink = styled(Link)<ButtonContainerProps>`
   font-weight: 500;
   cursor: pointer;
   transition: 200ms;
+  ${buttonStyles}
+
   &:hover {
     background-color: ${({ variant, color, theme }) =>
       variant === "contained"
@@ -102,6 +110,18 @@ const ButtonLink = styled(Link)<ButtonContainerProps>`
   }
 `;
 
+export interface ButtonProps {
+  children: string | ReactNode;
+  color?: "primary" | "black";
+  variant?: "contained" | "outlined";
+  href?: string;
+  onClick?: Function;
+  fullwidth?: boolean;
+  fileUploader?: boolean;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  disabled?: boolean; // 1. Add disabled prop
+}
+
 export const Button = ({
   children,
   color = "black",
@@ -109,7 +129,33 @@ export const Button = ({
   fullwidth,
   href,
   onClick,
+  fileUploader = false,
+  onChange,
+  disabled = false,
 }: ButtonProps) => {
+  if (fileUploader) {
+    return (
+      <label>
+        <ButtonContainer
+          onClick={onClick}
+          href={href}
+          color={color}
+          variant={variant}
+          $fullwidth={fullwidth}
+          disabled={disabled}
+        >
+          {children}
+          <input
+            disabled={disabled}
+            type="file"
+            style={{ display: "none" }}
+            onChange={onChange}
+          />
+        </ButtonContainer>
+      </label>
+    );
+  }
+
   if (href) {
     return (
       <ButtonLink
@@ -118,6 +164,7 @@ export const Button = ({
         color={color}
         variant={variant}
         $fullwidth={fullwidth}
+        disabled={disabled}
       >
         {children}
       </ButtonLink>
@@ -130,6 +177,7 @@ export const Button = ({
       color={color}
       variant={variant}
       $fullwidth={fullwidth}
+      disabled={disabled}
     >
       {children}
     </ButtonContainer>

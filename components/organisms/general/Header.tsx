@@ -3,13 +3,26 @@ import { ImMenu } from "react-icons/im";
 import { BiCollapseHorizontal } from "react-icons/bi";
 import { motion } from "framer-motion";
 
-const Container = styled.div`
+const menuWidth = 390;
+
+interface ContainerProps {
+  isMenuOpen: boolean;
+}
+
+const Container = styled.div<ContainerProps>`
+  position: fixed;
   display: flex;
   //margin-top: 1em;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e0e0e0;
   padding: 1em 2em;
+  left: ${({ isMenuOpen }) => (isMenuOpen ? `${menuWidth}px` : "0px")};
+  right: 0px;
+  transition: 200ms;
+  background-color: rgb(255, 255, 255, 10);
+  margin-bottom: 100px;
+  z-index: 1000;
 `;
 
 const Logo = styled.a`
@@ -36,6 +49,7 @@ const MenuButton = styled.div`
   cursor: pointer;
   transition: 200ms;
   position: relative;
+  background: white;
   &:hover {
     background-color: #f0f0f0;
   }
@@ -64,7 +78,7 @@ export interface HeaderProps {
 
 export const Header = ({ isMenuOpen, onMenuButton }: HeaderProps) => {
   return (
-    <Container>
+    <Container isMenuOpen={isMenuOpen}>
       <MenuButton onClick={() => onMenuButton()}>
         <motion.div
           initial={{ opacity: 0 }} // Initial opacity

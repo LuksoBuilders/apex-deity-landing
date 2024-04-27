@@ -42,7 +42,7 @@ const ArtisanUsername = styled.h4`
   margin-left: 0.5em;
 `;
 
-const FoundButtonContainer = styled.div`
+const ActionButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
@@ -129,13 +129,11 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
 
       <Spacing spacing="5em" />
 
-      <FoundButtonContainer>
-        {canFound ? (
-          <Button variant="contained" color="primary">
-            Found
-          </Button>
-        ) : null}
-      </FoundButtonContainer>
+      <ActionButtonContainer>
+        <Button disabled={!canFound} variant="contained" color="primary">
+          Found
+        </Button>
+      </ActionButtonContainer>
     </FoundFellowshipFormContainer>
   );
 };

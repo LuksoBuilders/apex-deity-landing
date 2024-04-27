@@ -1,7 +1,7 @@
 import { FoundFellowship } from "../components/templates";
 
-const App = () => {
+const Found = () => {
   return <FoundFellowship />;
 };
 
-export default App;
+export default Found;
