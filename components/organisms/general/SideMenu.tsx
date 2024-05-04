@@ -30,16 +30,16 @@ export const SideMenu = () => {
     <SideMenuContainer>
       <UserMenu />
       <SuperSpacing></SuperSpacing>
-      <Button href="#mint" color="black" variant="outlined">
+      <Button color="black" variant="outlined">
         <ButtonText>Home</ButtonText>
       </Button>
       <Spacing />
-      <Button href="#mint" color="black" variant="outlined">
+      <Button color="black" variant="outlined">
         <ButtonText>Learning Curve</ButtonText>
       </Button>
       <Spacing />
 
-      <Button href="#mint" color="black" variant="outlined">
+      <Button color="black" variant="outlined">
         <WTF> Holy Shit!</WTF>
       </Button>
     </SideMenuContainer>

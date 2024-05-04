@@ -48,7 +48,6 @@ export const UserMenu = () => {
         <div>
           <Button
             onClick={() => setIsConnected(true)}
-            href="#mint"
             color="black"
             variant="contained"
             fullwidth

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const menuWidth = 390;
 
 interface ContainerProps {
-  isMenuOpen: boolean;
+  $isMenuOpen: boolean;
 }
 
 const Container = styled.div<ContainerProps>`
@@ -17,7 +17,7 @@ const Container = styled.div<ContainerProps>`
   align-items: center;
   border-bottom: 1px solid #e0e0e0;
   padding: 1em 2em;
-  left: ${({ isMenuOpen }) => (isMenuOpen ? `${menuWidth}px` : "0px")};
+  left: ${({ $isMenuOpen }) => ($isMenuOpen ? `${menuWidth}px` : "0px")};
   right: 0px;
   transition: 200ms;
   background-color: rgb(255, 255, 255, 10);
@@ -78,7 +78,7 @@ export interface HeaderProps {
 
 export const Header = ({ isMenuOpen, onMenuButton }: HeaderProps) => {
   return (
-    <Container isMenuOpen={isMenuOpen}>
+    <Container $isMenuOpen={isMenuOpen}>
       <MenuButton onClick={() => onMenuButton()}>
         <motion.div
           initial={{ opacity: 0 }} // Initial opacity

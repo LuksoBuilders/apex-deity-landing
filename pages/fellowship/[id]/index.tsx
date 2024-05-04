@@ -1,7 +1,7 @@
-import { FoundFellowship } from "../../../components/templates";
+import { FellowshipDetails } from "../../../components/templates";
 
 const App = () => {
-  return <FoundFellowship />;
+  return <FellowshipDetails />;
 };
 
 export default App;

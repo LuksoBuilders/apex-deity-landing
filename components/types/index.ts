@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 export interface FetchingData<DataType> {
   data: DataType;
   loading: boolean;
@@ -16,4 +18,24 @@ export interface Deity {
   fellowships: number;
   rank: number;
   harvestableAmount: number;
+}
+
+export interface UPBasicInfo {
+  avatar: string;
+  name: string;
+  username: string;
+  address: string;
+}
+
+export interface Fellowship {
+  address: string;
+  endorsementAddress: string;
+  contributeAddress: string;
+  logo: string;
+  name: string;
+  symbol: string;
+  artisan: UPBasicInfo;
+  founder: Deity;
+  mintPrice: ethers.BigNumber;
+  totalSupply: ethers.BigNumber;
 }

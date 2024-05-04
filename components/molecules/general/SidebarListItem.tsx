@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { ReactNode } from "react";
 
 interface SidebarListItemContainerProps {
-  finish: boolean;
+  $finish: boolean;
 }
 
 const SidebarListItemContainer = styled.div<SidebarListItemContainerProps>`
   padding: 10px;
-  border-bottom: ${({ finish }) => (!finish ? "1px solid black" : "0px")};
+  border-bottom: ${({ $finish }) => (!$finish ? "1px solid black" : "0px")};
   cursor: pointer;
   transition: 200ms;
   &:hover {
@@ -25,7 +25,7 @@ export const SidebarListItem = ({
   children,
 }: SidebarListItemProps) => {
   return (
-    <SidebarListItemContainer finish={finish}>
+    <SidebarListItemContainer $finish={finish}>
       {children}
     </SidebarListItemContainer>
   );

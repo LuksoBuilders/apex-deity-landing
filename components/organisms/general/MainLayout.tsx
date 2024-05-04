@@ -31,10 +31,17 @@ const MainPanel = styled.div`
   margin-left: ${menuWidth}px;
 `;
 
-const Content = styled.div`
+interface ContentPanel {
+  $isMenuOpen: boolean;
+}
+
+const Content = styled.div<ContentPanel>`
   padding: 1em 2em;
   position: absolute;
   top: 80px;
+  transition: 200ms;
+  width: ${({ $isMenuOpen }) =>
+    $isMenuOpen ? `calc(100% - ${menuWidth}px)` : "100%"};
   //overflow-y: auto; /* Enable vertical scrolling if content exceeds viewport */
   //max-height: calc(100vh - 2em); /* Adjust height to fit viewport */
 `;
@@ -44,7 +51,7 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
     <AppContainer>
@@ -81,7 +88,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             isMenuOpen={isMenuOpen}
             onMenuButton={() => setIsMenuOpen(!isMenuOpen)}
           />
-          <Content>{children}</Content>
+          <Content $isMenuOpen={isMenuOpen}>{children}</Content>
         </MainPanel>
       </motion.div>
     </AppContainer>
