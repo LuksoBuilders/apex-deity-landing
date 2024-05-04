@@ -20,8 +20,8 @@ const buttonStyles = css<ButtonContainerProps>`
     disabled &&
     css`
       opacity: 0.6;
-      pointer-events: none;
       cursor: not-allowed;
+      pointer-events: none;
     `}
 `;
 
