@@ -10,6 +10,7 @@ export interface ButtonContainerProps {
   onClick?: Function;
   $fullwidth?: boolean;
   disabled?: boolean;
+  size?: string;
 }
 
 const buttonStyles = css<ButtonContainerProps>`
@@ -50,9 +51,9 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
 
   display: inline-block;
   min-width: ${({ $fullwidth }) => ($fullwidth ? "100%" : "200px")};
-  padding: 8px;
+  padding: ${({ size }) => (size === "standard" ? "8px" : "4px")};
   text-align: center;
-  font-size: 19px;
+  font-size: ${({ size }) => (size === "standard" ? "19px" : "17px")};
   font-weight: 500;
   cursor: pointer;
   transition: 200ms;
@@ -116,6 +117,7 @@ export interface ButtonProps {
   variant?: "contained" | "outlined";
   href?: string;
   onClick?: Function;
+  size?: "small" | "standard";
   fullwidth?: boolean;
   fileUploader?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;
@@ -131,6 +133,7 @@ export const Button = ({
   onClick,
   fileUploader = false,
   onChange,
+  size = "standard",
   disabled = false,
 }: ButtonProps) => {
   if (fileUploader) {
@@ -143,6 +146,7 @@ export const Button = ({
           variant={variant}
           $fullwidth={fullwidth}
           disabled={disabled}
+          size={size}
         >
           {children}
           <input
@@ -165,6 +169,7 @@ export const Button = ({
         variant={variant}
         $fullwidth={fullwidth}
         disabled={disabled}
+        size={size}
       >
         {children}
       </ButtonLink>
@@ -178,6 +183,7 @@ export const Button = ({
       variant={variant}
       $fullwidth={fullwidth}
       disabled={disabled}
+      size={size}
     >
       {children}
     </ButtonContainer>

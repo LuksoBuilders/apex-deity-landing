@@ -1,11 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { ethers } from "ethers";
-import { BounceLoader } from "react-spinners";
 
-import { CenteredDiv, Spacing, CircledImage } from "../../atoms";
-import { TextField } from "../../molecules";
+import { Spacing } from "../../atoms";
 import { Button } from "../../molecules";
+
+import { UniversalProfileInput } from "../general";
 
 import { DeitySelector } from "./DeitySelector";
 import { useUPBasicInfo } from "../../hooks";
@@ -54,31 +53,6 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
   const [universalProfileAddress, setUPA] = useState("");
   const artisan = useUPBasicInfo(universalProfileAddress);
 
-  const renderArtisanProfile = () => {
-    if (artisan.loading)
-      return (
-        <CenteredDiv>
-          <BounceLoader />
-        </CenteredDiv>
-      );
-
-    if (artisan.error)
-      return (
-        <ErrorMessage>
-          Are you sure this address is a proper Universal Profile? We can not
-          find the profile :(
-        </ErrorMessage>
-      );
-
-    if (artisan.data)
-      return (
-        <ArtisanDataContainer>
-          <CircledImage height="60px" width="60px" src={artisan.data.avatar} />
-          <ArtisanUsername>{artisan.data.name}</ArtisanUsername>
-        </ArtisanDataContainer>
-      );
-  };
-
   const canFound = artisan.data && selectedDeity !== null;
 
   return (
@@ -109,23 +83,11 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
       />
 
       <Spacing spacing="2em" />
-      <TextField
-        value={universalProfileAddress}
-        onChange={(v: string) => {
-          setUPA(v);
-        }}
+      <UniversalProfileInput
+        address={universalProfileAddress}
+        setAddress={(v: string) => setUPA(v)}
         label="Artisan Universal Profile Address"
       />
-      <Spacing spacing="1em" />
-
-      {ethers.utils.isAddress(universalProfileAddress.toLowerCase()) ? (
-        renderArtisanProfile()
-      ) : (
-        <ErrorMessage>
-          Artisan Universal Profile Address is required. A fellowship is
-          meaningless without an Artisan.
-        </ErrorMessage>
-      )}
 
       <Spacing spacing="5em" />
 

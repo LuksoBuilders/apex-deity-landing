@@ -50,6 +50,7 @@ export const TabPanel = ({ tabs }: TabPanelProps) => {
       <Tabs>
         {tabs.map((tab, index) => (
           <Tab
+            key={tab.label}
             $isLast={index === tabs.length - 1}
             $isSelected={index === selectedTab}
             onClick={() => setSelectedTab(index)}

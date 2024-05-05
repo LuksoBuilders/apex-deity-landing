@@ -1,8 +1,15 @@
 import styled from "styled-components";
 import { Button } from "../../molecules";
+import { Modal, ValueSelector } from "../general";
+import { useState } from "react";
+import { ContributionForm } from "./ContributionForm";
 
 const BackerBuckPanelContainer = styled.div`
-  border: 1px solid #e8e8e8;
+  border: 1px solid #f4f4f4;
+  //background-color: #fafafa;
+  background-image: url("/background2.png");
+  background-position: center center;
+  background-size: cover;
 `;
 
 const InfoRow = styled.div`
@@ -10,7 +17,14 @@ const InfoRow = styled.div`
   justify-content: space-between;
 `;
 
+const Overlay = styled.div`
+  background-color: rgba(248, 248, 248, 0.7);
+  backdrop-filter: blur(0px);
+`;
+
 const InfoCol = styled.div``;
+
+const MintSection = styled.div``;
 
 const Info = styled.h3`
   font-weight: 400;
@@ -19,11 +33,14 @@ const Info = styled.h3`
 `;
 
 const InfoDivider = styled.div`
-  border-bottom: 1px solid #e8e8e8;
+  border: 1px solid #f4f4f4;
 `;
 
 const Red = styled.span`
   color: ${({ theme }) => theme.primary};
+  font-weight: 700;
+  font-size: 16px;
+  font-style: italic;
 `;
 
 const Minter = styled.div`
@@ -47,20 +64,6 @@ const SelectorButton = styled.div`
   }
 `;
 
-const SelectorValue = styled.div`
-  min-width: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
-`;
-
-const MintSelector = styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 1em;
-`;
-
 const ActionsList = styled.div`
   display: flex;
   padding: 0.5em 1em;
@@ -69,94 +72,112 @@ const ActionsList = styled.div`
 interface BackerBuckPanelProps {}
 
 export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
+  const [mintValue, setMintValue] = useState(0);
+
+  const [contributeModal, setContributeModal] = useState(false);
+
   return (
     <BackerBuckPanelContainer>
-      <InfoRow>
-        <InfoCol>
-          <Info>
-            Total Supply: <Red>10 $ALY</Red>
-          </Info>
-        </InfoCol>
-        <InfoCol>
-          <Info>
-            Current Mint Price: <Red>10 $LYX</Red>
-          </Info>
-        </InfoCol>
-      </InfoRow>
-      <InfoDivider />
-      <InfoRow>
-        <InfoCol>
-          <Info>
-            Your Balance: <Red>5 $ALY</Red>
-          </Info>
-        </InfoCol>
-        <InfoCol>
-          <Minter>
-            <MintSelector>
-              <SelectorButton>-</SelectorButton>
-              <SelectorValue>10</SelectorValue>
-              <SelectorButton>+</SelectorButton>
-            </MintSelector>
-            <Button disabled variant="contained" color="primary">
-              Mint for {24.2} $LYX
-            </Button>
-          </Minter>
-        </InfoCol>
-      </InfoRow>
-      <InfoDivider />
-      <InfoRow>
-        <InfoCol>
-          <Info>
-            Your Contributions: <Red>3 $ALY</Red>
-          </Info>
-        </InfoCol>
-        <InfoCol>
-          <ActionsList>
-            <Button variant="outlined" color="black">
-              Purify
-            </Button>
-            <Button variant="contained" color="black">
-              Contribute
-            </Button>
-          </ActionsList>
-        </InfoCol>
-      </InfoRow>
-      <InfoDivider />
-      <InfoRow>
-        <InfoCol>
-          <Info>
-            Your Endorsements: <Red>10 $ALY</Red>
-          </Info>
-        </InfoCol>
-        <InfoCol>
-          <ActionsList>
-            <Button variant="outlined" color="black">
-              Revoke
-            </Button>
-            <Button variant="contained" color="black">
-              Endorse
-            </Button>
-          </ActionsList>
-        </InfoCol>
-      </InfoRow>
-      <InfoDivider />
-      <InfoRow>
-        <InfoCol>
-          <Info>
-            Secondary Market <Red>(SOON)</Red>
-          </Info>
-        </InfoCol>
-        <InfoCol>
-          <ActionsList>
-            <Button disabled variant="outlined" color="black">
-              Sell
-            </Button>
-            <Button disabled variant="contained" color="black">
-              Buy
-            </Button>
-          </ActionsList>
-        </InfoCol>
-      </InfoRow>
+      <Overlay>
+        <MintSection>
+          <InfoRow>
+            <InfoCol>
+              <Info>
+                Total Supply: <Red>10 $ALY</Red>
+              </Info>
+            </InfoCol>
+            <InfoCol>
+              <Info>
+                Current Mint Price: <Red>10 $LYX</Red>
+              </Info>
+            </InfoCol>
+          </InfoRow>
+          <InfoRow>
+            <InfoCol>
+              <Info>
+                Your Balance: <Red>5 $ALY</Red>
+              </Info>
+            </InfoCol>
+            <InfoCol>
+              <Minter>
+                <ValueSelector
+                  value={mintValue}
+                  setValue={setMintValue}
+                  maxValue={5}
+                />
+
+                <Button disabled variant="contained" color="primary">
+                  Mint for {24.2} $LYX
+                </Button>
+              </Minter>
+            </InfoCol>
+          </InfoRow>
+        </MintSection>
+
+        <InfoDivider />
+        <InfoRow>
+          <InfoCol>
+            <Info>
+              Your Contributions: <Red>3 $ALY</Red>
+            </Info>
+          </InfoCol>
+          <InfoCol>
+            <ActionsList>
+              <Button variant="outlined" color="black">
+                Purify
+              </Button>
+              <Button
+                onClick={() => setContributeModal(true)}
+                variant="contained"
+                color="black"
+              >
+                Contribute
+              </Button>
+            </ActionsList>
+          </InfoCol>
+        </InfoRow>
+        <InfoRow>
+          <InfoCol>
+            <Info>
+              Your Endorsements: <Red>10 $ALY</Red>
+            </Info>
+          </InfoCol>
+          <InfoCol>
+            <ActionsList>
+              <Button variant="outlined" color="black">
+                Revoke
+              </Button>
+              <Button variant="contained" color="black">
+                Endorse
+              </Button>
+            </ActionsList>
+          </InfoCol>
+        </InfoRow>
+        <InfoRow>
+          <InfoCol>
+            <Info>
+              Secondary Market <Red>(SOON)</Red>
+            </Info>
+          </InfoCol>
+          <InfoCol>
+            <ActionsList>
+              <Button disabled variant="outlined" color="black">
+                Sell
+              </Button>
+              <Button disabled variant="contained" color="black">
+                Buy
+              </Button>
+            </ActionsList>
+          </InfoCol>
+        </InfoRow>
+      </Overlay>
+      <Modal
+        title="Contribute"
+        open={contributeModal}
+        onClose={() => setContributeModal(false)}
+      >
+        <ContributionForm />
+      </Modal>
     </BackerBuckPanelContainer>
   );
 };
