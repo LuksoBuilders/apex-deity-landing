@@ -7,6 +7,7 @@ import {
   BackerBuckPanel,
   FellowshipDescription,
   TabPanel,
+  ContributorsList,
 } from "../organisms";
 
 export const FellowshipDetails = () => {
@@ -20,7 +21,7 @@ export const FellowshipDetails = () => {
       <TabPanel
         tabs={[
           { label: "Description", content: <FellowshipDescription /> },
-          { label: "Contributors", content: <div>Hello world!</div> },
+          { label: "Contributors", content: <ContributorsList /> },
           { label: "Endorsers", content: <FellowshipDescription /> },
         ]}
       />
