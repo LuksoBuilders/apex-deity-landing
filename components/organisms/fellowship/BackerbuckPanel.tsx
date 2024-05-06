@@ -3,6 +3,9 @@ import { Button } from "../../molecules";
 import { Modal, ValueSelector } from "../general";
 import { useState } from "react";
 import { ContributionForm } from "./ContributionForm";
+import { PurificatioForm } from "./PurificatioForm";
+import { EndorsementForm } from "./EndorsementForm";
+import { EndorsementRevocationForm } from "./EndorsementRevocationForm";
 
 const BackerBuckPanelContainer = styled.div`
   border: 1px solid #f4f4f4;
@@ -75,6 +78,9 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
   const [mintValue, setMintValue] = useState(0);
 
   const [contributeModal, setContributeModal] = useState(false);
+  const [purifyModal, setPurifyModal] = useState(false);
+  const [endorsementModal, setEndorsementModal] = useState(false);
+  const [revokationModal, setRevokeModal] = useState(false);
 
   return (
     <BackerBuckPanelContainer>
@@ -123,7 +129,11 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
           </InfoCol>
           <InfoCol>
             <ActionsList>
-              <Button variant="outlined" color="black">
+              <Button
+                onClick={() => setPurifyModal(true)}
+                variant="outlined"
+                color="black"
+              >
                 Purify
               </Button>
               <Button
@@ -144,10 +154,18 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
           </InfoCol>
           <InfoCol>
             <ActionsList>
-              <Button variant="outlined" color="black">
+              <Button
+                onClick={() => setRevokeModal(true)}
+                variant="outlined"
+                color="black"
+              >
                 Revoke
               </Button>
-              <Button variant="contained" color="black">
+              <Button
+                onClick={() => setEndorsementModal(true)}
+                variant="contained"
+                color="black"
+              >
                 Endorse
               </Button>
             </ActionsList>
@@ -177,6 +195,27 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
         onClose={() => setContributeModal(false)}
       >
         <ContributionForm />
+      </Modal>
+      <Modal
+        title="Purification"
+        open={purifyModal}
+        onClose={() => setPurifyModal(false)}
+      >
+        <PurificatioForm />
+      </Modal>
+      <Modal
+        title="Endorsement"
+        open={endorsementModal}
+        onClose={() => setEndorsementModal(false)}
+      >
+        <EndorsementForm />
+      </Modal>
+      <Modal
+        title="Endorsement Revocation"
+        open={revokationModal}
+        onClose={() => setRevokeModal(false)}
+      >
+        <EndorsementRevocationForm />
       </Modal>
     </BackerBuckPanelContainer>
   );

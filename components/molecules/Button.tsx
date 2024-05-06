@@ -15,6 +15,7 @@ export interface ButtonContainerProps {
 
 const buttonStyles = css<ButtonContainerProps>`
   /* Your existing styles */
+  transition: 200ms;
 
   /* New disabled styles */
   ${({ disabled }) =>
@@ -34,6 +35,8 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
         : "#1E1E1E"
       : "white"};
 
+  transition: 200ms;
+
   border-style: solid;
   border-width: ${({ variant, theme }) =>
     variant === "contained" ? "2px" : "2px"};
@@ -51,7 +54,7 @@ const ButtonContainer = styled.a<ButtonContainerProps>`
 
   display: inline-block;
   min-width: ${({ $fullwidth }) => ($fullwidth ? "100%" : "200px")};
-  padding: ${({ size }) => (size === "standard" ? "8px" : "4px")};
+  padding: ${({ size }) => (size === "standard" ? "8px" : "4px 8px")};
   text-align: center;
   font-size: ${({ size }) => (size === "standard" ? "19px" : "17px")};
   font-weight: 500;
@@ -75,6 +78,8 @@ const ButtonLink = styled(Link)<ButtonContainerProps>`
         ? theme.primary
         : "#1E1E1E"
       : "white"};
+
+  transition: 200ms;
 
   border-style: solid;
   border-width: ${({ variant, theme }) =>

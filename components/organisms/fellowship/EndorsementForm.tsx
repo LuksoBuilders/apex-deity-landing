@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Button } from "../../molecules";
 import { ValueSelector } from "../general";
 
-const ContributionFormContainer = styled.div``;
+const EndorsementFormContainer = styled.div``;
 
-const ContributionContent = styled.div`
+const EndorsementContent = styled.div`
   padding: 1em;
 `;
 
@@ -14,7 +14,7 @@ const Info = styled.p`
   margin-bottom: 0.5em;
 `;
 
-const ContributionSection = styled.div`
+const EndorsementSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +35,7 @@ const Red = styled.span`
   //font-style: italic;
 `;
 
-const ContributionAction = styled.div`
+const EndorsementAction = styled.div`
   //border-top: 1px solid #383838;
   margin-top: 0;
   display: flex;
@@ -43,31 +43,26 @@ const ContributionAction = styled.div`
   padding: 0.5em 1em;
 `;
 
-interface ContributionFormProps {}
+interface EndorsementFormProps {}
 
-export const ContributionForm = ({}: ContributionFormProps) => {
+export const EndorsementForm = ({}: EndorsementFormProps) => {
   const [amount, setAmount] = useState(0);
 
   const available = 5;
 
   return (
-    <ContributionFormContainer>
-      <ContributionContent>
+    <EndorsementFormContainer>
+      <EndorsementContent>
         <Info>
-          Contribution is the act of <b>burning</b> tokens for the sake of the
-          fellowship. Burning a backerbuck <b>reduces the supply</b> of the
-          fellowship, so it makes them more valuable.
+          Endorsement is the basic action that you can do with your{" "}
+          <b>BackerBucks</b>. Artisan will provide some benefits for their
+          endorsers.
         </Info>
         <Info>
-          Contribution is the ultimate support of a fellowship, so{" "}
-          <b>Artisans</b> provides the best benefits for their contributors.
+          Tokens you endorse, can be revoked and <b>you can</b> get your orginal
+          BackerBucks back.
         </Info>
-        <Info>
-          When you contribute a backerbuck, you will receive a{" "}
-          <b>soulbounded contribution token</b>, and{" "}
-          <b>you will lose the orginal backerbuck.</b>
-        </Info>
-        <ContributionSection>
+        <EndorsementSection>
           <BalanceInfo>
             Your Balance: <Red>{available} $ALY</Red>
           </BalanceInfo>
@@ -76,19 +71,19 @@ export const ContributionForm = ({}: ContributionFormProps) => {
             value={amount}
             setValue={setAmount}
           />
-        </ContributionSection>
-      </ContributionContent>
+        </EndorsementSection>
+      </EndorsementContent>
 
-      <ContributionAction>
+      <EndorsementAction>
         <Button
           size="small"
           disabled={amount <= 0}
           color="primary"
           variant="contained"
         >
-          {amount <= 0 ? `Contribute` : `Contribute ${amount} $ALY`}
+          {amount <= 0 ? `Endorse` : `Endorse ${amount} $ALY`}
         </Button>
-      </ContributionAction>
-    </ContributionFormContainer>
+      </EndorsementAction>
+    </EndorsementFormContainer>
   );
 };
