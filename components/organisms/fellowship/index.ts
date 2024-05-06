@@ -4,3 +4,4 @@ export * from "./FellowshipInfo";
 export * from "./BackerbuckPanel";
 export * from "./FellowshipDescription";
 export * from "./ContributorsList";
+export * from "./EndorsersList";
