@@ -3,11 +3,18 @@ import { Button } from "../../molecules";
 import { UserMenu } from "../user";
 
 const SideMenuContainer = styled.div`
-  padding-top: 78px;
+  position: relative;
   padding: 32px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  //display: flex;
+  //justify-content: center;
+  //flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  width: 100%;
+  --code-font-size: 14px;
+  --code-line-height: 1.4;
+  --scroll-bar-color: #c5c5c5;
+  --scroll-bar-bg-color: #f6f6f6;
 `;
 
 const Spacing = styled.div`
@@ -30,16 +37,16 @@ export const SideMenu = () => {
     <SideMenuContainer>
       <UserMenu />
       <SuperSpacing></SuperSpacing>
-      <Button color="black" variant="outlined">
+      <Button fullwidth color="black" variant="outlined">
         <ButtonText>Home</ButtonText>
       </Button>
       <Spacing />
-      <Button color="black" variant="outlined">
+      <Button fullwidth color="black" variant="outlined">
         <ButtonText>Learning Curve</ButtonText>
       </Button>
       <Spacing />
 
-      <Button color="black" variant="outlined">
+      <Button fullwidth color="black" variant="outlined">
         <WTF> Holy Shit!</WTF>
       </Button>
     </SideMenuContainer>

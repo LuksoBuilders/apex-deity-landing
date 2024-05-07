@@ -177,7 +177,12 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
           $isLast={isLast}
         >
           <FellowshipItemLayout>
-            <CircledImage width="30%" squared src={fellowship.logo} />
+            <CircledImage
+              width="200px"
+              height="200px"
+              squared
+              src={fellowship.logo}
+            />
             <FellowshipItemInformation>
               <FellowshipItemMainInfo>
                 {fellowship.name} - {fellowship.symbol}
@@ -197,7 +202,10 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
                   Founder: <Red>{fellowship.founder.name}</Red>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
-                  Total Supply: <Red>1000</Red>
+                  Total Supply:{" "}
+                  <Red>
+                    {ethers.utils.formatUnits(fellowship.totalSupply, 1)}
+                  </Red>
                 </FellowshipItemSecondaryInfo>
               </FellowshipItemSecondaryInfoSection>
             </FellowshipItemInformation>

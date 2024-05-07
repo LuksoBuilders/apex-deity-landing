@@ -5,13 +5,21 @@ import { Spacing, CenteredDiv } from "../../atoms";
 import { Button, SidebarList } from "../../molecules";
 import { UserUPBasicInfo } from "./UserUPBasicInfo";
 import { UserDeitiesSidebarMenu } from "./UserDeitiesSidebarMenu";
+import { UserFellowshipsSidebarMenu } from "./UserFellowshipsSidebarMenu";
 import { useDeities } from "../../hooks/useDeities";
 
 const UserMenuContainer = styled.div`
   width: 100%;
+  //position: relative;
+  //top: 0px;
+  //background-color: green;
 `;
 
-const ConnectedMenuContainer = styled.div``;
+const ConnectedMenuContainer = styled.div`
+  //height: 1000px;
+  //position: absolute;
+  //background-color: red;
+`;
 
 export const UserMenu = () => {
   const deities = useDeities([0, 78]);
@@ -38,6 +46,8 @@ export const UserMenu = () => {
       {connected ? (
         <ConnectedMenuContainer>
           <UserUPBasicInfo userAddress={userAddress} />
+          <Spacing spacing="3em" />
+          <UserFellowshipsSidebarMenu />
           <Spacing spacing="3em" />
           <UserDeitiesSidebarMenu deities={Object.values(deities.data)} />
           <Button href="/found" fullwidth variant="contained" color="black">

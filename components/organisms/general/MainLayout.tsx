@@ -12,10 +12,11 @@ const AppContainer = styled.div`
 `;
 
 const SidePanel = styled.div`
-  min-height: 100vh;
+  //min-height: 100vh;
   background-image: url("/background.png");
   background-size: 600px 2546px;
   border-right: 1px solid #c8c8c8;
+  position: relative;
 `;
 
 const SidePanelOverlay = styled.div`

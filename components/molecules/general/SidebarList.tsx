@@ -47,9 +47,9 @@ export const SidebarList = ({
     <SidebarListContainer>
       <ListHeader>
         <ListTitle>{title}</ListTitle>
-        <ListNav href={allRoute}>
+        {/*<ListNav href={allRoute}>
           See All {more > 0 ? `(+${more})` : ""}{" "}
-        </ListNav>
+  </ListNav>*/}
       </ListHeader>
       <ListContent>{children}</ListContent>
     </SidebarListContainer>
