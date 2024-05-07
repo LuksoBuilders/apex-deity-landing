@@ -19,3 +19,5 @@ export * from "./HolyShit";
 
 export * from "./general";
 export * from "./fellowship";
+
+export * from "./deitiy";

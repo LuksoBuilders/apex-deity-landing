@@ -5,3 +5,4 @@ export * from "./BackerbuckPanel";
 export * from "./FellowshipDescription";
 export * from "./ContributorsList";
 export * from "./EndorsersList";
+export * from "./FellowshipsList";

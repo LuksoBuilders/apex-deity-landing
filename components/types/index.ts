@@ -29,6 +29,7 @@ export interface UPBasicInfo {
 
 export interface Fellowship {
   address: string;
+  initialized?: boolean;
   endorsementAddress: string;
   contributeAddress: string;
   logo: string;
