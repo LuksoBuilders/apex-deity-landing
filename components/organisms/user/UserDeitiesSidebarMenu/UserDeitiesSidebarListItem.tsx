@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import { Deity } from "../../../types";
+import Link from "next/link";
+import { ipfsURLtoNormal } from "../../../utils";
+import { Deity } from "../../../types/remoteTypes";
+import { ethers } from "ethers";
 
-const UserDeitiesSidebarListItemContainer = styled.div`
+const UserDeitiesSidebarListItemContainer = styled(Link)`
   display: flex;
   width: 100%;
 `;
@@ -90,16 +93,22 @@ interface UserDeitiesSidebarListItemProps {
 export const UserDeitiesSidebarListItem = ({
   deity,
 }: UserDeitiesSidebarListItemProps) => {
+  const availableSlots = deity.slots.filter(
+    (slot) => Number(slot.usedAt) * 1000 < Number(new Date()) - 7 * 24 * 1000
+  );
+
   return (
-    <UserDeitiesSidebarListItemContainer>
+    <UserDeitiesSidebarListItemContainer href={`/deities/${deity.id}`}>
       <ImageSection>
-        <DeityImage src={deity.image} />
+        <DeityImage
+          src={ipfsURLtoNormal(String(deity.metadata?.images?.[0]?.[3]?.url))}
+        />
       </ImageSection>
       <InfoSection>
         <MainRow>
           <MainRowPrimary>
             <DeityTitle>
-              {deity.tier.toUpperCase()}. {deity.name}
+              {deity.tier.toUpperCase()}. {deity.metadata?.name}
             </DeityTitle>
             <DeityLevel>{deity.level}</DeityLevel>
           </MainRowPrimary>
@@ -111,23 +120,26 @@ export const UserDeitiesSidebarListItem = ({
         </MainRow>
         <InfoRow>
           <InfoItem>
-            Slots: <Important>{deity.availableSlots}</Important>/{deity.slots}
+            Slots: <Important>{availableSlots.length}</Important>/
+            {deity.slots.length}
           </InfoItem>
           <InfoItem>
-            <Important>{deity.fellowships}</Important> FSP
+            <Important>{deity.portfolio.length}</Important> FSP
           </InfoItem>
         </InfoRow>
 
-        <InfoRow>
-          <InfoItem>
-            Rank: <Important>{deity.rank}</Important>
-          </InfoItem>
-          <InfoItem>
-            <Important>
-              <Red>{deity.harvestableAmount} $LYX</Red>
-            </Important>
-          </InfoItem>
-        </InfoRow>
+        {
+          <InfoRow>
+            <InfoItem>
+              Rank: <Important>{/*deity.rank*/}N/A</Important>
+            </InfoItem>
+            <InfoItem>
+              <Important>
+                <Red>{ethers.utils.formatEther(deity.withdrawable)} $LYX</Red>
+              </Important>
+            </InfoItem>
+          </InfoRow>
+        }
       </InfoSection>
     </UserDeitiesSidebarListItemContainer>
   );

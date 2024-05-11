@@ -33,8 +33,6 @@ export const UniversalProfileInput = ({
 }: UniversalProfileInputProps) => {
   const profile = useUPBasicInfo(address);
 
-  console.log(label);
-
   const renderProfile = () => {
     if (profile.loading)
       return (

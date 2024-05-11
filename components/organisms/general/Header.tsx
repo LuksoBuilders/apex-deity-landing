@@ -27,7 +27,7 @@ const Container = styled.div<ContainerProps>`
 
 const Logo = styled.a`
   font-size: 2em;
-  font-weight: 700;
+  font-weight: 900;
   color: ${({ theme }) => theme.primary};
 `;
 

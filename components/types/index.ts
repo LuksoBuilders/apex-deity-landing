@@ -40,3 +40,19 @@ export interface Fellowship {
   mintPrice: ethers.BigNumber;
   totalSupply: ethers.BigNumber;
 }
+
+export interface User extends UPBasicInfo {
+  //id: string;
+  //address: string;
+  //fellowships: Array<Fellowship>;
+  //deities: Array<Deity>;
+  //backerBuck: Array<BackerBuck>;
+}
+
+export interface BalanceItem {
+  id: string;
+  fellowship: Fellowship;
+  balance: number;
+  endorsements: number;
+  contributions: number;
+}

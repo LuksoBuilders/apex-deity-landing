@@ -5,6 +5,8 @@ import { lightTheme } from "../components/theme";
 import Head from "next/head";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { ExtentionProvider } from "../components/hooks/useExtension";
+import { client } from "../components/client";
+import { ApolloProvider } from "@apollo/client";
 
 declare global {
   interface Window {
@@ -24,9 +26,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         />{" "}
       </Head>
 
-      <ThemeProvider theme={lightTheme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <ApolloProvider client={client}>
+        <ExtentionProvider>
+          <ThemeProvider theme={lightTheme}>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </ExtentionProvider>
+      </ApolloProvider>
     </>
   );
 }

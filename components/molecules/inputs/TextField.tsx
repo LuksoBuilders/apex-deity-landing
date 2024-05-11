@@ -88,8 +88,6 @@ export const TextField = ({
     }
   }, [value]);
 
-  console.log(helperText, label);
-
   return (
     <TextFieldContainer
       $isError={error}

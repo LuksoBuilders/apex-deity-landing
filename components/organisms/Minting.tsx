@@ -139,10 +139,6 @@ export const Minting = () => {
     setCTierAmount(0);
   };
 
-  const one = numberToBytes32(1);
-  console.log(one);
-  console.log(bytes32ToNumber(one));
-
   const {
     isConnected,
     connectedAccount,

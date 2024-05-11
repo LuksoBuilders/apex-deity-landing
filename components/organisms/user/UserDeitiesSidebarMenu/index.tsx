@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { SidebarList } from "../../../molecules";
 
-import { Deity } from "../../../types";
+import { Deity } from "../../../types/remoteTypes";
 import { useDeities } from "../../../hooks/useDeities";
 import { UserDeitiesSidebarListItem } from "./UserDeitiesSidebarListItem";
 import { SidebarListItem } from "../../../molecules/general/SidebarListItem";
