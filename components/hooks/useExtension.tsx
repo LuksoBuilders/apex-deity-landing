@@ -4,6 +4,7 @@ import { DataProvider } from "./useData";
 
 import ApexDeities from "../abis/ApexDeities.json";
 import HolyShit from "../abis/HolyShit.json";
+import ArtisanAlly from "../abis/ArtisanAlly.json";
 
 interface ExtentionContextType {
   provider: ethers.providers.Provider | null;
@@ -20,9 +21,14 @@ interface ExtentionContextType {
   shit: (tokenId: number) => Promise<void>;
   batchShit: (tokenIds: Array<number>) => Promise<void>;
   mint: (order: Array<number>, value: ethers.BigNumber) => Promise<void>;
+  foundFellowship: (
+    deity: number,
+    slot: number,
+    artisan: string
+  ) => Promise<void>;
 }
 
-function bytes32ToNumber(bytes: string): bigint {
+export function bytes32ToNumber(bytes: string): bigint {
   // Ensure the input string represents a valid bytes32 (64 characters)
   if (bytes.length !== 66) {
     throw new Error("Invalid bytes32 format");
@@ -79,7 +85,7 @@ const mainnetContractAddresses = {
 const testnetContractAddresses = {
   apexDeities: "0xb4E32a20aa27B5891Bfa592c392c9858A1DD3945",
   holyShit: "0xAd28D1A66597f0EC79829A02Db9CCCf361f2b8Ac",
-  //holyShit: "",
+  artisanAlly: "0x440a30FeC7a10d06D7A1c9391B27402cE9f8AbA8",
   //holyShit: "",
   //holyShit: "",
   //holyShit: "",
@@ -104,6 +110,7 @@ const ExtentionContext = createContext<ExtentionContextType>({
   shit: async (tokenId: number) => {},
   batchShit: async (tokenIds: Array<number>) => {},
   mint: async (order: Array<Number>, value: ethers.BigNumber) => {},
+  foundFellowship: async (deity: number, slot: number, artisan: string) => {},
 });
 
 export const useExtention = () => {
@@ -423,6 +430,30 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const foundFellowship = async (
+    deity: number,
+    slot: number,
+    artisan: string
+  ) => {
+    if (signer) {
+      const artisanAlly = new ethers.Contract(
+        targetContractAddresses.artisanAlly,
+        ArtisanAlly,
+        signer
+      );
+
+      try {
+        const tx = await artisanAlly.foundFellowship(deity, slot, artisan);
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   return (
     <ExtentionContext.Provider
       value={{
@@ -440,6 +471,7 @@ export const ExtentionProvider = ({ children }) => {
         batchShit,
         lastShitTime,
         shitBalance,
+        foundFellowship,
       }}
     >
       <DataProvider>{children}</DataProvider>

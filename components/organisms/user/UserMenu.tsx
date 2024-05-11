@@ -83,7 +83,7 @@ interface ConnectedMenuProps {
 export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
   const { data, loading, error } = useQuery(GET_DEITIES, {
     variables: {
-      userAddress: "0x117e85ba40b00bf6647f60ebd023992932e2acb6",
+      userAddress: userAddress,
     },
   });
 
@@ -100,7 +100,7 @@ export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
       pV +
       deity.slots.filter(
         (slot) =>
-          Number(slot.usedAt) * 1000 < Number(new Date()) - 7 * 24 * 1000
+          Number(slot.usedAt) * 1000 < Number(new Date()) - 7 * 24 * 3600 * 1000
       ).length
     );
   }, 0);

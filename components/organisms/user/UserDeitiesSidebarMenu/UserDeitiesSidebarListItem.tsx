@@ -94,7 +94,8 @@ export const UserDeitiesSidebarListItem = ({
   deity,
 }: UserDeitiesSidebarListItemProps) => {
   const availableSlots = deity.slots.filter(
-    (slot) => Number(slot.usedAt) * 1000 < Number(new Date()) - 7 * 24 * 1000
+    (slot) =>
+      Number(slot.usedAt) * 1000 < Number(new Date()) - 7 * 24 * 3600 * 1000
   );
 
   return (

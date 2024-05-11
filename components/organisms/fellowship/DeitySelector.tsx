@@ -1,17 +1,74 @@
 import styled from "styled-components";
 import { BounceLoader } from "react-spinners";
 import { useState, useEffect } from "react";
+import { useQuery, gql } from "@apollo/client";
 
-import { Deity } from "../../types";
+import { Deity } from "../../types/remoteTypes";
+import { ipfsURLtoNormal } from "../../utils";
 
 import { useDeities } from "../../hooks/useDeities";
 import { CenteredDiv } from "../../atoms";
 
+const GET_DEITIES = gql`
+  query userDeities($userAddress: String!) {
+    userDeities(userAddress: $userAddress) {
+      id
+      level
+      metadata {
+        assets {
+          fileType
+          url
+          verificationData
+          verificationFunction
+        }
+        attributes {
+          key
+          type
+          value
+        }
+        description
+        images {
+          height
+          url
+          verificationData
+          verificationFunction
+          width
+        }
+        links {
+          title
+          url
+        }
+        mythology
+        name
+        story
+      }
+      owner {
+        id
+      }
+      portfolio {
+        id
+      }
+      slots {
+        id
+        index
+        usedAt
+      }
+      tier
+      tokenIdNumber
+      withdrawable
+      xp
+    }
+  }
+`;
+
 const DeitySelectorContainer = styled.div``;
 
 const DeitiesListContainer = styled.div`
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   display: flex;
+  width: 100%;
+  overflow-y: auto;
+  padding-bottom: 1em;
 `;
 
 interface DeityItemProps {
@@ -28,6 +85,7 @@ const DeityItemContainer = styled.div<DeityItemProps>`
   box-sizing: border-box;
   transition: 200ms;
   position: relative;
+  overflow-x: auto;
   &:hover {
     border: 2px solid
       ${(props) => (!props.$isDisabled ? " #393939" : "#f0f0f0")};
@@ -84,46 +142,57 @@ const SelectedDeityInfo = styled.p``;
 
 const getDirectFeeBasedOnTier = (tier: string) => {
   switch (tier) {
-    case "s":
+    case "S":
       return 2;
-    case "a":
+    case "A":
       return 1.5;
-    case "b":
+    case "B":
       return 1;
-    case "c":
+    case "C":
       return 0.5;
   }
 };
 
 interface DeitySelectorProps {
-  selectedDeity: number | null;
+  selectedDeity: Deity | null;
   setSelectedDeity: Function;
+  userAddress: string;
 }
 
 export const DeitySelector = ({
   selectedDeity,
   setSelectedDeity,
+  userAddress,
 }: DeitySelectorProps) => {
-  const deities = useDeities([0, 78]);
+  const { data, loading, error } = useQuery(GET_DEITIES, {
+    variables: {
+      userAddress: userAddress,
+    },
+  });
 
-  if (deities.loading)
+  if (loading)
     return (
       <CenteredDiv>
         <BounceLoader />
       </CenteredDiv>
     );
 
-  const userDeities = Object.values(deities.data);
+  const userDeities = data.userDeities;
 
   const renderDeityItem = (deity: Deity) => {
-    const isSelected = deity.id === selectedDeity;
-    const isDisabled = deity.availableSlots === 0;
+    const isSelected = deity.id === selectedDeity?.id;
+    const availableSlots = deity.slots.filter(
+      (slot) =>
+        Number(slot.usedAt) * 1000 < Number(new Date()) - 7 * 24 * 3600 * 1000
+    ).length;
+
+    const isDisabled = availableSlots === 0;
 
     return (
       <DeityItemContainer
         onClick={() => {
           if (!isDisabled) {
-            setSelectedDeity(deity.id);
+            setSelectedDeity(deity);
           }
         }}
         $isSelected={isSelected}
@@ -131,25 +200,29 @@ export const DeitySelector = ({
       >
         {isDisabled && <DisabledOverlay />}
         <DeityImageHolder>
-          <DeityItemImage src={deity.image} />
+          <DeityItemImage
+            src={ipfsURLtoNormal(String(deity.metadata?.images?.[0]?.[3]?.url))}
+          />
         </DeityImageHolder>
         <DeityItemInfo $isSelected={isSelected} $isDisabled={isDisabled}>
           <DeityItemName>
-            {deity.tier.toUpperCase()}. {deity.name}
+            {deity.tier.toUpperCase()}. {deity.metadata?.name}
           </DeityItemName>
           <DeityItemSlots>
-            Slots: <Important>{deity.availableSlots}</Important>/{deity.slots}
+            Slots: <Important>{availableSlots}</Important>/{deity.slots.length}
           </DeityItemSlots>
         </DeityItemInfo>
       </DeityItemContainer>
     );
   };
 
+  const selectedDeityItem = selectedDeity;
+
   return (
     <DeitySelectorContainer>
       <DeitiesListContainer>
-        {userDeities.map((deity) => (
-          <div key={deity.name}>{renderDeityItem(deity)}</div>
+        {userDeities?.map((deity: Deity) => (
+          <div key={deity.id}>{renderDeityItem(deity)}</div>
         ))}
       </DeitiesListContainer>
 
@@ -160,15 +233,13 @@ export const DeitySelector = ({
           </NotSelectedDeity>
         ) : (
           <SelectedDeityInfo>
-            Since <Important>{deities.data[selectedDeity].name}</Important> is{" "}
-            <Important>
-              {deities.data[selectedDeity].tier.toUpperCase()}{" "}
-            </Important>
+            Since <Important>{selectedDeityItem?.metadata?.name}</Important> is{" "}
+            <Important>{selectedDeityItem?.tier.toUpperCase()} </Important>
             tier, it will receive{" "}
             <Important>
               {" "}
-              {getDirectFeeBasedOnTier(deities.data[selectedDeity].tier)}%
-              direct fee{" "}
+              {getDirectFeeBasedOnTier(String(selectedDeityItem?.tier))}% direct
+              fee{" "}
             </Important>
             from this fellowship.
           </SelectedDeityInfo>

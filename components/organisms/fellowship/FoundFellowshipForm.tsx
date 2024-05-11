@@ -1,13 +1,15 @@
 import { useState } from "react";
 import styled from "styled-components";
-
+import { ethers } from "ethers";
 import { Spacing } from "../../atoms";
 import { Button } from "../../molecules";
+import { Deity } from "../../types/remoteTypes";
+import { useApolloClient } from "@apollo/client";
 
-import { UniversalProfileInput } from "../general";
+import { UniversalProfileInput, Modal } from "../general";
 
 import { DeitySelector } from "./DeitySelector";
-import { useUPBasicInfo } from "../../hooks";
+import { useExtention, bytes32ToNumber } from "../../hooks/useExtension";
 
 const FoundFellowshipFormContainer = styled.div`
   //border: 1px solid #f1f1f1;
@@ -46,14 +48,36 @@ const ActionButtonContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const SuccessMessageContainer = styled.div`
+  padding: 1em;
+`;
+
 interface FoundFellowshipFormProps {}
 
 export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
-  const [selectedDeity, setSelectedDeity] = useState<number | null>(null);
-  const [universalProfileAddress, setUPA] = useState("");
-  const artisan = useUPBasicInfo(universalProfileAddress);
+  const client = useApolloClient();
+  const [founding, setFounding] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const { connectedAccount, foundFellowship } = useExtention();
 
-  const canFound = artisan.data && selectedDeity !== null;
+  const [selectedDeity, setSelectedDeity] = useState<Deity | null>(null);
+  const [universalProfileAddress, setUPA] = useState("");
+
+  const canFound =
+    ethers.utils.isAddress(universalProfileAddress.toLowerCase()) &&
+    selectedDeity !== null;
+
+  if (!connectedAccount) {
+    return (
+      <FoundFellowshipFormContainer>
+        <Title>You are not connected</Title>
+        <Paragraph>
+          For founding a Fellowship you need to connect with your Universal
+          Profile first.
+        </Paragraph>
+      </FoundFellowshipFormContainer>
+    );
+  }
 
   return (
     <FoundFellowshipFormContainer>
@@ -78,6 +102,7 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
       <Spacing spacing="2em" />
 
       <DeitySelector
+        userAddress={connectedAccount}
         selectedDeity={selectedDeity}
         setSelectedDeity={setSelectedDeity}
       />
@@ -92,10 +117,50 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
       <Spacing spacing="5em" />
 
       <ActionButtonContainer>
-        <Button disabled={!canFound} variant="contained" color="primary">
-          Found
+        <Button
+          onClick={async () => {
+            if (selectedDeity) {
+              const availableSlots = selectedDeity.slots.find(
+                (slot) =>
+                  Number(slot.usedAt) * 1000 <
+                  Number(new Date()) - 7 * 24 * 3600 * 1000
+              );
+              if (availableSlots) {
+                try {
+                  setFounding(true);
+                  await foundFellowship(
+                    Number(selectedDeity.tokenIdNumber),
+                    Number(availableSlots.index),
+                    universalProfileAddress
+                  );
+                  await client.resetStore();
+                  setSuccess(true);
+                  setSelectedDeity(null);
+                  setUPA("");
+                  setFounding(false);
+                } catch (err) {
+                  console.error(err);
+                  setFounding(false);
+                }
+              }
+            }
+          }}
+          disabled={!canFound || founding}
+          variant="contained"
+          color="primary"
+        >
+          {founding ? "Founding ..." : "Found"}
         </Button>
       </ActionButtonContainer>
+      <Modal
+        title="Founding Success"
+        open={success}
+        onClose={() => setSuccess(false)}
+      >
+        <SuccessMessageContainer>
+          <Paragraph>Fellowship got founded successfully.</Paragraph>
+        </SuccessMessageContainer>
+      </Modal>
     </FoundFellowshipFormContainer>
   );
 };
