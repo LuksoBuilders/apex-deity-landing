@@ -67,25 +67,10 @@ const mainnetContractAddresses = {
   holyShit: "0x2fF8dF5F47Cd67AfE425a2acb28d6506838495Ee",
 };
 
-//Signer address is 0x4cB317AFAB0292D4fF48e158e006C8bC78547173
-//FellowshipLogic contract deployed at: 0xA00ec8D1B3c689701C95451cb5c9115170671082
-//FellowshipBeacon contract deployed at: 0x0110bCF399a2f963597af3eAeCa03409850130A0
-//BeaconProxyFactory contract deployed at: 0x521Dc29641596fE497985cC2ed6435fe9217BB98
-//LevelManager contract deployed at:  0xa33aD2E0984D8bAa596D12937a9D68dc9C68Bd9d
-//SlotManager contract deployed at:  0x619D964e41bf82e42322319bF0480925EEEc385a
-//EndorsementTokenLogic contract deployed at: 0x79d110E7BC37120e22FF1a783148665Ca51C0d2F
-//EndorsementBeacon contract deployed at: 0xd95DA2956C1AB576Da986b33A9C0fAe1337918d6
-//ContributionTokenLogic contract deployed at: 0x83C02bD2C3e7E100920f70635d4526C9A7fC891F
-//ContributionTokenBeacon contract deployed at: 0xb6F9Cbc1ecDaec93E28fa4bA1d687aA2B76130CF
-//FeeCollector contract deployed at:  0x4c0aBBef8584e3c9abb39dBA62991749a0F966AC
-//Fee collector added as the experience manipulator
-//ArtisanAlly contract deployed at:  0x440a30FeC7a10d06D7A1c9391B27402cE9f8AbA8
-//ArtisanAlly added as the Slot Manipulator
-
 const testnetContractAddresses = {
   apexDeities: "0xb4E32a20aa27B5891Bfa592c392c9858A1DD3945",
   holyShit: "0xAd28D1A66597f0EC79829A02Db9CCCf361f2b8Ac",
-  artisanAlly: "0x440a30FeC7a10d06D7A1c9391B27402cE9f8AbA8",
+  artisanAlly: "0x83A86e0531DA80Bb4D33DC11276AF793BD52323C",
   //holyShit: "",
   //holyShit: "",
   //holyShit: "",

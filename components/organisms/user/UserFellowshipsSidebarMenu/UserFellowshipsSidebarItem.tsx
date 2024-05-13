@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Fellowship } from "../../../types";
+import { Fellowship } from "../../../types/remoteTypes";
 import { ethers } from "ethers";
 import Link from "next/link";
 
@@ -93,7 +93,7 @@ interface UserFellowshipsSidebarListItemProps {
 export const UserFellowshipsSidebarListItem = ({
   fellowship,
 }: UserFellowshipsSidebarListItemProps) => {
-  if (!fellowship.initialized)
+  if (!fellowship.metadata)
     return (
       <div>
         <UserFellowshipsSidebarListItemContainer
@@ -111,7 +111,7 @@ export const UserFellowshipsSidebarListItem = ({
               <InfoItem>
                 Founder:{" "}
                 <Important>
-                  <Red>{fellowship.founder.name}</Red>
+                  <Red>{fellowship.founder.metadata?.name}</Red>
                 </Important>
               </InfoItem>
             </InfoRow>
@@ -119,8 +119,11 @@ export const UserFellowshipsSidebarListItem = ({
         </UserFellowshipsSidebarListItemContainer>
       </div>
     );
-  return (
-    <UserFellowshipsSidebarListItemContainer
+  return <div>Intiaialized Fellowship</div>;
+};
+
+{
+  /* <UserFellowshipsSidebarListItemContainer
       href={`/fellowship/${fellowship.address}`}
     >
       <ImageSection>
@@ -158,6 +161,5 @@ export const UserFellowshipsSidebarListItem = ({
           </InfoItem>
         </InfoRow>
       </InfoSection>
-    </UserFellowshipsSidebarListItemContainer>
-  );
-};
+  </UserFellowshipsSidebarListItemContainer> */
+}

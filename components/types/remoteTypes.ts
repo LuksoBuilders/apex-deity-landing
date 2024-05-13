@@ -49,6 +49,7 @@ export interface User {
 export interface Fellowship {
   id: string;
   address: string;
+  metadata: string;
   contributionAddress: string;
   endorsementAddress: string;
   backerBucks: BackerBuck[];

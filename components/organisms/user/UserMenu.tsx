@@ -9,7 +9,7 @@ import { UserFellowshipsSidebarMenu } from "./UserFellowshipsSidebarMenu";
 import { useDeities } from "../../hooks/useDeities";
 import { useQuery, gql } from "@apollo/client";
 import { useExtention } from "../../hooks/useExtension";
-import { Deity, Slot } from "../../types/remoteTypes";
+import { Deity, Slot, Fellowship } from "../../types/remoteTypes";
 
 const GET_DEITIES = gql`
   query userDeities($userAddress: String!) {
@@ -63,6 +63,25 @@ const GET_DEITIES = gql`
   }
 `;
 
+const GET_FELLOWSHIPS = gql`
+  query userFellowships($userAddress: String!) {
+    userFellowships(userAddress: $userAddress) {
+      address
+      metadata
+      artisan {
+        id
+      }
+      founder {
+        id
+        tier
+        metadata {
+          name
+        }
+      }
+    }
+  }
+`;
+
 const UserMenuContainer = styled.div`
   width: 100%;
   //position: relative;
@@ -81,20 +100,26 @@ interface ConnectedMenuProps {
 }
 
 export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
-  const { data, loading, error } = useQuery(GET_DEITIES, {
+  const UserDeities = useQuery(GET_DEITIES, {
     variables: {
       userAddress: userAddress,
     },
   });
 
-  if (loading)
+  const UserFellowships = useQuery(GET_FELLOWSHIPS, {
+    variables: {
+      userAddress: userAddress,
+    },
+  });
+
+  if (UserDeities.loading || UserFellowships.loading)
     return (
       <CenteredDiv>
         <BounceLoader />
       </CenteredDiv>
     );
 
-  const deities: Array<Deity> = data.userDeities;
+  const deities: Array<Deity> = UserDeities.data.userDeities;
   const availableSlots = deities.reduce((pV, deity) => {
     return (
       pV +
@@ -104,12 +129,13 @@ export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
       ).length
     );
   }, 0);
+  const fellowships: Array<Fellowship> = UserFellowships.data.userFellowships;
 
   return (
     <ConnectedMenuContainer>
       <UserUPBasicInfo userAddress={userAddress} />
       <Spacing spacing="3em" />
-      <UserFellowshipsSidebarMenu />
+      <UserFellowshipsSidebarMenu fellowships={fellowships} />
       <Spacing spacing="3em" />
       <UserDeitiesSidebarMenu deities={deities} />
       <Button
