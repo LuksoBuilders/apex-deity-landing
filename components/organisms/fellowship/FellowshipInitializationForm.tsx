@@ -7,6 +7,7 @@ import { useUninitializedFellowhsip } from "../../hooks";
 import { BounceLoader } from "react-spinners";
 import { Spacing, CircledImage } from "../../atoms";
 import { TextField, Button } from "../../molecules";
+import { useExtention } from "../../hooks/useExtension";
 
 const FellowshipInitializationFormContainer = styled.div``;
 
@@ -55,6 +56,8 @@ interface FellowshipInitializationFormProps {}
 
 export const FellowshipInitializationForm =
   ({}: FellowshipInitializationFormProps) => {
+    const { initializeFellowship } = useExtention();
+
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [avatar, setAvatar] = useState<File>();
@@ -126,7 +129,6 @@ export const FellowshipInitializationForm =
                 setSymbol(v);
               }}
               label="Fellowship Symbol *"
-              error
               helperText="Usually 3 or 4 characters."
             />
           </Col>
@@ -143,7 +145,9 @@ export const FellowshipInitializationForm =
 
         <LogoFieldContainer>
           <Button
-            onChange={(e) => setAvatar(e.target.files?.[0])}
+            onChange={(e) => {
+              setAvatar(e.target.files?.[0]);
+            }}
             variant="contained"
             fileUploader
             color="black"
@@ -179,7 +183,20 @@ export const FellowshipInitializationForm =
         <Spacing spacing="2em" />
 
         <ActionButtonContainer>
-          <Button disabled={isDisbaled} variant="contained" color="primary">
+          <Button
+            onClick={() => {
+              initializeFellowship(
+                String(fellowshipAddress),
+                name,
+                symbol,
+                avatar,
+                description
+              );
+            }}
+            disabled={isDisbaled}
+            variant="contained"
+            color="primary"
+          >
             Initialize
           </Button>
         </ActionButtonContainer>

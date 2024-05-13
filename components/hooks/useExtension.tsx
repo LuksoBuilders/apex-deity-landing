@@ -1,10 +1,20 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DataProvider } from "./useData";
+import { LSPFactory } from "../lsp-tools";
+import { generateVerifiableURIFromIPFS } from "../utils";
 
 import ApexDeities from "../abis/ApexDeities.json";
 import HolyShit from "../abis/HolyShit.json";
 import ArtisanAlly from "../abis/ArtisanAlly.json";
+import Fellowship from "../abis//Fellowship.json";
+
+const testnetRPC = "https://4201.rpc.thirdweb.com";
+const mainnetRPC = "https://42.rpc.thirdweb.com";
+
+const targetRPC = testnetRPC;
+
+const targetChainId = 4201;
 
 interface ExtentionContextType {
   provider: ethers.providers.Provider | null;
@@ -25,6 +35,13 @@ interface ExtentionContextType {
     deity: number,
     slot: number,
     artisan: string
+  ) => Promise<void>;
+  initializeFellowship: (
+    fellowshiAddress: string,
+    fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string
   ) => Promise<void>;
 }
 
@@ -96,6 +113,13 @@ const ExtentionContext = createContext<ExtentionContextType>({
   batchShit: async (tokenIds: Array<number>) => {},
   mint: async (order: Array<Number>, value: ethers.BigNumber) => {},
   foundFellowship: async (deity: number, slot: number, artisan: string) => {},
+  initializeFellowship: async (
+    fellowshiAddress: string,
+    fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string
+  ) => {},
 });
 
 export const useExtention = () => {
@@ -148,13 +172,6 @@ export const ExtentionProvider = ({ children }) => {
     };
 
     getData();
-
-    const intervalId = setInterval(() => {
-      getData();
-    }, 100000); // 10 seconds in milliseconds
-
-    // Clear the interval when the component unmounts or when the dependencies change
-    return () => clearInterval(intervalId);
   }, [signer, connectedAccount, provider, refetchCounter]);
 
   useEffect(() => {
@@ -180,16 +197,13 @@ export const ExtentionProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const testnetRPC = "https://4201.rpc.thirdweb.com";
-    const mainnetRPC = "https://42.rpc.thirdweb.com";
-
     const connectProvider = async () => {
       const web3Provider =
         // @ts-ignore
         window.lukso && window.lukso.isUniversalProfileExtension
           ? // @ts-ignore
             new ethers.providers.Web3Provider(window.lukso)
-          : new ethers.providers.JsonRpcProvider(testnetRPC);
+          : new ethers.providers.JsonRpcProvider(targetRPC);
       // @ts-ignore
       setProvider(web3Provider);
       getAccounts(web3Provider);
@@ -439,6 +453,52 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const initializeFellowship = async (
+    fellowshiAddress: string,
+    fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string
+  ) => {
+    if (signer) {
+      const provider = targetRPC;
+
+      const lspFactory = new LSPFactory(provider, {
+        chainId: targetChainId,
+      });
+
+      const artisanAlly = new ethers.Contract(
+        fellowshiAddress,
+        Fellowship,
+        signer
+      );
+
+      try {
+        const metadata =
+          await lspFactory.LSP4DigitalAssetMetadata.uploadMetadata({
+            description: fellowshipDescription,
+            assets: [fellowshipLogo],
+            images: [fellowshipLogo],
+            links: [],
+          });
+
+        const verifiableURI = await generateVerifiableURIFromIPFS(metadata.url);
+
+        const tx = await artisanAlly.initialize(
+          fellowshipName,
+          fellowshipSymbol,
+          verifiableURI
+        );
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <ExtentionContext.Provider
       value={{
@@ -457,6 +517,7 @@ export const ExtentionProvider = ({ children }) => {
         lastShitTime,
         shitBalance,
         foundFellowship,
+        initializeFellowship,
       }}
     >
       <DataProvider>{children}</DataProvider>
