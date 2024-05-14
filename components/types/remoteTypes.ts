@@ -48,8 +48,11 @@ export interface User {
 
 export interface Fellowship {
   id: string;
+  name: string;
+  symbol: string;
   address: string;
   metadata: string;
+  info: LSP4Metadata | null;
   contributionAddress: string;
   endorsementAddress: string;
   backerBucks: BackerBuck[];

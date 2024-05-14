@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         const response = await saveFile(files.file);
         const { data } = response;
 
-        return res.send({ cid: data.Hash });
+        return res.send(data.Hash);
       });
     } catch (e) {
       console.log(e);

@@ -67,7 +67,27 @@ const GET_FELLOWSHIPS = gql`
   query userFellowships($userAddress: String!) {
     userFellowships(userAddress: $userAddress) {
       address
+      name
+      symbol
       metadata
+      info {
+        assets {
+          url
+        }
+        attributes {
+          key
+          type
+          value
+        }
+        description
+        images {
+          url
+        }
+        links {
+          title
+          url
+        }
+      }
       artisan {
         id
       }

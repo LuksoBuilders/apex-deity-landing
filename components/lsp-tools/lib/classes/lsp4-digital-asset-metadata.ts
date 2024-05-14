@@ -63,24 +63,20 @@ export class LSP4DigitalAssetMetadata {
     if (uploadOptions.url) {
       // TODO: implement simple HTTP upload
     } else {
-      uploadResponse = JSON.parse(
-        await ipfsUpload(
-          JSON.stringify(lsp4Metadata),
-          uploadOptions?.ipfsGateway
-        )
+      uploadResponse = await ipfsUpload(
+        JSON.stringify(lsp4Metadata),
+        uploadOptions?.ipfsGateway
       );
     }
 
     console.log(
       uploadResponse,
-      uploadResponse.cid ? "ipfs://" + uploadResponse.cid : "https upload TBD"
+      uploadResponse ? "ipfs://" + uploadResponse : "https upload TBD"
     );
 
     return {
       json: lsp4Metadata,
-      url: uploadResponse.cid
-        ? "ipfs://" + uploadResponse.cid
-        : "https upload TBD",
+      url: uploadResponse ? "ipfs://" + uploadResponse : "https upload TBD",
     };
   }
 

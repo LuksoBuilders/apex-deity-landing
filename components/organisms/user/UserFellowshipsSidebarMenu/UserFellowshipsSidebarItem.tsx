@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Fellowship } from "../../../types/remoteTypes";
 import { ethers } from "ethers";
 import Link from "next/link";
+import { ipfsURLtoNormal } from "../../../utils";
 
 const UserFellowshipsSidebarListItemContainer = styled(Link)`
   display: flex;
@@ -93,6 +94,8 @@ interface UserFellowshipsSidebarListItemProps {
 export const UserFellowshipsSidebarListItem = ({
   fellowship,
 }: UserFellowshipsSidebarListItemProps) => {
+  console.log(fellowship.info);
+
   if (!fellowship.metadata)
     return (
       <div>
@@ -119,47 +122,55 @@ export const UserFellowshipsSidebarListItem = ({
         </UserFellowshipsSidebarListItemContainer>
       </div>
     );
+
+  if (fellowship.info) {
+    return (
+      <UserFellowshipsSidebarListItemContainer
+        href={`/fellowship/${fellowship.address}`}
+      >
+        <ImageSection>
+          <FellowshipImage
+            src={ipfsURLtoNormal(fellowship.info.images[0]?.[0].url, 1)}
+          />
+        </ImageSection>
+        <InfoSection>
+          <MainRow>
+            <MainRowPrimary>
+              <FellowshipTitle>{fellowship.name}</FellowshipTitle>
+            </MainRowPrimary>
+          </MainRow>
+          <InfoRow>
+            <InfoItem>
+              Mint Price:{" "}
+              <Important>
+                <Red>
+                  {ethers.utils.formatEther("1000000000000000000")} $LYX
+                </Red>
+              </Important>
+            </InfoItem>
+          </InfoRow>
+
+          <InfoRow>
+            <InfoItem>
+              TotalSupply:{" "}
+              <Important>{ethers.utils.formatUnits(180, 1)}</Important>
+            </InfoItem>
+          </InfoRow>
+          <InfoRow>
+            <InfoItem>
+              Founder:{" "}
+              <Important>
+                <Red>{fellowship.founder.metadata.name}</Red>
+              </Important>
+            </InfoItem>
+          </InfoRow>
+        </InfoSection>
+      </UserFellowshipsSidebarListItemContainer>
+    );
+  }
   return <div>Intiaialized Fellowship</div>;
 };
 
 {
-  /* <UserFellowshipsSidebarListItemContainer
-      href={`/fellowship/${fellowship.address}`}
-    >
-      <ImageSection>
-        <FellowshipImage src={fellowship.logo} />
-      </ImageSection>
-      <InfoSection>
-        <MainRow>
-          <MainRowPrimary>
-            <FellowshipTitle>{fellowship.name}</FellowshipTitle>
-          </MainRowPrimary>
-        </MainRow>
-        <InfoRow>
-          <InfoItem>
-            Mint Price:{" "}
-            <Important>
-              <Red>{ethers.utils.formatEther(fellowship.mintPrice)} $LYX</Red>
-            </Important>
-          </InfoItem>
-        </InfoRow>
-
-        <InfoRow>
-          <InfoItem>
-            TotalSupply:{" "}
-            <Important>
-              {ethers.utils.formatUnits(fellowship.totalSupply, 1)}
-            </Important>
-          </InfoItem>
-        </InfoRow>
-        <InfoRow>
-          <InfoItem>
-            Founder:{" "}
-            <Important>
-              <Red>{fellowship.founder.name}</Red>
-            </Important>
-          </InfoItem>
-        </InfoRow>
-      </InfoSection>
-  </UserFellowshipsSidebarListItemContainer> */
+  /*  */
 }
