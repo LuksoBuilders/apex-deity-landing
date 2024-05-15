@@ -4,8 +4,74 @@ import { useFellowship } from "../../hooks/useFellowship";
 import { Row, Col } from "react-grid-system";
 import Link from "next/link";
 import { ethers } from "ethers";
+import { gql, useQuery } from "@apollo/client";
+import { BounceLoader } from "react-spinners";
+import { CircledImage, CenteredDiv, Spacing } from "../../atoms";
+import { Fellowship } from "../../types/remoteTypes";
+import { ipfsURLtoNormal } from "../../utils";
 
-import { CircledImage } from "../../atoms";
+const GET_FELLOWSHIP = gql`
+  query Fellowship($fellowshipId: String!) {
+    fellowship(id: $fellowshipId) {
+      id
+      name
+      symbol
+      address
+      metadata
+      info {
+        assets {
+          url
+        }
+        attributes {
+          key
+          type
+          value
+        }
+        description
+        images {
+          url
+        }
+        links {
+          title
+          url
+        }
+      }
+      artisan {
+        id
+        profile {
+          name
+          profileImage {
+            url
+          }
+        }
+      }
+      founder {
+        id
+        metadata {
+          name
+          images {
+            url
+          }
+        }
+      }
+      backerBucks {
+        id
+      }
+      contributionAddress
+      contributions {
+        id
+      }
+      endorsementAddress
+      endorsements {
+        id
+      }
+      currentPrice
+      initialPrice
+      priceGrowth
+      totalSupply
+    }
+  }
+`;
 
 const FellowshipInfoContainer = styled.div`
   width: 100%;
@@ -32,7 +98,8 @@ const ActorsContainer = styled.div`
   bottom: 0px;
 `;
 
-const ActorCard = styled(Link)`
+// TODO: change this to link later
+const ActorCard = styled.div`
   border: 1px solid #e8e8e8;
   display: inline-block;
   cursor: pointer;
@@ -101,15 +168,32 @@ const EXPLORER_ADDRESS =
 
 export const FellowshipInfo = ({}: FellowshipInfoProps) => {
   const { query } = useRouter();
-  const { error, loading, data } = useFellowship(String(query.id));
 
-  const fellowship = data;
+  const { error, loading, data } = useQuery(GET_FELLOWSHIP, {
+    variables: { fellowshipId: query.id },
+  });
+
+  console.log(error, loading, data);
+
+  if (loading || error) {
+    return (
+      <CenteredDiv>
+        <BounceLoader />
+      </CenteredDiv>
+    );
+  }
+
+  const fellowship: Fellowship = data.fellowship;
 
   return (
     <FellowshipInfoContainer>
       <Row style={{ width: "100%" }}>
         <Col md={6}>
-          <CircledImage width="100%" squared src={fellowship.logo} />
+          <CircledImage
+            width="100%"
+            squared
+            src={ipfsURLtoNormal(fellowship.info.images[0]?.[1].url, 1)}
+          />
         </Col>
         <Col md={6}>
           <NameAndSymbolContainer>
@@ -137,28 +221,40 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
             Contribute Address:{" "}
             <RedInfoLink
               target="_blank"
-              href={`${EXPLORER_ADDRESS}/${fellowship.contributeAddress}`}
+              href={`${EXPLORER_ADDRESS}/${fellowship.contributionAddress}`}
             >
-              {shortenString(fellowship.contributeAddress)}
+              {shortenString(fellowship.contributionAddress)}
             </RedInfoLink>
           </Info>
           <ActorsContainer>
-            <ActorCard href={`/deities/${fellowship.artisan.address}`}>
+            <ActorCard
+            //href={`/deities/${fellowship.artisan.id}`}
+            >
               <ActorImageHolder>
-                <ActorImage src={fellowship.artisan.avatar} />
+                <ActorImage
+                  src={ipfsURLtoNormal(
+                    fellowship.artisan?.profile.profileImage[0].url
+                  )}
+                />
               </ActorImageHolder>
               <ActorInfoContainer>
                 <ActorTitle>Artisan</ActorTitle>
-                <ActorName>{fellowship.artisan.name}</ActorName>
+                <ActorName>{fellowship.artisan.profile.name}</ActorName>
               </ActorInfoContainer>
             </ActorCard>
-            <ActorCard href={`/deities/${fellowship.founder.id}`}>
+            <ActorCard
+            //href={`/deities/${fellowship.founder.id}`}
+            >
               <ActorImageHolder>
-                <ActorImage src={fellowship.founder.image} />
+                <ActorImage
+                  src={ipfsURLtoNormal(
+                    fellowship.founder?.metadata.images[0][0].url
+                  )}
+                />
               </ActorImageHolder>
               <ActorInfoContainer>
                 <ActorTitle>Founder</ActorTitle>
-                <ActorName>{fellowship.founder.name}</ActorName>
+                <ActorName>{fellowship.founder.metadata.name}</ActorName>
               </ActorInfoContainer>
             </ActorCard>
           </ActorsContainer>

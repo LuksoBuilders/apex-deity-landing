@@ -35,8 +35,46 @@ export interface LSP4Metadata {
   attributes: Attribute[];
 }
 
+export interface Verification {
+  method: string;
+  data: string;
+}
+
+export interface Avatar {
+  verification: Verification;
+  url: string;
+  fileType: string;
+}
+
+export interface ProfileImage {
+  width: string;
+  height: string;
+  url: string;
+  verification: Verification;
+  address: string;
+  tokenId: string;
+}
+
+export interface BackgroundImage {
+  width: string;
+  height: string;
+  url: String;
+  verification: Verification;
+}
+
+export interface LSP3Profile {
+  name: String;
+  description: String;
+  links: [Link];
+  tags: [String];
+  avatar: [Avatar];
+  profileImage: [ProfileImage];
+  backgroundImage: [BackgroundImage];
+}
+
 export interface User {
   id: string;
+  profile: LSP3Profile;
   fellowships: Fellowship[];
   deities: Deity[];
   backerBucks: BackerBuck[];
@@ -55,6 +93,10 @@ export interface Fellowship {
   info: LSP4Metadata | null;
   contributionAddress: string;
   endorsementAddress: string;
+  priceGrowth: string;
+  initialPrice: string;
+  currentPrice: string;
+  totalSupply: string;
   backerBucks: BackerBuck[];
   contributions: Contribution[];
   endorsements: Endorsement[];

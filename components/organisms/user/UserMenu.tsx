@@ -132,14 +132,14 @@ export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
     },
   });
 
-  if (UserDeities.loading || UserFellowships.loading)
+  if (!UserDeities.data || !UserFellowships.data)
     return (
       <CenteredDiv>
         <BounceLoader />
       </CenteredDiv>
     );
 
-  const deities: Array<Deity> = UserDeities.data.userDeities;
+  const deities: Array<Deity> = UserDeities.data?.userDeities;
   const availableSlots = deities.reduce((pV, deity) => {
     return (
       pV +

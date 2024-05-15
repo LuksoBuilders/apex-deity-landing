@@ -124,7 +124,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
         <InfoRow>
           <InfoCol>
             <Info>
-              Your Contributions: <Red>3 $ALY</Red>
+              Your Contributions: <Red>Soon</Red>
             </Info>
           </InfoCol>
           <InfoCol>
@@ -133,6 +133,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                 onClick={() => setPurifyModal(true)}
                 variant="outlined"
                 color="black"
+                disabled
               >
                 Purify
               </Button>
@@ -140,6 +141,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                 onClick={() => setContributeModal(true)}
                 variant="contained"
                 color="black"
+                disabled
               >
                 Contribute
               </Button>
@@ -149,12 +151,13 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
         <InfoRow>
           <InfoCol>
             <Info>
-              Your Endorsements: <Red>10 $ALY</Red>
+              Your Endorsements: <Red>Soon</Red>
             </Info>
           </InfoCol>
           <InfoCol>
             <ActionsList>
               <Button
+                disabled
                 onClick={() => setRevokeModal(true)}
                 variant="outlined"
                 color="black"
@@ -162,6 +165,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                 Revoke
               </Button>
               <Button
+                disabled
                 onClick={() => setEndorsementModal(true)}
                 variant="contained"
                 color="black"
@@ -174,7 +178,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
         <InfoRow>
           <InfoCol>
             <Info>
-              Secondary Market <Red>(SOON)</Red>
+              Secondary Market <Red>SOON</Red>
             </Info>
           </InfoCol>
           <InfoCol>

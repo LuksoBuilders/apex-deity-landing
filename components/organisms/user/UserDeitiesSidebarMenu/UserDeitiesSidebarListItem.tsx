@@ -24,6 +24,9 @@ const DeityImage = styled.img`
 `;
 
 const InfoSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   padding: 0px 1em;
   width: 100%;
 `;
@@ -40,19 +43,19 @@ const MainRowPrimary = styled.div`
 `;
 
 const DeityTitle = styled.h5`
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 600;
 `;
 
 const DeityLevel = styled.h5`
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   border: 2px solid #c8c8c8;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 25px;
-  height: 25px;
+  width: 21px;
+  height: 21px;
   border-radius: 100px;
   margin-left: 4px;
   background-color: white;
@@ -61,7 +64,7 @@ const DeityLevel = styled.h5`
 const MainRowSecondary = styled.div``;
 
 const XPText = styled.h6`
-  font-size: 19px;
+  font-size: 14px;
   font-style: italic;
 `;
 
@@ -77,6 +80,8 @@ const InfoRow = styled.div`
 
 const InfoItem = styled.p`
   font-style: italic;
+  font-size: 14px;
+
   font-weight: 300;
 `;
 
@@ -119,17 +124,17 @@ export const UserDeitiesSidebarListItem = ({
             </XPText>
           </MainRowSecondary>
         </MainRow>
-        <InfoRow>
-          <InfoItem>
-            Slots: <Important>{availableSlots.length}</Important>/
-            {deity.slots.length}
-          </InfoItem>
-          <InfoItem>
-            <Important>{deity.portfolio.length}</Important> FSP
-          </InfoItem>
-        </InfoRow>
+        <div>
+          <InfoRow>
+            <InfoItem>
+              Slots: <Important>{availableSlots.length}</Important>/
+              {deity.slots.length}
+            </InfoItem>
+            <InfoItem>
+              <Important>{deity.portfolio.length}</Important> FSP
+            </InfoItem>
+          </InfoRow>
 
-        {
           <InfoRow>
             <InfoItem>
               Rank: <Important>{/*deity.rank*/}N/A</Important>
@@ -140,7 +145,7 @@ export const UserDeitiesSidebarListItem = ({
               </Important>
             </InfoItem>
           </InfoRow>
-        }
+        </div>
       </InfoSection>
     </UserDeitiesSidebarListItemContainer>
   );

@@ -94,8 +94,6 @@ interface UserFellowshipsSidebarListItemProps {
 export const UserFellowshipsSidebarListItem = ({
   fellowship,
 }: UserFellowshipsSidebarListItemProps) => {
-  console.log(fellowship.info);
-
   if (!fellowship.metadata)
     return (
       <div>
@@ -130,7 +128,7 @@ export const UserFellowshipsSidebarListItem = ({
       >
         <ImageSection>
           <FellowshipImage
-            src={ipfsURLtoNormal(fellowship.info.images[0]?.[0].url, 1)}
+            src={ipfsURLtoNormal(fellowship.info.images[0]?.[5].url, 1)}
           />
         </ImageSection>
         <InfoSection>
