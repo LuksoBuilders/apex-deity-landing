@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <link rel="icon" href="/favicon.png" sizes="any" />
-        <title>Apex Deities</title>
+        <title>ArtisanAlly</title>
         <meta
           name="description"
           content="ArtisanAlly is the first step for the creative projects. It will help you to find a community that cares for what you're creating, and show it by funding you."
