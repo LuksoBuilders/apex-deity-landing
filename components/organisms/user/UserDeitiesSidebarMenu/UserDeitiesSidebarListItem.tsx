@@ -25,7 +25,7 @@ const DeityImage = styled.img`
 
 const InfoSection = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-direction: column;
   padding: 0px 1em;
   width: 100%;
@@ -104,7 +104,7 @@ export const UserDeitiesSidebarListItem = ({
   );
 
   return (
-    <UserDeitiesSidebarListItemContainer href={`/deities/${deity.id}`}>
+    <UserDeitiesSidebarListItemContainer href={`#`}>
       <ImageSection>
         <DeityImage
           src={ipfsURLtoNormal(String(deity.metadata?.images?.[0]?.[3]?.url))}
@@ -141,7 +141,9 @@ export const UserDeitiesSidebarListItem = ({
             </InfoItem>
             <InfoItem>
               <Important>
-                <Red>{ethers.utils.formatEther(deity.withdrawable)} $LYX</Red>
+                <Red>
+                  {/*ethers.utils.formatEther(deity.withdrawable)*/} N/A $LYX
+                </Red>
               </Important>
             </InfoItem>
           </InfoRow>

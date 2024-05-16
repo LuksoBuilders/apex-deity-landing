@@ -8,7 +8,7 @@ interface LabelProps {
 
 const TextFieldContainer = styled.div<LabelProps>`
   position: relative;
-  height: 56px;
+  min-height: 56px;
   border: ${(props) =>
     props.$isError
       ? `2px solid ${props.theme.error}`
@@ -48,14 +48,29 @@ const TextFieldLabel = styled.label<LabelProps>`
 const TextFieldInput = styled.input`
   width: 100%;
   height: 100%;
-  position: absolute;
+  //position: absolute;
   font-size: 1em;
+  font-weight: lighter;
+  padding: 1em 1.5em;
+  padding-top: 1.3em;
+  outline: none;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0px;
+`;
+
+const TextFieldArea = styled.textarea`
+  width: 100%;
+  //position: absolute;
+  font-size: 1.2em;
   font-weight: lighter;
   padding: 1em 1.5em;
   outline: none;
   box-sizing: border-box;
   border: none;
   border-radius: 0px;
+  height: 150px;
+  resize: none;
 `;
 
 const HelperText = styled.p<LabelProps>`
@@ -71,6 +86,7 @@ interface TextFieldProps {
   onChange: Function;
   error?: boolean;
   helperText?: string;
+  multiline?: boolean;
 }
 
 export const TextField = ({
@@ -79,6 +95,7 @@ export const TextField = ({
   onChange,
   error = false,
   helperText,
+  multiline = false,
 }: TextFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -93,15 +110,27 @@ export const TextField = ({
       $isError={error}
       $isFocused={isFocused || Boolean(value)}
     >
-      <TextFieldInput
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        type="email"
-        onChange={(e) => {
-          onChange(e.target.value);
-        }}
-        value={value}
-      />
+      {multiline ? (
+        <TextFieldArea
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+          value={value}
+          rows={10}
+        />
+      ) : (
+        <TextFieldInput
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          type="text"
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+          value={value}
+        />
+      )}
       <TextFieldLabel
         $isError={error}
         onClick={() => setIsFocused(true)}

@@ -94,7 +94,7 @@ export const PurificatioForm = ({}: PurificatioFormProps) => {
       </PurificatioAction>
 
       {holyshitBalance.lt(ethers.utils.parseEther(String(amount * 100))) && (
-        <ErrorContainer>You don't have enough HolyShits!</ErrorContainer>
+        <ErrorContainer>You don&apos;t have enough HolyShits!</ErrorContainer>
       )}
     </PurificatioFormContainer>
   );

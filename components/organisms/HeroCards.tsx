@@ -30,24 +30,24 @@ export const HeroCards = () => {
     <HeroCardsContainer>
       <FirstCardContainer>
         <DeityCard
-          tier="C"
-          name="Melpomene"
-          owner="Luksta"
-          image="/deities/melpomene.png"
-          rank={83}
-          founded={6}
-          collected={21}
+          tier="S"
+          name="Poseidon"
+          owner="Sage"
+          image="/deities/poseidon.png"
+          rank={8}
+          founded={18}
+          collected={132}
         />
       </FirstCardContainer>
       <SecondCardContainer>
         <DeityCard
           tier="S"
-          name="Poseidon"
-          owner="Luksta"
-          image="/deities/poseidon.png"
-          rank={8}
-          founded={18}
-          collected={132}
+          name="Shanti"
+          owner="Ethalorian"
+          image="/deities/Shanti.png"
+          rank={6}
+          founded={6}
+          collected={91}
         />
       </SecondCardContainer>
     </HeroCardsContainer>

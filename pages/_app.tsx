@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Apex Deities</title>
         <meta
           name="description"
-          content="Apex Deities is a collection of 100 unique hand drawn Deities that have godly power over the ArtisanAlly platform."
+          content="ArtisanAlly is the first step for the creative projects. It will help you to find a community that cares for what you're creating, and show it by funding you."
         />{" "}
       </Head>
 

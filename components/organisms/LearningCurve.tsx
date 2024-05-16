@@ -108,7 +108,7 @@ export const LearningCurve = () => {
           items={curve.map((item) => item.label)}
         />
         <div style={{ marginBottom: "3em" }}></div>
-        <Image alt="zeus" width={200} height={251} src="/deities/zeus.png" />
+        <Image alt="zeus" width={150} height={187.5} src="/deities/zeus.png" />
       </Col>
       <Col md={9}>
         <div

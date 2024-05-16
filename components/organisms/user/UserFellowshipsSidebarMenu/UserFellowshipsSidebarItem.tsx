@@ -128,7 +128,11 @@ export const UserFellowshipsSidebarListItem = ({
       >
         <ImageSection>
           <FellowshipImage
-            src={ipfsURLtoNormal(fellowship.info.images[0]?.[5].url, 1)}
+            src={ipfsURLtoNormal(
+              fellowship.info.images[0]?.[fellowship.info.images[0].length - 1]
+                .url,
+              1
+            )}
           />
         </ImageSection>
         <InfoSection>
@@ -142,7 +146,10 @@ export const UserFellowshipsSidebarListItem = ({
               Mint Price:{" "}
               <Important>
                 <Red>
-                  {ethers.utils.formatEther("1000000000000000000")} $LYX
+                  {Number(
+                    ethers.utils.formatEther(fellowship.currentPrice)
+                  ).toFixed(3)}{" "}
+                  $LYX
                 </Red>
               </Important>
             </InfoItem>
@@ -150,8 +157,7 @@ export const UserFellowshipsSidebarListItem = ({
 
           <InfoRow>
             <InfoItem>
-              TotalSupply:{" "}
-              <Important>{ethers.utils.formatUnits(180, 1)}</Important>
+              TotalSupply: <Important>{fellowship.totalSupply}</Important>
             </InfoItem>
           </InfoRow>
           <InfoRow>

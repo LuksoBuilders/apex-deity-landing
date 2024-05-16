@@ -4,7 +4,7 @@ import Image from "next/image";
 export const DeityCardContainer = styled.div`
   display: inline-block;
   border: 2px solid black;
-  padding: 0.75em 1em 1em;
+  padding: 0.5em;
   background-color: white;
 `;
 
@@ -20,7 +20,7 @@ export const DeityTier = styled.span`
 `;
 
 export const DeityTitle = styled.h1`
-  font-size: 28px;
+  font-size: 21px;
   font-weight: 400;
 `;
 
@@ -30,7 +30,7 @@ export const DeityOwner = styled.p`
 `;
 
 export const DeityImageContainer = styled.div`
-  border: 2px solid black;
+  border: 1px solid black;
   display: inline-block;
 `;
 
@@ -39,19 +39,20 @@ export const DeityMetadata = styled.div`
 `;
 
 export const DeityRank = styled.div`
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 600;
   text-align: left;
 `;
 
 export const DeitySecondary = styled.div`
-  display: flex;
-  justify-content: space-between;
+  //display: flex;
+  //justify-content: space-between;
 `;
 
 export const DeitySecondaryInfo = styled.p`
   font-weight: 300;
-  font-size: 13px;
+  font-size: 11px;
+  text-align: left;
 `;
 
 export interface DeityCardProps {
@@ -83,8 +84,8 @@ export const DeityCard = ({
       </DeityCardHeader>
       <DeityImageContainer>
         <Image
-          width={300}
-          height={300}
+          width={220}
+          height={220}
           unoptimized={true}
           alt={name}
           src={image}
@@ -93,10 +94,7 @@ export const DeityCard = ({
 
       <DeityMetadata>
         <DeityRank>Rank: {rank}</DeityRank>
-        <DeitySecondary>
-          <DeitySecondaryInfo>Founded: {founded} Fellowship</DeitySecondaryInfo>
-          <DeitySecondaryInfo>Collected: {collected} $LYX</DeitySecondaryInfo>
-        </DeitySecondary>
+        <DeitySecondaryInfo>Collected: {collected} $LYX</DeitySecondaryInfo>
       </DeityMetadata>
     </DeityCardContainer>
   );

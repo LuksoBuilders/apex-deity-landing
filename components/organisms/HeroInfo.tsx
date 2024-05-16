@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Button } from "../molecules";
 
 const HeroContainer = styled.div`
-  padding-top: 5em;
+  padding-top: 0em;
   margin-bottom: 3em;
 `;
 
@@ -15,6 +15,7 @@ const HeroTitle = styled.h1`
   font-weight: 400;
   font-size: 48px;
   max-width: 350px;
+  line-height: 1.4em;
 `;
 
 const MainDescription = styled.div`
@@ -51,33 +52,29 @@ export const HeroInfo = () => {
   return (
     <HeroContainer>
       <HeroTitle>
-        <ApexDeityTitle>Apex Deities</ApexDeityTitle> give you godly power.
+        <ApexDeityTitle>ArtisanAlly</ApexDeityTitle> is the first step towards
+        creativity.
       </HeroTitle>
       <MainDescription>
         <Description>
-          <SemiBold>Apex Deities</SemiBold> is a collection of 100 unique hand
-          drawn Deities that have godly power over the
-          <SemiBold> ArtisanAlly </SemiBold>
-          platform.
+          By creating a <SemiBold>Fellowship</SemiBold> you can issue a faith
+          token for your
+          <SemiBold> Early Adoptors</SemiBold>.
         </Description>
       </MainDescription>
       <TierDescription>
         <Description>
-          Apex Deities come in 4 tiers: <SemiBold>S</SemiBold>,
-          <SemiBold> A</SemiBold>, <SemiBold> B</SemiBold>,
-          <SemiBold> C</SemiBold>
+          <SemiBold>BackerBucks</SemiBold> price goes up{" "}
+          <SemiBold>Exponentially</SemiBold> and creates an urgency.
         </Description>
       </TierDescription>
-
-      <ButtonsContainer>
-        <ButtonHolder>
-          <Button href="#mint" color="primary" variant="contained">
-            Mint a Deity
-          </Button>
-        </ButtonHolder>
-
-        <Button href="#learn">Learn More</Button>
-      </ButtonsContainer>
+      <TierDescription>
+        <Description>
+          First step of a creative project is{" "}
+          <SemiBold>selling a promise</SemiBold>. We help you do that while
+          eating breakfast.
+        </Description>
+      </TierDescription>
     </HeroContainer>
   );
 };

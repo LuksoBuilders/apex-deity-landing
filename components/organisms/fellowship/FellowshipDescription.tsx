@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { gql, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
 import Markdown from "react-markdown";
 
@@ -50,7 +52,33 @@ thyrsos veterum dabuntur Bacchus quondam Creteque Victor mitisque robustior
 natorum. Iniqui est, orbem nostri [Argos venti](http://vincatfugit.io/mox)
 tollens amor sanguinis nullos est spinosis **tergo nec** habuere Peleus.`;
 
+const GET_FELLOWSHIP = gql`
+  query Fellowship($fellowshipId: String!) {
+    fellowship(id: $fellowshipId) {
+      id
+      metadata
+      info {
+        description
+      }
+    }
+  }
+`;
+
 export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
+  const { query } = useRouter();
+
+  const { error, loading, data } = useQuery(GET_FELLOWSHIP, {
+    variables: { fellowshipId: query.id },
+  });
+
+  if (loading || error) {
+    return <div></div>;
+  }
+
+  const fellowship = data.fellowship;
+
+  console.log(fellowship.info.description);
+
   return (
     <FellowshipDescriptionContainer>
       <Markdown
@@ -85,7 +113,7 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
           },
         }}
       >
-        {markdown}
+        {fellowship.info.description}
       </Markdown>
     </FellowshipDescriptionContainer>
   );

@@ -56,7 +56,10 @@ interface FellowshipInitializationFormProps {}
 
 export const FellowshipInitializationForm =
   ({}: FellowshipInitializationFormProps) => {
+    const router = useRouter();
     const { initializeFellowship } = useExtention();
+
+    const [initializing, setInitializing] = useState<boolean>(false);
 
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
@@ -101,8 +104,8 @@ export const FellowshipInitializationForm =
         <Spacing spacing="0.5em" />
 
         <Paragraph>
-          You <b>CAN NOT</b> change the name and symbol of your fellowship's
-          backerbuck after creation.
+          You <b>CAN NOT</b> change the name and symbol of your
+          fellowship&apos;s backerbuck after creation.
         </Paragraph>
 
         <Spacing spacing="0.5em" />
@@ -178,26 +181,35 @@ export const FellowshipInitializationForm =
           }}
           label="Description"
           helperText=""
+          multiline
         />
 
         <Spacing spacing="2em" />
 
         <ActionButtonContainer>
           <Button
-            onClick={() => {
-              initializeFellowship(
-                String(fellowshipAddress),
-                name,
-                symbol,
-                avatar,
-                description
-              );
+            onClick={async () => {
+              try {
+                setInitializing(true);
+                await initializeFellowship(
+                  String(fellowshipAddress),
+                  name,
+                  symbol,
+                  avatar,
+                  description
+                );
+                router.push(`/fellowship/${query.id}`);
+                setInitializing(true);
+              } catch (err) {
+                console.error(err);
+                setInitializing(false);
+              }
             }}
-            disabled={isDisbaled}
+            disabled={isDisbaled || initializing}
             variant="contained"
             color="primary"
           >
-            Initialize
+            {initializing ? "Initializing" : "Initialize"}
           </Button>
         </ActionButtonContainer>
       </FellowshipInitializationFormContainer>

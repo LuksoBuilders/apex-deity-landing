@@ -49,6 +49,7 @@ export const LearningCurveNavigator = ({
           {items.map((item, i) => (
             <div key={item} style={{ marginBottom: "1px" }}>
               <Button
+                fullwidth
                 color={selectedItem === i ? "black" : "black"}
                 variant={selectedItem === i ? "contained" : "outlined"}
                 onClick={() => setSelectedItem(i)}
@@ -64,7 +65,7 @@ export const LearningCurveNavigator = ({
         animate={{
           position: "absolute",
           bottom: -15,
-          left: "160px",
+          left: "130px",
           background: !expanded ? "#F06A8B" : "white",
           display: "flex",
           alignItems: "center",

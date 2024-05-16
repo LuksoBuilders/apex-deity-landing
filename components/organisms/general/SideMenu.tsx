@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Button } from "../../molecules";
 import { UserMenu } from "../user";
+import Link from "next/link";
 
 const SideMenuContainer = styled.div`
   position: relative;
@@ -37,16 +38,16 @@ export const SideMenu = () => {
     <SideMenuContainer>
       <UserMenu />
       <SuperSpacing></SuperSpacing>
-      <Button fullwidth color="black" variant="outlined">
+      <Button href="/" fullwidth color="black" variant="outlined">
         <ButtonText>Home</ButtonText>
       </Button>
       <Spacing />
-      <Button fullwidth color="black" variant="outlined">
+      <Button href="/learning-curve" fullwidth color="black" variant="outlined">
         <ButtonText>Learning Curve</ButtonText>
       </Button>
       <Spacing />
 
-      <Button fullwidth color="black" variant="outlined">
+      <Button href="/holy-shit" fullwidth color="black" variant="outlined">
         <WTF> Holy Shit!</WTF>
       </Button>
     </SideMenuContainer>

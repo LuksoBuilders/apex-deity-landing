@@ -1,107 +1,76 @@
 import styled from "styled-components";
 import { ethers } from "ethers";
 import { CircledImage } from "../../atoms";
-import { Fellowship } from "../../types";
+import { Fellowship } from "../../types/remoteTypes";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
+import { CenteredDiv } from "../../atoms";
+import { BounceLoader } from "react-spinners";
+import { ipfsURLtoNormal } from "../../utils";
 
-const fellowships: Array<Fellowship> = [
-  {
-    address: "0xF4A97b59dC44e4A0969c08b8858e69e057537a11",
-    initialized: true,
-    endorsementAddress: "0x9d6F3c3e42Ae4aE52CA13E152edF8eD417b4BbDf",
-    contributeAddress: "0x2E83f3e45e17DdE2B29cF9d05A786e5b3cD3Ed7E",
-    logo: "https://picsum.photos/200",
-    name: "Craftsman Collective",
-    symbol: "CCC",
-    artisan: {
-      address: "0xF4A97b59dC44e4A0969c08b8858e69e057537a11",
-      avatar:
-        "https://api.universalprofile.cloud/image/QmWVZEpweFpLw9qMNBt5C9bqS7s2AgTzgeGR8PpN8mu7Ki?width=1000?width=1000",
-      name: "ArtisanAdept",
-      username: "@artisanadept#8c43",
-    },
-    founder: {
-      id: 78,
-      tier: "c",
-      name: "Erato",
-      image: "https://artisanally.io/deities/erato.png",
-      level: 2,
-      xp: 13,
-      availableSlots: 1,
-      slots: 3,
-      fellowships: 4,
-      rank: 81,
-      harvestableAmount: 9,
-    },
-    mintPrice: ethers.utils.parseEther("3.5"),
-    totalSupply: ethers.BigNumber.from(1000),
-  },
-  {
-    initialized: true,
-    address: "0xD4dC66D8f857e901fa79f426da68E43f05223Eda",
-    endorsementAddress: "0xDe939c88A551691F6952d68aa2110ADc45076a40",
-    contributeAddress: "0x6780c126048Cabea92A221821cd4dA27E9c56e0A",
-    logo: "https://picsum.photos/200",
-    name: "Artisan Ally",
-    symbol: "ALY",
-    artisan: {
-      address: "0xD4dC66D8f857e901fa79f426da68E43f05223Eda",
-      avatar:
-        "https://api.universalprofile.cloud/image/QmSf9qaPfn1rCN6kzkkeWLRcqQP8m26oXyy9yrVa2iyZhN?width=1000?width=1000",
-      name: "Ethalorian",
-      username: "@ethalorian#26e7",
-    },
-    founder: {
-      id: 0,
-      tier: "s",
-      name: "Zeus",
-      image:
-        "https://artisanally.io/_next/image?url=%2Fdeities%2Fzeus.png&w=256&q=75",
-      level: 5,
-      xp: 153,
-      availableSlots: 2,
-      slots: 9,
-      fellowships: 18,
-      rank: 2,
-      harvestableAmount: 121,
-    },
-    mintPrice: ethers.utils.parseEther("3.2"),
-    totalSupply: ethers.BigNumber.from(1356),
-  },
-  {
-    initialized: false,
-    address: "0xD4dC66D8f857e901fa79f426da68E43f05223Eda",
-    endorsementAddress: "0xDe939c88A551691F6952d68aa2110ADc45076a40",
-    contributeAddress: "0x6780c126048Cabea92A221821cd4dA27E9c56e0A",
-    logo: "https://picsum.photos/200",
-    name: "Artisan Ally",
-    symbol: "ALY",
-    artisan: {
-      address: "0xD4dC66D8f857e901fa79f426da68E43f05223Eda",
-      avatar:
-        "https://api.universalprofile.cloud/image/QmSf9qaPfn1rCN6kzkkeWLRcqQP8m26oXyy9yrVa2iyZhN?width=1000?width=1000",
-      name: "Ethalorian",
-      username: "@ethalorian#26e7",
-    },
-    founder: {
-      id: 0,
-      tier: "s",
-      name: "Zeus",
-      image:
-        "https://artisanally.io/_next/image?url=%2Fdeities%2Fzeus.png&w=256&q=75",
-      level: 5,
-      xp: 153,
-      availableSlots: 2,
-      slots: 9,
-      fellowships: 18,
-      rank: 2,
-      harvestableAmount: 121,
-    },
-    mintPrice: ethers.utils.parseEther("3.2"),
-    totalSupply: ethers.BigNumber.from(1356),
-  },
-];
+const GET_FELLOWSHIPS = gql`
+  query Fellowships {
+    fellowships {
+      id
+      name
+      symbol
+      address
+      metadata
+      info {
+        assets {
+          url
+        }
+        attributes {
+          key
+          type
+          value
+        }
+        description
+        images {
+          url
+        }
+        links {
+          title
+          url
+        }
+      }
+      artisan {
+        id
+        profile {
+          name
+          profileImage {
+            url
+          }
+        }
+      }
+      founder {
+        id
+        metadata {
+          name
+          images {
+            url
+          }
+        }
+      }
+      backerBucks {
+        id
+      }
+      contributionAddress
+      contributions {
+        id
+      }
+      endorsementAddress
+      endorsements {
+        id
+      }
+      currentPrice
+      initialPrice
+      priceGrowth
+      totalSupply
+    }
+  }
+`;
 
 const FellowshipListContainer = styled.div``;
 
@@ -139,11 +108,13 @@ const FellowshipItemSecondaryInfoSection = styled.div``;
 const FellowshipItemInfoRow = styled.div``;
 
 const FellowshipItemSecondaryInfo = styled.h5`
+  font-weight: 400;
   font-size: 19px;
 `;
 
 const Red = styled.span`
   color: ${({ theme }) => theme.primary};
+  font-weight: 600;
 `;
 
 interface FellowshipListProps {}
@@ -151,8 +122,23 @@ interface FellowshipListProps {}
 export const FellowshipsList = ({}: FellowshipListProps) => {
   const router = useRouter();
 
+  const { data, loading, error } = useQuery(GET_FELLOWSHIPS);
+
+  console.log(loading, error);
+
+  if (loading || error) {
+    return (
+      <CenteredDiv>
+        <BounceLoader />
+      </CenteredDiv>
+    );
+  }
+
+  const fellowships: Array<Fellowship> = data.fellowships;
+  console.log(fellowships);
+
   const renderFellowshipItem = (fellowship: Fellowship, isLast: boolean) => {
-    if (!fellowship.initialized) {
+    if (!fellowship.metadata) {
       return (
         <FellowshipItemContainer
           //href={`/fellowship/${fellowship.address}`}
@@ -162,10 +148,10 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
             This Fellowship has not been initialized yet.
           </UninitializedFellowshipHeader>
           <FellowshipItemSecondaryInfo>
-            Artisan: <Red>{fellowship.artisan.name}</Red>
+            Artisan: <Red>{fellowship.artisan.profile.name}</Red>
           </FellowshipItemSecondaryInfo>
           <FellowshipItemSecondaryInfo>
-            Founder: <Red>{fellowship.founder.name}</Red>
+            Founder: <Red>{fellowship.founder.metadata.name}</Red>
           </FellowshipItemSecondaryInfo>
         </FellowshipItemContainer>
       );
@@ -181,7 +167,7 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
               width="200px"
               height="200px"
               squared
-              src={fellowship.logo}
+              src={ipfsURLtoNormal(fellowship.info.images[0]?.[1].url, 1)}
             />
             <FellowshipItemInformation>
               <FellowshipItemMainInfo>
@@ -189,23 +175,23 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
               </FellowshipItemMainInfo>
               <FellowshipItemSecondaryInfoSection>
                 <FellowshipItemSecondaryInfo>
-                  Artisan: <Red>{fellowship.artisan.name}</Red>{" "}
+                  Artisan: <Red>{fellowship.artisan.profile.name}</Red>{" "}
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
                   Mint Price:
                   <Red>
                     {" "}
-                    {ethers.utils.formatEther(fellowship.mintPrice)} $LYX
+                    {Number(
+                      ethers.utils.formatEther(fellowship.currentPrice)
+                    ).toFixed(3)}{" "}
+                    $LYX
                   </Red>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
-                  Founder: <Red>{fellowship.founder.name}</Red>
+                  Founder: <Red>{fellowship.founder.metadata.name}</Red>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
-                  Total Supply:{" "}
-                  <Red>
-                    {ethers.utils.formatUnits(fellowship.totalSupply, 1)}
-                  </Red>
+                  Total Supply: <Red>{fellowship.totalSupply}</Red>
                 </FellowshipItemSecondaryInfo>
               </FellowshipItemSecondaryInfoSection>
             </FellowshipItemInformation>
@@ -217,11 +203,13 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
 
   return (
     <FellowshipListContainer>
-      {fellowships.map((fellowship, i) => (
-        <div key={fellowship.address}>
-          {renderFellowshipItem(fellowship, i == fellowships.length - 1)}
-        </div>
-      ))}
+      {[...fellowships]
+        .sort((a, b) => Number(b.totalSupply) - Number(a.totalSupply))
+        .map((fellowship, i) => (
+          <div key={fellowship.address}>
+            {renderFellowshipItem(fellowship, i == fellowships.length - 1)}
+          </div>
+        ))}
     </FellowshipListContainer>
   );
 };

@@ -43,6 +43,7 @@ interface ExtentionContextType {
     fellowshipLogo: File,
     fellowshipDescription: string
   ) => Promise<void>;
+  mintBackerBuck: (fellowshiAddress: string, amount: number) => Promise<void>;
 }
 
 export function bytes32ToNumber(bytes: string): bigint {
@@ -120,6 +121,7 @@ const ExtentionContext = createContext<ExtentionContextType>({
     fellowshipLogo: File,
     fellowshipDescription: string
   ) => {},
+  mintBackerBuck: async (fellowshiAddress: string, amount: number) => {},
 });
 
 export const useExtention = () => {
@@ -153,7 +155,6 @@ export const ExtentionProvider = ({ children }) => {
 
   useEffect(() => {
     if (connectedAccount) {
-      console.log("connecting ...");
       connect();
     }
   }, [connectedAccount]);
@@ -216,11 +217,8 @@ export const ExtentionProvider = ({ children }) => {
     try {
       // @ts-ignore
       //if (window.lukso && window.lukso.isUniversalProfileExtension) {
-      console.log(window.lukso);
 
       if (window.lukso) {
-        console.log(window.lukso);
-
         await window.lukso.request({
           method: "wallet_switchEthereumChain",
           params: [
@@ -337,7 +335,6 @@ export const ExtentionProvider = ({ children }) => {
       );
 
       try {
-        console.log("shitting for tokenId", numberToBytes32(tokenId));
         const tx = await holyShit.shit(numberToBytes32(tokenId));
 
         await tx.wait();
@@ -359,7 +356,6 @@ export const ExtentionProvider = ({ children }) => {
 
       try {
         const listIds = tokenIds.map((tokenId) => numberToBytes32(tokenId));
-        console.log("shitting for tokenId", listIds);
         const tx = await holyShit.batchShit(listIds);
 
         await tx.wait();
@@ -407,7 +403,6 @@ export const ExtentionProvider = ({ children }) => {
       try {
         const lst = new Map<number, ethers.BigNumber>();
 
-        console.log(userBalances);
         userBalances.forEach(async (tokenId) => {
           lst.set(
             tokenId,
@@ -467,7 +462,7 @@ export const ExtentionProvider = ({ children }) => {
         chainId: targetChainId,
       });
 
-      const artisanAlly = new ethers.Contract(
+      const fellowship = new ethers.Contract(
         fellowshiAddress,
         Fellowship,
         signer
@@ -484,7 +479,7 @@ export const ExtentionProvider = ({ children }) => {
 
         const verifiableURI = await generateVerifiableURIFromIPFS(metadata.url);
 
-        const tx = await artisanAlly.initialize(
+        const tx = await fellowship.initialize(
           fellowshipName,
           fellowshipSymbol,
           verifiableURI
@@ -495,6 +490,31 @@ export const ExtentionProvider = ({ children }) => {
         refetch();
       } catch (err) {
         console.log(err);
+      }
+    }
+  };
+
+  const mintBackerBuck = async (fellowshiAddress: string, amount: number) => {
+    if (signer) {
+      const fellowship = new ethers.Contract(
+        fellowshiAddress,
+        Fellowship,
+        signer
+      );
+
+      try {
+        const totalSupply = await fellowship.totalSupply();
+        const mintPrice = await fellowship.getMintPrice(totalSupply, amount);
+
+        console.log(String(mintPrice[1]));
+
+        const tx = await fellowship.mint(amount, { value: mintPrice[1] });
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.error(err);
       }
     }
   };
@@ -518,6 +538,7 @@ export const ExtentionProvider = ({ children }) => {
         shitBalance,
         foundFellowship,
         initializeFellowship,
+        mintBackerBuck,
       }}
     >
       <DataProvider>{children}</DataProvider>

@@ -4,12 +4,20 @@ import { BounceLoader } from "react-spinners";
 import { Spacing, CenteredDiv } from "../../atoms";
 import { Button, SidebarList } from "../../molecules";
 import { UserUPBasicInfo } from "./UserUPBasicInfo";
-import { UserDeitiesSidebarMenu } from "./UserDeitiesSidebarMenu";
-import { UserFellowshipsSidebarMenu } from "./UserFellowshipsSidebarMenu";
 import { useDeities } from "../../hooks/useDeities";
 import { useQuery, gql } from "@apollo/client";
 import { useExtention } from "../../hooks/useExtension";
-import { Deity, Slot, Fellowship } from "../../types/remoteTypes";
+import {
+  Deity,
+  Slot,
+  Fellowship,
+  User,
+  BackerBuck,
+} from "../../types/remoteTypes";
+
+import { UserDeitiesSidebarMenu } from "./UserDeitiesSidebarMenu";
+import { UserFellowshipsSidebarMenu } from "./UserFellowshipsSidebarMenu";
+import { UserBackerBucksSidebarMenu } from "./UsersBackerBucksSidebarMenu";
 
 const GET_DEITIES = gql`
   query userDeities($userAddress: String!) {
@@ -98,10 +106,40 @@ const GET_FELLOWSHIPS = gql`
           name
         }
       }
+      currentPrice
+      initialPrice
+      priceGrowth
+      totalSupply
     }
   }
 `;
 
+const GET_USER = gql`
+  query User($userAddress: String!) {
+    user(userAddress: $userAddress) {
+      id
+      backerBucks {
+        id
+        fellowship {
+          id
+          name
+          symbol
+          metadata
+          info {
+            images {
+              url
+            }
+          }
+          currentPrice
+        }
+        owner {
+          id
+        }
+        amount
+      }
+    }
+  }
+`;
 const UserMenuContainer = styled.div`
   width: 100%;
   //position: relative;
@@ -132,7 +170,13 @@ export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
     },
   });
 
-  if (!UserDeities.data || !UserFellowships.data)
+  const UserQuery = useQuery(GET_USER, {
+    variables: {
+      userAddress: userAddress,
+    },
+  });
+
+  if (!UserDeities.data || !UserFellowships.data || !UserQuery.data)
     return (
       <CenteredDiv>
         <BounceLoader />
@@ -151,22 +195,31 @@ export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
   }, 0);
   const fellowships: Array<Fellowship> = UserFellowships.data.userFellowships;
 
+  const user: User = UserQuery.data.user;
+
+  console.log(user);
+
   return (
     <ConnectedMenuContainer>
       <UserUPBasicInfo userAddress={userAddress} />
       <Spacing spacing="3em" />
       <UserFellowshipsSidebarMenu fellowships={fellowships} />
       <Spacing spacing="3em" />
+
+      <UserBackerBucksSidebarMenu backerBucks={user.backerBucks} />
+      <Spacing spacing="3em" />
       <UserDeitiesSidebarMenu deities={deities} />
-      <Button
-        disabled={availableSlots === 0}
-        href="/found"
-        fullwidth
-        variant="contained"
-        color="black"
-      >
-        Found Fellowship {availableSlots > 0 ? `(${availableSlots})` : ""}
-      </Button>
+      {[deities].length > 0 ? (
+        <Button
+          disabled={availableSlots === 0}
+          href="/found"
+          fullwidth
+          variant="contained"
+          color="black"
+        >
+          Found Fellowship {availableSlots > 0 ? `(${availableSlots})` : ""}
+        </Button>
+      ) : null}
     </ConnectedMenuContainer>
   );
 };

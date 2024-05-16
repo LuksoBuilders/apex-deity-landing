@@ -22,8 +22,12 @@ export const FellowshipDetails = () => {
       <TabPanel
         tabs={[
           { label: "Description", content: <FellowshipDescription /> },
-          { label: "Contributors", content: <ContributorsList /> },
-          { label: "Endorsers", content: <EndorsersList /> },
+          {
+            label: "Contributors",
+            content: <ContributorsList />,
+            disabled: true,
+          },
+          { label: "Endorsers", content: <EndorsersList />, disabled: true },
         ]}
       />
     </MainLayout>

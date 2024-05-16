@@ -89,7 +89,7 @@ export const InputProfileRenderer = ({
         <CircledImage
           height="60px"
           width="60px"
-          src={ipfsURLtoNormal(user.profile.profileImage[0].url)}
+          src={ipfsURLtoNormal(user.profile.profileImage?.[0].url)}
         />
         <Username>{user.profile.name}</Username>
       </ProfileDataContainer>

@@ -86,7 +86,7 @@ export const FoundFellowshipForm = ({}: FoundFellowshipFormProps) => {
       <Paragraph>
         You can found a fellowship for any UP address you want. The UP address
         would be the artisan which controlls the fellowship, while your deity
-        become it's founder.
+        become it&apos;s founder.
       </Paragraph>
       <Spacing spacing="0.5em" />
 

@@ -173,8 +173,6 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
     variables: { fellowshipId: query.id },
   });
 
-  console.log(error, loading, data);
-
   if (loading || error) {
     return (
       <CenteredDiv>
@@ -232,9 +230,13 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
             >
               <ActorImageHolder>
                 <ActorImage
-                  src={ipfsURLtoNormal(
-                    fellowship.artisan?.profile.profileImage[0].url
-                  )}
+                  src={
+                    fellowship.artisan?.profile.profileImage?.[0].url
+                      ? ipfsURLtoNormal(
+                          fellowship.artisan?.profile.profileImage?.[0].url
+                        )
+                      : ""
+                  }
                 />
               </ActorImageHolder>
               <ActorInfoContainer>

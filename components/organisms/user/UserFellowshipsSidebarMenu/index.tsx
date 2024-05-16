@@ -13,6 +13,8 @@ interface UserFellowshipsSidebarMenuInterface {
 export const UserFellowshipsSidebarMenu = ({
   fellowships,
 }: UserFellowshipsSidebarMenuInterface) => {
+  if (fellowships.length === 0) return <div></div>;
+
   return (
     <SidebarList
       title="Your Fellowships"

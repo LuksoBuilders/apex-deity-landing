@@ -2,6 +2,7 @@ import axios from "axios";
 import web3 from "web3";
 
 export const ipfsURLtoNormal = (URI: string, variant: number = 0) => {
+  if (!URI) return "";
   if (variant === 0) return URI.replace("ipfs://", "https://ipfs.io/ipfs/");
   return URI.replace("ipfs://", "https://gateway.lighthouse.storage/ipfs/");
 };

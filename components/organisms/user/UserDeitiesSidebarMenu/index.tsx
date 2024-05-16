@@ -13,6 +13,7 @@ interface UserDeitiesSidebarMenuInterface {
 export const UserDeitiesSidebarMenu = ({
   deities,
 }: UserDeitiesSidebarMenuInterface) => {
+  if (deities.length === 0) return <div></div>;
   return (
     <SidebarList
       title="Your Deities"
