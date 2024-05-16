@@ -12,9 +12,9 @@ import Fellowship from "../abis//Fellowship.json";
 const testnetRPC = "https://4201.rpc.thirdweb.com";
 const mainnetRPC = "https://42.rpc.thirdweb.com";
 
-const targetRPC = testnetRPC;
+const targetRPC = mainnetRPC;
 
-const targetChainId = 4201;
+const targetChainId = 42;
 
 interface ExtentionContextType {
   provider: ethers.providers.Provider | null;
@@ -83,6 +83,7 @@ const APEX_DEITIES_CONTRACT_ADDRESS =
 const mainnetContractAddresses = {
   apexDeities: "0xb4E32a20aa27B5891Bfa592c392c9858A1DD3945",
   holyShit: "0x2fF8dF5F47Cd67AfE425a2acb28d6506838495Ee",
+  artisanAlly: "0x84d6022AeCb5d558Cb119A8632b79436f0575ee3",
 };
 
 const testnetContractAddresses = {
@@ -96,7 +97,7 @@ const testnetContractAddresses = {
   //holyShit: "",
 };
 
-const targetContractAddresses = testnetContractAddresses;
+const targetContractAddresses = mainnetContractAddresses;
 
 const ExtentionContext = createContext<ExtentionContextType>({
   provider: null,
@@ -223,7 +224,7 @@ export const ExtentionProvider = ({ children }) => {
           method: "wallet_switchEthereumChain",
           params: [
             {
-              chainId: TESTNET_CHAIN_ID,
+              chainId: MAINNET_CHAIN_ID,
             },
           ],
         });

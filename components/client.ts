@@ -5,9 +5,10 @@ import {
   gql,
   createHttpLink,
 } from "@apollo/client";
+import { SERVER_ADDRESS } from "./server-address";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/",
+  uri: SERVER_ADDRESS,
 });
 
 export const client = new ApolloClient({
