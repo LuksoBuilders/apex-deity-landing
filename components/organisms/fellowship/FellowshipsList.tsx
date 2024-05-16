@@ -167,7 +167,7 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
               width="200px"
               height="200px"
               squared
-              src={ipfsURLtoNormal(fellowship.info.images[0]?.[1].url, 1)}
+              src={ipfsURLtoNormal(fellowship.info.images[0]?.[2].url, 1)}
             />
             <FellowshipItemInformation>
               <FellowshipItemMainInfo>
