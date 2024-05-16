@@ -190,7 +190,7 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
           <CircledImage
             width="100%"
             squared
-            src={ipfsURLtoNormal(fellowship.info.images[0]?.[1].url, 1)}
+            src={ipfsURLtoNormal(fellowship.info.images[0]?.[2].url, 1)}
           />
         </Col>
         <Col md={6}>
