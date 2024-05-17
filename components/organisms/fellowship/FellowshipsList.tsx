@@ -124,9 +124,9 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
 
   const { data, loading, error } = useQuery(GET_FELLOWSHIPS);
 
-  console.log(loading, error);
+  console.log(data, loading, error);
 
-  if (loading || error) {
+  if (!data) {
     return (
       <CenteredDiv>
         <BounceLoader />
@@ -167,7 +167,11 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
               width="200px"
               height="200px"
               squared
-              src={ipfsURLtoNormal(fellowship.info.images[0]?.[2].url, 1)}
+              src={
+                fellowship.info.images[0]?.[2]
+                  ? ipfsURLtoNormal(fellowship.info.images[0]?.[2].url, 1)
+                  : ""
+              }
             />
             <FellowshipItemInformation>
               <FellowshipItemMainInfo>
