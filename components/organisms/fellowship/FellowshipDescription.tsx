@@ -111,6 +111,19 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
             const { node, ...rest } = props;
             return <h6 style={{ marginBottom: "0.5em" }} {...rest} />;
           },
+          img(props) {
+            const { node, ...rest } = props;
+            return (
+              <img
+                style={{
+                  marginBottom: "0.5em",
+                  maxWidth: "100%",
+                  marginTop: "1em",
+                }}
+                {...rest}
+              />
+            );
+          },
         }}
       >
         {fellowship.info.description}
