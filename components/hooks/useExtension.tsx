@@ -532,12 +532,10 @@ export const ExtentionProvider = ({ children }) => {
           String(mintPrice[1])
         );
 
-        //
-        //const tx = await fellowship.mint(amount, { value: mintPrice[1] });
-        //
-        //await tx.wait();
+        const tx = await fellowship.mint(amount, { value: mintPrice[1] });
 
-        //refetch();
+        await tx.wait();
+        refetch();
       } catch (err) {
         console.error("is error here?", err);
       }
