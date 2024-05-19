@@ -312,7 +312,11 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                   onClick={async () => {
                     try {
                       setMinting(true);
-                      await mintBackerBuck(fellowship.address, mintValue);
+                      await mintBackerBuck(
+                        fellowship.address,
+                        mintValue,
+                        Number(fellowship.totalSupply)
+                      );
                       await client.resetStore();
                       setMinting(false);
                       setMintValue(0);

@@ -10,7 +10,7 @@ import ArtisanAlly from "../abis/ArtisanAlly.json";
 import Fellowship from "../abis//Fellowship.json";
 
 const testnetRPC = "https://4201.rpc.thirdweb.com";
-const mainnetRPC = "https://42.rpc.thirdweb.com";
+const mainnetRPC = "https://rpc.lukso.sigmacore.io";
 
 const targetRPC = mainnetRPC;
 
@@ -43,7 +43,11 @@ interface ExtentionContextType {
     fellowshipLogo: File,
     fellowshipDescription: string
   ) => Promise<void>;
-  mintBackerBuck: (fellowshiAddress: string, amount: number) => Promise<void>;
+  mintBackerBuck: (
+    fellowshiAddress: string,
+    amount: number,
+    gqlSupply: number
+  ) => Promise<void>;
 }
 
 export function bytes32ToNumber(bytes: string): bigint {
@@ -122,7 +126,11 @@ const ExtentionContext = createContext<ExtentionContextType>({
     fellowshipLogo: File,
     fellowshipDescription: string
   ) => {},
-  mintBackerBuck: async (fellowshiAddress: string, amount: number) => {},
+  mintBackerBuck: async (
+    fellowshiAddress: string,
+    amount: number,
+    gqlSupply: number
+  ) => {},
 });
 
 export const useExtention = () => {
@@ -495,7 +503,11 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
-  const mintBackerBuck = async (fellowshiAddress: string, amount: number) => {
+  const mintBackerBuck = async (
+    fellowshiAddress: string,
+    amount: number,
+    gqlSupply: number
+  ) => {
     if (signer) {
       const fellowship = new ethers.Contract(
         fellowshiAddress,
@@ -504,18 +516,30 @@ export const ExtentionProvider = ({ children }) => {
       );
 
       try {
-        const totalSupply = await fellowship.totalSupply();
-        const mintPrice = await fellowship.getMintPrice(totalSupply, amount);
+        const totalSupply: ethers.BigNumber = await fellowship.totalSupply();
 
-        console.log(String(mintPrice[1]));
+        const targetSupply: ethers.BigNumber = totalSupply.gte(gqlSupply)
+          ? totalSupply
+          : ethers.BigNumber.from(gqlSupply);
 
-        const tx = await fellowship.mint(amount, { value: mintPrice[1] });
+        const mintPrice = await fellowship.getMintPrice(targetSupply, amount);
 
-        await tx.wait();
+        console.log(
+          String(gqlSupply),
+          String(totalSupply),
+          String(targetSupply),
+          String(mintPrice[0]),
+          String(mintPrice[1])
+        );
 
-        refetch();
+        //
+        //const tx = await fellowship.mint(amount, { value: mintPrice[1] });
+        //
+        //await tx.wait();
+
+        //refetch();
       } catch (err) {
-        console.error(err);
+        console.error("is error here?", err);
       }
     }
   };
