@@ -3,74 +3,10 @@ import { ethers } from "ethers";
 import { CircledImage } from "../../atoms";
 import { Fellowship } from "../../types/remoteTypes";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { gql, useQuery } from "@apollo/client";
 import { CenteredDiv } from "../../atoms";
 import { BounceLoader } from "react-spinners";
 import { ipfsURLtoNormal } from "../../utils";
-
-const GET_FELLOWSHIPS = gql`
-  query Fellowships {
-    fellowships {
-      id
-      name
-      symbol
-      address
-      metadata
-      info {
-        assets {
-          url
-        }
-        attributes {
-          key
-          type
-          value
-        }
-        description
-        images {
-          url
-        }
-        links {
-          title
-          url
-        }
-      }
-      artisan {
-        id
-        profile {
-          name
-          profileImage {
-            url
-          }
-        }
-      }
-      founder {
-        id
-        metadata {
-          name
-          images {
-            url
-          }
-        }
-      }
-      backerBucks {
-        id
-      }
-      contributionAddress
-      contributions {
-        id
-      }
-      endorsementAddress
-      endorsements {
-        id
-      }
-      currentPrice
-      initialPrice
-      priceGrowth
-      totalSupply
-    }
-  }
-`;
+import { RedSpan } from "../../atoms";
 
 const FellowshipListContainer = styled.div``;
 
@@ -105,28 +41,17 @@ const FellowshipItemMainInfo = styled.h3`
 
 const FellowshipItemSecondaryInfoSection = styled.div``;
 
-const FellowshipItemInfoRow = styled.div``;
-
 const FellowshipItemSecondaryInfo = styled.h5`
   font-weight: 400;
   font-size: 19px;
 `;
 
-const Red = styled.span`
-  color: ${({ theme }) => theme.primary};
-  font-weight: 600;
-`;
+interface FellowshipListProps {
+  fellowships: Array<Fellowship>;
+}
 
-interface FellowshipListProps {}
-
-export const FellowshipsList = ({}: FellowshipListProps) => {
-  const router = useRouter();
-
-  const { data, loading, error } = useQuery(GET_FELLOWSHIPS);
-
-  console.log(data, loading, error);
-
-  if (!data) {
+export const FellowshipsList = ({ fellowships }: FellowshipListProps) => {
+  if (!fellowships) {
     return (
       <CenteredDiv>
         <BounceLoader />
@@ -134,7 +59,6 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
     );
   }
 
-  const fellowships: Array<Fellowship> = data.fellowships;
   console.log(fellowships);
 
   const renderFellowshipItem = (fellowship: Fellowship, isLast: boolean) => {
@@ -148,10 +72,10 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
             This Fellowship has not been initialized yet.
           </UninitializedFellowshipHeader>
           <FellowshipItemSecondaryInfo>
-            Artisan: <Red>{fellowship.artisan.profile.name}</Red>
+            Artisan: <RedSpan>{fellowship.artisan.profile.name}</RedSpan>
           </FellowshipItemSecondaryInfo>
           <FellowshipItemSecondaryInfo>
-            Founder: <Red>{fellowship.founder.metadata.name}</Red>
+            Founder: <RedSpan>{fellowship.founder.metadata.name}</RedSpan>
           </FellowshipItemSecondaryInfo>
         </FellowshipItemContainer>
       );
@@ -179,23 +103,23 @@ export const FellowshipsList = ({}: FellowshipListProps) => {
               </FellowshipItemMainInfo>
               <FellowshipItemSecondaryInfoSection>
                 <FellowshipItemSecondaryInfo>
-                  Artisan: <Red>{fellowship.artisan.profile.name}</Red>{" "}
+                  Artisan: <RedSpan>{fellowship.artisan.profile.name}</RedSpan>{" "}
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
                   Mint Price:
-                  <Red>
+                  <RedSpan>
                     {" "}
                     {Number(
                       ethers.utils.formatEther(fellowship.currentPrice)
                     ).toFixed(3)}{" "}
                     $LYX
-                  </Red>
+                  </RedSpan>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
-                  Founder: <Red>{fellowship.founder.metadata.name}</Red>
+                  Founder: <RedSpan>{fellowship.founder.metadata.name}</RedSpan>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
-                  Total Supply: <Red>{fellowship.totalSupply}</Red>
+                  Total Supply: <RedSpan>{fellowship.totalSupply}</RedSpan>
                 </FellowshipItemSecondaryInfo>
               </FellowshipItemSecondaryInfoSection>
             </FellowshipItemInformation>
