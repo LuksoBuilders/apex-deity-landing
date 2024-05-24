@@ -145,7 +145,7 @@ export const UserInfo = ({ user }: UserInfoProps) => {
             </div>
             <div>
               {user.profile.links.map((link) => (
-                <UserLink href={link.url} target="_blank">
+                <UserLink key={link.title} href={link.url} target="_blank">
                   {link.title}
                 </UserLink>
               ))}
