@@ -52,8 +52,8 @@ export const HeroInfo = () => {
   return (
     <HeroContainer>
       <HeroTitle>
-        <ApexDeityTitle>ArtisanAlly</ApexDeityTitle> is the first step towards
-        creativity.
+        <ApexDeityTitle>ArtisanAlly</ApexDeityTitle> will find your early
+        adoptors.
       </HeroTitle>
       <MainDescription>
         <Description>

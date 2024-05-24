@@ -17,9 +17,12 @@ interface Lastable {
 const FellowshipItemContainer = styled(PaddedContainer)<Lastable>`
   display: block;
   border-bottom: ${({ $isLast }) => ($isLast ? "0px" : "1px")} solid #888;
-  margin-bottom: ${({ $isLast }) => ($isLast ? "em" : "1em")};
   padding-bottom: ${({ $isLast }) => ($isLast ? "em" : "1em")};
   cursor: pointer;
+  transition: 200ms;
+  &:hover {
+    background-color: #f8f8f8;
+  }
 `;
 
 const FellowshipItemLayout = styled.div`

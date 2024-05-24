@@ -5,3 +5,4 @@ export * from "./FellowshipDetails";
 export * from "./FellowshipInitialization";
 export * from "./DeityDetails";
 export * from "./LearnMore";
+export * from "./Profile";

@@ -21,3 +21,4 @@ export * from "./general";
 export * from "./fellowship";
 
 export * from "./deitiy";
+export * from "./user";
