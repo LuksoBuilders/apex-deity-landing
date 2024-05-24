@@ -8,6 +8,8 @@ import {
 } from "../organisms";
 import { Spacing } from "../atoms";
 import { gql, useQuery } from "@apollo/client";
+import { CenteredDiv } from "../atoms";
+import { BounceLoader } from "react-spinners";
 
 const GET_FELLOWSHIPS = gql`
   query Fellowships {
@@ -61,9 +63,48 @@ const GET_USERS = gql`
   }
 `;
 
+const DeitiesListWrapper = () => {
+  const deities = useQuery(GET_DEITIES);
+
+  const { loading, error } = deities;
+
+  console.log(loading, error);
+
+  if (loading || error) {
+    return (
+      <div style={{ padding: "1em" }}>
+        <CenteredDiv>
+          <BounceLoader />
+        </CenteredDiv>
+      </div>
+    );
+  }
+
+  return <DeitiesList deities={deities.data?.deities} />;
+};
+
+const UsersListWrapper = () => {
+  const users = useQuery(GET_USERS);
+
+  const { loading, error } = users;
+
+  console.log(loading, error);
+
+  if (loading || error) {
+    return (
+      <div style={{ padding: "1em" }}>
+        <CenteredDiv>
+          <BounceLoader />
+        </CenteredDiv>
+      </div>
+    );
+  }
+
+  return <UsersList users={users.data?.users} />;
+};
+
 export const HomePage = () => {
   const fellowships = useQuery(GET_FELLOWSHIPS);
-  const deities = useQuery(GET_DEITIES);
   const users = useQuery(GET_USERS);
 
   console.log(users);
@@ -82,11 +123,11 @@ export const HomePage = () => {
           },
           {
             label: "Deities",
-            content: <DeitiesList deities={deities.data?.deities} />,
+            content: <DeitiesListWrapper />,
           },
           {
             label: "Top Backers",
-            content: <UsersList users={users.data?.users} />,
+            content: <UsersListWrapper />,
           },
           { label: "High Status", content: <div></div>, disabled: true },
         ]}

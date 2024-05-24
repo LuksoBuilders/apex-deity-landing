@@ -87,7 +87,7 @@ export const DeitiesList = ({ deities }: DeitiesListProps) => {
               width="200px"
               height="200px"
               squared
-              src={ipfsURLtoNormal(deity.metadata.images[0]?.[0].url, 2)}
+              src={ipfsURLtoNormal(deity.metadata.images[0]?.[0].url, 0)}
             />
             <DeityItemInformation>
               <DeityMainInfo>
@@ -137,7 +137,7 @@ export const DeitiesList = ({ deities }: DeitiesListProps) => {
 
   return (
     <DeitiesListContainer>
-      {deities.length > 0
+      {deities?.length > 0
         ? [...deities]
             .sort((a, b) => {
               const aA = Number(
