@@ -252,8 +252,6 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
     variables: { fellowshipId: query.id },
   });
 
-  console.log(error, loading, data);
-
   if (loading || error) {
     return (
       <CenteredDiv>

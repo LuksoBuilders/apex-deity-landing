@@ -9,6 +9,7 @@ import {
   TabPanel,
   ContributorsList,
   EndorsersList,
+  BackersList,
 } from "../organisms";
 
 export const FellowshipDetails = () => {
@@ -22,6 +23,7 @@ export const FellowshipDetails = () => {
       <TabPanel
         tabs={[
           { label: "Description", content: <FellowshipDescription /> },
+          { label: "Backers", content: <BackersList /> },
           {
             label: "Contributors",
             content: <ContributorsList />,

@@ -78,8 +78,6 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
 
   const fellowship = data.fellowship;
 
-  console.log(fellowship.info.description);
-
   return (
     <FellowshipDescriptionContainer>
       <PaddedContainer>

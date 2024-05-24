@@ -6,3 +6,4 @@ export * from "./FellowshipDescription";
 export * from "./ContributorsList";
 export * from "./EndorsersList";
 export * from "./FellowshipsList";
+export * from "./BackersList";
