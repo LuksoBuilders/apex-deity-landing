@@ -53,3 +53,20 @@ export async function generateVerifiableURIFromIPFS(ipfsURI: string) {
     throw error; // Propagate error
   }
 }
+
+export function isWeekSinceUsed(usedAt: Date | string): boolean {
+  // Ensure usedAt is a Date object
+  const usedDate = new Date(usedAt);
+
+  // Get the current date and time
+  const currentDate = new Date();
+
+  // Calculate the difference in milliseconds
+  const timeDifference = currentDate.getTime() - usedDate.getTime();
+
+  // Convert milliseconds to days
+  const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+  // Check if the difference is at least 7 days (one week)
+  return daysDifference >= 7;
+}

@@ -532,6 +532,11 @@ export const ExtentionProvider = ({ children }) => {
           String(mintPrice[1])
         );
 
+        console.log(
+          "error is: ",
+          fellowship.interface.parseError("0x969043da")
+        );
+
         const tx = await fellowship.mint(amount, { value: mintPrice[1] });
 
         await tx.wait();

@@ -99,7 +99,7 @@ const ActorsContainer = styled.div`
 `;
 
 // TODO: change this to link later
-const ActorCard = styled.div`
+const ActorCard = styled(Link)`
   border: 1px solid #e8e8e8;
   display: inline-block;
   cursor: pointer;
@@ -229,9 +229,7 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
             </RedInfoLink>
           </Info>
           <ActorsContainer>
-            <ActorCard
-            //href={`/deities/${fellowship.artisan.id}`}
-            >
+            <ActorCard href={`/user/${fellowship.artisan.id}`}>
               <ActorImageHolder>
                 <ActorImage
                   src={
@@ -248,9 +246,7 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
                 <ActorName>{fellowship.artisan.profile.name}</ActorName>
               </ActorInfoContainer>
             </ActorCard>
-            <ActorCard
-            //href={`/deities/${fellowship.founder.id}`}
-            >
+            <ActorCard href={`/deities/${fellowship.founder.id}`}>
               <ActorImageHolder>
                 <ActorImage
                   src={ipfsURLtoNormal(

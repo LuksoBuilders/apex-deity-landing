@@ -1,14 +1,25 @@
 import styled from "styled-components";
-import { CircledImage } from "../../atoms";
+import { RedSpan } from "../../atoms";
 import { Row, Col } from "react-grid-system";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "../../molecules";
+import { Deity } from "../../types/remoteTypes";
+import { ipfsURLtoNormal, isWeekSinceUsed } from "../../utils";
+import { ethers } from "ethers";
+import Link from "next/link";
 
 const DeityInfoContainer = styled.div``;
 
 interface DeityImageHolderProps {
   $height: string;
 }
+
+const DeityMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+`;
 
 const DeityImageHolder = styled.div<DeityImageHolderProps>`
   border: 2px solid #383838;
@@ -36,19 +47,25 @@ const DeityTopRow = styled.div`
 `;
 
 const DeityMainInfo = styled.h2`
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
   font-style: italic;
 `;
 
+const DeitySecondRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const DeitySecondaryInfoSection = styled.div`
-  position: absolute;
-  bottom: 0;
+  //position: absolute;
+  //bottom: 0;
 `;
 
 const DeitySecondaryInfo = styled.h4`
   font-size: 21px;
   margin-top: 0.5em;
+  font-weight: 400;
 `;
 
 const DeityRankHolder = styled.div`
@@ -70,9 +87,57 @@ const DeityRankHolder = styled.div`
   background: ${({ theme }) => theme.primary};
 `;
 
-interface DeityInfoProps {}
+const DeityStories = styled.div`
+  margin-top: 3em;
+`;
 
-export const DeityInfo = ({}: DeityInfoProps) => {
+const DeityParagraph = styled.p`
+  margin-top: 1em;
+  font-size: 1.1em;
+`;
+
+const ActorCard = styled(Link)`
+  border: 1px solid #e8e8e8;
+  display: inline-block;
+  cursor: pointer;
+  transition: 200ms;
+  &:hover {
+    border: 1px solid #a8a8a8;
+  }
+`;
+
+const ActorImageHolder = styled.div`
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  padding: 0.5em;
+
+  border-bottom: 1px solid #e8e8e8;
+`;
+
+const ActorImage = styled.img`
+  height: 100%;
+`;
+
+const ActorInfoContainer = styled.div`
+  padding: 0.25em 0.5em;
+`;
+
+const ActorTitle = styled.h5`
+  font-size: 15px;
+  font-weight: 300;
+`;
+
+const ActorName = styled.h6`
+  font-size: 15px;
+`;
+
+interface DeityInfoProps {
+  deity: Deity;
+}
+
+export const DeityInfo = ({ deity }: DeityInfoProps) => {
   const imageHolderRef = useRef<HTMLDivElement>(null);
   const [imageHolderWidth, setImageHolderWidth] = useState(0);
 
@@ -111,20 +176,18 @@ export const DeityInfo = ({}: DeityInfoProps) => {
     };
   }, []);
 
-  const deity = {
-    id: 0,
-    tier: "s",
-    name: "Zeus",
-    image:
-      "https://artisanally.io/_next/image?url=%2Fdeities%2Fzeus.png&w=256&q=75",
-    level: 5,
-    xp: 153,
-    availableSlots: 2,
-    slots: 9,
-    fellowships: 18,
-    rank: 2,
-    harvestableAmount: 121,
-  };
+  console.log(deity);
+
+  const isAnythingToWithdraw = ethers.utils
+    .parseEther(deity.withdrawable)
+    .gt(0);
+
+  console.log(isAnythingToWithdraw);
+
+  const availableSlots = deity.slots
+    .map((slot) => new Date(Number(slot.usedAt) * 1000))
+    .map((usedAts) => isWeekSinceUsed(usedAts))
+    .filter((isAWeekAfter) => isAWeekAfter);
 
   return (
     <DeityInfoContainer>
@@ -134,26 +197,75 @@ export const DeityInfo = ({}: DeityInfoProps) => {
             ref={imageHolderRef}
             $height={`${imageHolderWidth}px`}
           >
-            <img src={deity.image} height="100%" />
-            <DeityRankHolder>{deity.rank}</DeityRankHolder>
+            <img
+              src={ipfsURLtoNormal(deity.metadata.images[0]?.[0].url, 0)}
+              height="100%"
+            />
+            <DeityRankHolder>?</DeityRankHolder>
           </DeityImageHolder>
         </Col>
         <Col md={8}>
-          <DeityTopRow>
-            <DeityMainInfo>
-              {deity.tier.toUpperCase()}. {deity.name}{" "}
-              <DeityId>#{deity.id}</DeityId>
-            </DeityMainInfo>
-            <Button color="primary" variant="contained">
-              Withdraw 100 $LYX
-            </Button>
-          </DeityTopRow>
+          <DeityMain>
+            <DeityTopRow>
+              <DeityMainInfo>
+                {deity.tier.toUpperCase()}. {deity.metadata.name}{" "}
+                <DeityId>#{deity.tokenIdNumber}</DeityId>
+              </DeityMainInfo>
+              <Button disabled={true} color="primary" variant="contained">
+                Withdraw{" "}
+                {Number(ethers.utils.formatEther(deity.withdrawable)).toFixed(
+                  3
+                )}{" "}
+                $LYX
+              </Button>
+            </DeityTopRow>
 
-          <DeitySecondaryInfoSection>
-            <DeitySecondaryInfo>Slots: 2/9</DeitySecondaryInfo>
-            <DeitySecondaryInfo>XP: 100</DeitySecondaryInfo>
-            <DeitySecondaryInfo>Level: 15</DeitySecondaryInfo>
-          </DeitySecondaryInfoSection>
+            <DeitySecondRow>
+              <DeitySecondaryInfoSection>
+                <DeitySecondaryInfo>
+                  Mythology: <RedSpan>{deity.metadata.mythology}</RedSpan>
+                </DeitySecondaryInfo>
+                <DeitySecondaryInfo>
+                  Slots:{" "}
+                  <RedSpan>
+                    {availableSlots.length}/{deity.slots.length}
+                  </RedSpan>
+                </DeitySecondaryInfo>
+                <DeitySecondaryInfo>
+                  XP: <RedSpan>{deity.xp}</RedSpan>
+                </DeitySecondaryInfo>
+                <DeitySecondaryInfo>
+                  Level: <RedSpan>{deity.level}</RedSpan>
+                </DeitySecondaryInfo>
+              </DeitySecondaryInfoSection>
+
+              <ActorCard href={`/user/${deity.owner.id}`}>
+                <ActorImageHolder>
+                  <ActorImage
+                    src={
+                      deity.owner?.profile.profileImage?.[0].url
+                        ? ipfsURLtoNormal(
+                            deity.owner?.profile.profileImage?.[0].url
+                          )
+                        : ""
+                    }
+                  />
+                </ActorImageHolder>
+                <ActorInfoContainer>
+                  <ActorTitle>Owner</ActorTitle>
+                  <ActorName>{deity.owner.profile.name}</ActorName>
+                </ActorInfoContainer>
+              </ActorCard>
+            </DeitySecondRow>
+          </DeityMain>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12}>
+          <DeityStories>
+            <DeityParagraph>{deity.metadata.description}</DeityParagraph>
+            <DeityParagraph>{deity.metadata.story}</DeityParagraph>
+          </DeityStories>
         </Col>
       </Row>
     </DeityInfoContainer>

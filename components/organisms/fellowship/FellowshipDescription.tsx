@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { PaddedContainer } from "../../atoms";
 
 import Markdown from "react-markdown";
 
@@ -81,53 +82,55 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
 
   return (
     <FellowshipDescriptionContainer>
-      <Markdown
-        components={{
-          p(props) {
-            const { node, ...rest } = props;
-            return <p style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          h1(props) {
-            const { node, ...rest } = props;
-            return <h1 style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          h2(props) {
-            const { node, ...rest } = props;
-            return <h2 style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          h3(props) {
-            const { node, ...rest } = props;
-            return <h3 style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          h4(props) {
-            const { node, ...rest } = props;
-            return <h4 style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          h5(props) {
-            const { node, ...rest } = props;
-            return <h5 style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          h6(props) {
-            const { node, ...rest } = props;
-            return <h6 style={{ marginBottom: "0.5em" }} {...rest} />;
-          },
-          img(props) {
-            const { node, ...rest } = props;
-            return (
-              <img
-                style={{
-                  marginBottom: "0.5em",
-                  maxWidth: "100%",
-                  marginTop: "1em",
-                }}
-                {...rest}
-              />
-            );
-          },
-        }}
-      >
-        {fellowship.info.description}
-      </Markdown>
+      <PaddedContainer>
+        <Markdown
+          components={{
+            p(props) {
+              const { node, ...rest } = props;
+              return <p style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            h1(props) {
+              const { node, ...rest } = props;
+              return <h1 style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            h2(props) {
+              const { node, ...rest } = props;
+              return <h2 style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            h3(props) {
+              const { node, ...rest } = props;
+              return <h3 style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            h4(props) {
+              const { node, ...rest } = props;
+              return <h4 style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            h5(props) {
+              const { node, ...rest } = props;
+              return <h5 style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            h6(props) {
+              const { node, ...rest } = props;
+              return <h6 style={{ marginBottom: "0.5em" }} {...rest} />;
+            },
+            img(props) {
+              const { node, ...rest } = props;
+              return (
+                <img
+                  style={{
+                    marginBottom: "0.5em",
+                    maxWidth: "100%",
+                    marginTop: "1em",
+                  }}
+                  {...rest}
+                />
+              );
+            },
+          }}
+        >
+          {fellowship.info.description}
+        </Markdown>
+      </PaddedContainer>
     </FellowshipDescriptionContainer>
   );
 };

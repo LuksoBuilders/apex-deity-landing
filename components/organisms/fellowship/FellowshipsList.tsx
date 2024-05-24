@@ -6,7 +6,7 @@ import Link from "next/link";
 import { CenteredDiv } from "../../atoms";
 import { BounceLoader } from "react-spinners";
 import { ipfsURLtoNormal } from "../../utils";
-import { RedSpan } from "../../atoms";
+import { RedSpan, PaddedContainer } from "../../atoms";
 
 const FellowshipListContainer = styled.div``;
 
@@ -14,9 +14,9 @@ interface Lastable {
   $isLast: boolean;
 }
 
-const FellowshipItemContainer = styled.div<Lastable>`
+const FellowshipItemContainer = styled(PaddedContainer)<Lastable>`
   display: block;
-  border-bottom: ${({ $isLast }) => ($isLast ? "0px" : "1px")} solid #c8c8c8;
+  border-bottom: ${({ $isLast }) => ($isLast ? "0px" : "1px")} solid #888;
   margin-bottom: ${({ $isLast }) => ($isLast ? "em" : "1em")};
   padding-bottom: ${({ $isLast }) => ($isLast ? "em" : "1em")};
   cursor: pointer;
@@ -53,9 +53,11 @@ interface FellowshipListProps {
 export const FellowshipsList = ({ fellowships }: FellowshipListProps) => {
   if (!fellowships) {
     return (
-      <CenteredDiv>
-        <BounceLoader />
-      </CenteredDiv>
+      <PaddedContainer>
+        <CenteredDiv>
+          <BounceLoader />
+        </CenteredDiv>
+      </PaddedContainer>
     );
   }
 
@@ -129,15 +131,25 @@ export const FellowshipsList = ({ fellowships }: FellowshipListProps) => {
     );
   };
 
+  const renderNoFellowship = () => {
+    return (
+      <PaddedContainer>
+        This deity has not founded a fellowship yet.
+      </PaddedContainer>
+    );
+  };
+
   return (
     <FellowshipListContainer>
-      {[...fellowships]
-        .sort((a, b) => Number(b.totalSupply) - Number(a.totalSupply))
-        .map((fellowship, i) => (
-          <div key={fellowship.address}>
-            {renderFellowshipItem(fellowship, i == fellowships.length - 1)}
-          </div>
-        ))}
+      {fellowships.length > 0
+        ? [...fellowships]
+            .sort((a, b) => Number(b.totalSupply) - Number(a.totalSupply))
+            .map((fellowship, i) => (
+              <div key={fellowship.address}>
+                {renderFellowshipItem(fellowship, i == fellowships.length - 1)}
+              </div>
+            ))
+        : renderNoFellowship()}
     </FellowshipListContainer>
   );
 };

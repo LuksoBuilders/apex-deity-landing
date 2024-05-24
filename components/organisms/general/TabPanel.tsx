@@ -32,7 +32,7 @@ const Tab = styled.div<TabsProps>`
 
 const ContentHolder = styled.div`
   border: 2px solid #383838;
-  padding: 1em;
+  //padding: 1em;
 `;
 
 interface TabItem {
