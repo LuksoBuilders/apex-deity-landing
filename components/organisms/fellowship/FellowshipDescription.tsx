@@ -85,7 +85,7 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
           components={{
             p(props) {
               const { node, ...rest } = props;
-              return <p style={{ marginBottom: "0.5em" }} {...rest} />;
+              return <p style={{ marginBottom: "0.75em" }} {...rest} />;
             },
             h1(props) {
               const { node, ...rest } = props;
@@ -93,7 +93,12 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
             },
             h2(props) {
               const { node, ...rest } = props;
-              return <h2 style={{ marginBottom: "0.5em" }} {...rest} />;
+              return (
+                <h2
+                  style={{ marginBottom: "0.5em", marginTop: "1em" }}
+                  {...rest}
+                />
+              );
             },
             h3(props) {
               const { node, ...rest } = props;
@@ -119,6 +124,18 @@ export const FellowshipDescription = ({}: FellowshipDescriptionProps) => {
                     marginBottom: "0.5em",
                     maxWidth: "100%",
                     marginTop: "1em",
+                  }}
+                  {...rest}
+                />
+              );
+            },
+            a(props) {
+              const { node, ...rest } = props;
+              return (
+                <a
+                  target="_blank"
+                  style={{
+                    textDecoration: "underline",
                   }}
                   {...rest}
                 />
