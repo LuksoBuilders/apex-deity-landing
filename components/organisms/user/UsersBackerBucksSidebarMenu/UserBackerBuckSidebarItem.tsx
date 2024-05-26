@@ -20,7 +20,8 @@ const ImageSection = styled.div`
 `;
 
 const BackerBuckImage = styled.img`
-  height: 100%;
+  max-height: 100%;
+  width: 90px;
 `;
 
 const InfoSection = styled.div`
@@ -97,6 +98,13 @@ interface UserBackerBucksSidebarListItemProps {
 export const UserBackerBucksSidebarListItem = ({
   backerBuck,
 }: UserBackerBucksSidebarListItemProps) => {
+  console.log(backerBuck.fellowship.info, backerBuck.fellowship.info.images[0]);
+
+  const targetImageUrl =
+    backerBuck.fellowship.info.images[0]?.[
+      backerBuck.fellowship.info.images[0].length - 1
+    ].url;
+
   return (
     <UserBackerBucksSidebarListItemContainer
       href={`/fellowship/${backerBuck.fellowship.id}`}
@@ -104,10 +112,8 @@ export const UserBackerBucksSidebarListItem = ({
       <ImageSection>
         <BackerBuckImage
           src={ipfsURLtoNormal(
-            backerBuck.fellowship.info.images[0]?.[
-              backerBuck.fellowship.info.images[0].length - 1
-            ].url,
-            1
+            targetImageUrl,
+            targetImageUrl.replace("ipfs://", "").startsWith("b") ? 0 : 1
           )}
         />
       </ImageSection>
