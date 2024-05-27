@@ -100,7 +100,7 @@ export const Profile = () => {
         <UserInfo user={user} />
 
         <Spacing spacing="4em"></Spacing>
-        <TabPanel tabs={getUserTabs()} />
+        {getUserTabs().length ? <TabPanel tabs={getUserTabs()} /> : null}
       </>
     );
   };
