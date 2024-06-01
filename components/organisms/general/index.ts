@@ -4,3 +4,4 @@ export * from "./TabPanel";
 export * from "./Modal";
 export * from "./UniversalProfileInput";
 export * from "./ValueSelector";
+export * from "./Metrics";

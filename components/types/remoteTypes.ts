@@ -102,6 +102,7 @@ export interface Fellowship {
   endorsements: Endorsement[];
   founder: Deity;
   artisan: User;
+  raisedAmount: string;
 }
 
 export interface Deity {

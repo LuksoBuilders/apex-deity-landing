@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 import { HeroCards } from "./HeroCards";
 import { HeroInfo } from "./HeroInfo";
+import { Metrics } from "./general";
 
 const HeroContainer = styled.div`
   margin-top: 100px;
@@ -30,6 +31,7 @@ export const Hero = () => {
             </HeroCardsContainer>
           </Col>
         </Row>
+        <Metrics />
       </HeroContainer>
     </div>
   );

@@ -100,6 +100,21 @@ export const UsersList = ({ users }: UsersListProps) => {
       };
     });
 
+  console.log(
+    users
+      .map((user) => ({
+        ...user,
+        worth: user.backerBucks.reduce((pV: ethers.BigNumber, cV) => {
+          return pV.add(
+            ethers.BigNumber.from(cV.amount).mul(
+              ethers.BigNumber.from(cV.fellowship.currentPrice)
+            )
+          );
+        }, ethers.BigNumber.from("0")),
+      }))
+      .find((user) => user.id === "0xe0c0084a7d1e8aa4d12c418118e2b4492268c8fe")
+  );
+
   /* console.log(newBackers);
 
   const backers: Array<UPBasicInfo> = [

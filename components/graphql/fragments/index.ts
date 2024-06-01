@@ -79,6 +79,7 @@ export const FELLOWSHIP_PRICES_FIELDS = gql`
     initialPrice
     priceGrowth
     totalSupply
+    raisedAmount
   }
 `;
 

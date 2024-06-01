@@ -73,6 +73,7 @@ const GET_FELLOWSHIP = gql`
       initialPrice
       priceGrowth
       totalSupply
+      raisedAmount
     }
   }
 `;
@@ -339,6 +340,19 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                   $LYX`}
                 </Button>
               </Minter>
+            </InfoCol>
+          </InfoRow>
+          <InfoRow>
+            <InfoCol>
+              <Info>
+                Total Raised Amount:{" "}
+                <Red>
+                  {Number(
+                    ethers.utils.formatEther(fellowship.raisedAmount)
+                  ).toFixed(1)}{" "}
+                  $LYX
+                </Red>
+              </Info>
             </InfoCol>
           </InfoRow>
         </MintSection>

@@ -121,6 +121,17 @@ export const FellowshipsList = ({ fellowships }: FellowshipListProps) => {
                   </RedSpan>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
+                  Total Raised:
+                  <RedSpan>
+                    {" "}
+                    {Number(
+                      ethers.utils.formatEther(fellowship.raisedAmount)
+                    ).toFixed(1)}{" "}
+                    $LYX
+                  </RedSpan>
+                </FellowshipItemSecondaryInfo>
+
+                <FellowshipItemSecondaryInfo>
                   Founder: <RedSpan>{fellowship.founder.metadata.name}</RedSpan>
                 </FellowshipItemSecondaryInfo>
                 <FellowshipItemSecondaryInfo>
