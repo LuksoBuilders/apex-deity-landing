@@ -6,6 +6,7 @@ import { DeityShitCard } from "./DeityShitCard";
 import { useState } from "react";
 
 import { Button } from "../../molecules";
+import { RedSpan } from "../../atoms";
 
 const Container = styled.div``;
 
@@ -121,9 +122,7 @@ export const FarmingSection = () => {
           Total Minted HolyShits:{" "}
           <b>{ethers.utils.formatEther(totalShitsSupply)}</b>
         </TotalSupplySection>
-        {connectedAccount ? (
-          <ConnectedWallet>{connectedAccount}</ConnectedWallet>
-        ) : (
+        {connectedAccount ? null : (
           <ConnectionButton onClick={connect}>
             Connect to Farm your Shits
           </ConnectionButton>
@@ -138,88 +137,6 @@ export const FarmingSection = () => {
               <b>{ethers.utils.formatEther(shitBalance)}</b>
             </HolyShitBalance>
           </Col>
-          {userTokens.S.map((token) => (
-            <Col md={4} key={token}>
-              <DeityShitCard
-                image="/deities/ToBeKnown.png"
-                tier="S"
-                name="ToBeKnown"
-                owner={String(token)}
-                shitAmount={400}
-                lastShitTime={lastShitTime.get(token)}
-                onShit={() => shit(token)}
-              />
-            </Col>
-          ))}
-          {userTokens.A.map((token) => (
-            <Col md={4} key={token}>
-              <DeityShitCard
-                image="/deities/ToBeKnown.png"
-                tier="A"
-                name="ToBeKnown"
-                owner={String(token)}
-                shitAmount={300}
-                lastShitTime={lastShitTime.get(token)}
-                onShit={() => shit(token)}
-              />
-            </Col>
-          ))}
-          {userTokens.B.map((token) => (
-            <Col md={4} key={token}>
-              <DeityShitCard
-                image="/deities/ToBeKnown.png"
-                tier="B"
-                name="ToBeKnown"
-                owner={String(token)}
-                shitAmount={200}
-                lastShitTime={lastShitTime.get(token)}
-                onShit={() => shit(token)}
-              />
-            </Col>
-          ))}
-          {userTokens.C.map((token) => (
-            <Col md={4} key={token}>
-              <DeityShitCard
-                image="/deities/ToBeKnown.png"
-                tier="C"
-                name="ToBeKnown"
-                owner={String(token)}
-                shitAmount={100}
-                lastShitTime={lastShitTime.get(token)}
-                onShit={() => shit(token)}
-              />
-            </Col>
-          ))}
-
-          <Col md={12}>
-            {totalPossibleShit() > 0 ? (
-              <Button
-                variant="contained"
-                color="primary"
-                fullwidth
-                onClick={async () => {
-                  try {
-                    setFarming(true);
-                    await batchShit(shittableTokens());
-                    setFarming(false);
-                  } catch (err) {
-                    console.error(err);
-                    setFarming(false);
-                  }
-                }}
-              >
-                {farming
-                  ? "Farming ..."
-                  : ` Your Deities can Shit a total ${totalPossibleShit()} $HolyShit.
-                Farm now!`}
-              </Button>
-            ) : (
-              <Button href="/" fullwidth>
-                All of your deities are resting and can not shit. You can wait
-                or mint new deities.
-              </Button>
-            )}
-          </Col>
         </Row>
       ) : userBalances.length > 0 || !connectedAccount ? null : (
         <Row>
@@ -231,6 +148,14 @@ export const FarmingSection = () => {
           </Col>
         </Row>
       )}
+
+      <Row>
+        <Col md={12}>
+          <HolyShitBalance>
+            <RedSpan>There is no more Shit to Farm :(</RedSpan>
+          </HolyShitBalance>
+        </Col>
+      </Row>
     </Container>
   );
 };
