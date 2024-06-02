@@ -43,6 +43,11 @@ interface ExtentionContextType {
     fellowshipLogo: File,
     fellowshipDescription: string
   ) => Promise<void>;
+  editFellowship: (
+    fellowshiAddress: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string
+  ) => Promise<void>;
   mintBackerBuck: (
     fellowshiAddress: string,
     amount: number,
@@ -122,6 +127,11 @@ const ExtentionContext = createContext<ExtentionContextType>({
   initializeFellowship: async (
     fellowshiAddress: string,
     fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string
+  ) => {},
+  editFellowship: async (
     fellowshipSymbol: string,
     fellowshipLogo: File,
     fellowshipDescription: string
@@ -503,6 +513,49 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const editFellowship = async (
+    fellowshiAddress: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string
+  ) => {
+    if (signer) {
+      const LSP4_METADATA_KEY =
+        "0x9afb95cacc9f95858ec44aa8c3b685511002e30ae54415823f406128b85b238e";
+
+      const provider = targetRPC;
+
+      const lspFactory = new LSPFactory(provider, {
+        chainId: targetChainId,
+      });
+
+      const fellowship = new ethers.Contract(
+        fellowshiAddress,
+        Fellowship,
+        signer
+      );
+
+      try {
+        const metadata =
+          await lspFactory.LSP4DigitalAssetMetadata.uploadMetadata({
+            description: fellowshipDescription,
+            assets: [fellowshipLogo],
+            images: [fellowshipLogo],
+            links: [],
+          });
+
+        const verifiableURI = await generateVerifiableURIFromIPFS(metadata.url);
+
+        const tx = await fellowship.setData(LSP4_METADATA_KEY, verifiableURI);
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   const mintBackerBuck = async (
     fellowshiAddress: string,
     amount: number,
@@ -566,6 +619,7 @@ export const ExtentionProvider = ({ children }) => {
         shitBalance,
         foundFellowship,
         initializeFellowship,
+        editFellowship,
         mintBackerBuck,
       }}
     >

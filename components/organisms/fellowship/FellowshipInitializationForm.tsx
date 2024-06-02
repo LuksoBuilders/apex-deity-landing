@@ -9,6 +9,22 @@ import { Spacing, CircledImage } from "../../atoms";
 import { TextField, Button } from "../../molecules";
 import { useExtention } from "../../hooks/useExtension";
 
+import { Fellowship } from "../../types/remoteTypes";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_FELLOWSHIP = gql`
+  query Fellowship($fellowshipId: String!) {
+    fellowship(id: $fellowshipId) {
+      founder {
+        id
+        metadata {
+          name
+        }
+      }
+    }
+  }
+`;
+
 const FellowshipInitializationFormContainer = styled.div``;
 
 const Title = styled.h1`
@@ -67,8 +83,12 @@ export const FellowshipInitializationForm =
     const [symbol, setSymbol] = useState<string>("");
 
     const { query } = useRouter();
+    const { error, loading, data } = useQuery(GET_FELLOWSHIP, {
+      variables: { fellowshipId: query.id },
+    });
+
     const fellowshipAddress = query.id;
-    const fellowship = useUninitializedFellowhsip(String(fellowshipAddress));
+    const fellowship: Fellowship = data?.fellowship;
 
     const isDisbaled = !name || !description || !symbol || !avatar;
 
@@ -79,12 +99,10 @@ export const FellowshipInitializationForm =
         <FounderContainer>
           Founded By:{" "}
           <Founder>
-            {fellowship.loading ? (
+            {!fellowship ? (
               <BounceLoader size={22} />
-            ) : fellowship.data ? (
-              fellowship.data.deity.name
             ) : (
-              fellowship.error?.message
+              fellowship.founder.metadata.name
             )}
           </Founder>
         </FounderContainer>

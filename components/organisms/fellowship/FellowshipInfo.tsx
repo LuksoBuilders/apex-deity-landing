@@ -9,6 +9,8 @@ import { BounceLoader } from "react-spinners";
 import { CircledImage, CenteredDiv, Spacing } from "../../atoms";
 import { Fellowship } from "../../types/remoteTypes";
 import { ipfsURLtoNormal } from "../../utils";
+import { Button } from "../../molecules";
+import { useExtention } from "../../hooks/useExtension";
 
 const GET_FELLOWSHIP = gql`
   query Fellowship($fellowshipId: String!) {
@@ -78,6 +80,11 @@ const FellowshipInfoContainer = styled.div`
   position: relative;
 `;
 
+const TopInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const NameAndSymbolContainer = styled.div`
   color: #383838;
   margin-bottom: 1em;
@@ -86,6 +93,20 @@ const NameAndSymbolContainer = styled.div`
 const Name = styled.h1`
   font-size: 28px;
   font-weight: 800;
+`;
+
+const EditButton = styled(Link)`
+  font-size: 1.1em;
+  background: #fff;
+  padding: 0.25em 1em;
+  color: #121e8e;
+  border: 2px solid #121e8e;
+  cursor: pointer;
+  transition: 200ms;
+  display: inline-block;
+  &:hover {
+    background-color: #f8f8f8;
+  }
 `;
 
 const Symbol = styled.h2`
@@ -167,6 +188,8 @@ const EXPLORER_ADDRESS =
   "https://explorer.execution.mainnet.lukso.network/address";
 
 export const FellowshipInfo = ({}: FellowshipInfoProps) => {
+  const { connectedAccount } = useExtention();
+
   const { query } = useRouter();
 
   const { error, loading, data } = useQuery(GET_FELLOWSHIP, {
@@ -183,6 +206,9 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
 
   const fellowship: Fellowship = data.fellowship;
 
+  const isOwner =
+    connectedAccount?.toLowerCase() === fellowship.artisan.id.toLowerCase();
+
   return (
     <FellowshipInfoContainer>
       <Row style={{ width: "100%" }}>
@@ -198,9 +224,19 @@ export const FellowshipInfo = ({}: FellowshipInfoProps) => {
           />
         </Col>
         <Col md={6}>
-          <NameAndSymbolContainer>
-            <Name>{fellowship.name}</Name> <Symbol>${fellowship.symbol}</Symbol>
-          </NameAndSymbolContainer>
+          <TopInfo>
+            <NameAndSymbolContainer>
+              <Name>{fellowship.name}</Name>{" "}
+              <Symbol>${fellowship.symbol}</Symbol>
+            </NameAndSymbolContainer>
+            {isOwner ? (
+              <div>
+                <EditButton href={`/fellowship/${fellowship.id}/edit`}>
+                  Edit
+                </EditButton>
+              </div>
+            ) : null}
+          </TopInfo>
           <Info>
             Contract Address:{" "}
             <RedInfoLink
