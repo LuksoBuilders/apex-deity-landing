@@ -104,7 +104,7 @@ export const UserDeitiesSidebarListItem = ({
   );
 
   return (
-    <UserDeitiesSidebarListItemContainer href={`#`}>
+    <UserDeitiesSidebarListItemContainer href={`/deities/${deity.id}`}>
       <ImageSection>
         <DeityImage
           src={ipfsURLtoNormal(String(deity.metadata?.images?.[0]?.[3]?.url))}
@@ -142,7 +142,14 @@ export const UserDeitiesSidebarListItem = ({
             <InfoItem>
               <Important>
                 <Red>
-                  {/*ethers.utils.formatEther(deity.withdrawable)*/} N/A $LYX
+                  {Number(ethers.utils.formatEther(deity.withdrawable)) > 1
+                    ? Number(
+                        ethers.utils.formatEther(deity.withdrawable)
+                      ).toFixed(1)
+                    : Number(
+                        ethers.utils.formatEther(deity.withdrawable)
+                      ).toFixed(3)}{" "}
+                  $LYX
                 </Red>
               </Important>
             </InfoItem>

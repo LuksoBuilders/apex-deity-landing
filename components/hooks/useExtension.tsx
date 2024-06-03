@@ -8,6 +8,7 @@ import ApexDeities from "../abis/ApexDeities.json";
 import HolyShit from "../abis/HolyShit.json";
 import ArtisanAlly from "../abis/ArtisanAlly.json";
 import Fellowship from "../abis//Fellowship.json";
+import FeeCollector from "../abis/FeeCollector.json";
 
 const testnetRPC = "https://4201.rpc.thirdweb.com";
 const mainnetRPC = "https://rpc.lukso.sigmacore.io";
@@ -53,6 +54,7 @@ interface ExtentionContextType {
     amount: number,
     gqlSupply: number
   ) => Promise<void>;
+  harvestDeity: (deity: number) => Promise<void>;
 }
 
 export function bytes32ToNumber(bytes: string): bigint {
@@ -93,6 +95,7 @@ const mainnetContractAddresses = {
   apexDeities: "0xb4E32a20aa27B5891Bfa592c392c9858A1DD3945",
   holyShit: "0x2fF8dF5F47Cd67AfE425a2acb28d6506838495Ee",
   artisanAlly: "0x84d6022AeCb5d558Cb119A8632b79436f0575ee3",
+  feeCollector: "0xd7cD9902ec51010b99c7577fDa2F4c335A17E75f",
 };
 
 const testnetContractAddresses = {
@@ -141,6 +144,7 @@ const ExtentionContext = createContext<ExtentionContextType>({
     amount: number,
     gqlSupply: number
   ) => {},
+  harvestDeity: async (deity: number) => {},
 });
 
 export const useExtention = () => {
@@ -600,6 +604,26 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const harvestDeity = async (deity: number) => {
+    if (signer) {
+      const feeCollector = new ethers.Contract(
+        targetContractAddresses.feeCollector,
+        FeeCollector,
+        signer
+      );
+
+      try {
+        const tx = await feeCollector.harvestDeity(deity);
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   return (
     <ExtentionContext.Provider
       value={{
@@ -621,6 +645,7 @@ export const ExtentionProvider = ({ children }) => {
         initializeFellowship,
         editFellowship,
         mintBackerBuck,
+        harvestDeity,
       }}
     >
       <DataProvider>{children}</DataProvider>

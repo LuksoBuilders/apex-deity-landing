@@ -118,6 +118,9 @@ const GET_USER = gql`
   query User($userAddress: String!) {
     user(userAddress: $userAddress) {
       id
+      profile {
+        name
+      }
       backerBucks {
         id
         fellowship {
@@ -197,7 +200,7 @@ export const ConnectedMenu = ({ userAddress }: ConnectedMenuProps) => {
 
   const user: User = UserQuery.data.user;
 
-  console.log(user);
+  console.log("user: ", user);
 
   return (
     <ConnectedMenuContainer>

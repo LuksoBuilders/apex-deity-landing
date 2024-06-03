@@ -95,7 +95,7 @@ export const DeitiesList = ({ deities }: DeitiesListProps) => {
                 <DeityId>#{deity.tokenIdNumber}</DeityId>
               </DeityMainInfo>{" "}
               <DeityItemSecondaryInfoSection>
-                <DeityItemSecondaryInfo>
+                {/*<DeityItemSecondaryInfo>
                   Divine Tribute:{" "}
                   <RedSpan>
                     {Number(
@@ -103,7 +103,7 @@ export const DeitiesList = ({ deities }: DeitiesListProps) => {
                     ).toFixed(3)}{" "}
                     $LYX
                   </RedSpan>{" "}
-                </DeityItemSecondaryInfo>
+                  </DeityItemSecondaryInfo>*/}
 
                 <DeityItemSecondaryInfo>
                   Owner: <RedSpan>{deity.owner.profile.name}</RedSpan>{" "}
@@ -115,7 +115,7 @@ export const DeitiesList = ({ deities }: DeitiesListProps) => {
                   </RedSpan>
                 </DeityItemSecondaryInfo>
                 <DeityItemSecondaryInfo>
-                  XP: <RedSpan>{deity.level}</RedSpan>
+                  XP: <RedSpan>{deity.xp}</RedSpan>
                 </DeityItemSecondaryInfo>
                 <DeityItemSecondaryInfo>
                   Level: <RedSpan>{deity.level}</RedSpan>
@@ -140,12 +140,8 @@ export const DeitiesList = ({ deities }: DeitiesListProps) => {
       {deities?.length > 0
         ? [...deities]
             .sort((a, b) => {
-              const aA = Number(
-                Number(ethers.utils.formatEther(a.withdrawable)).toFixed(3)
-              );
-              const bB = Number(
-                Number(ethers.utils.formatEther(b.withdrawable)).toFixed(3)
-              );
+              const aA = Number(a.xp);
+              const bB = Number(b.xp);
 
               return bB - aA;
             })

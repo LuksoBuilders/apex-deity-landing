@@ -7,6 +7,8 @@ import { Deity } from "../../types/remoteTypes";
 import { ipfsURLtoNormal, isWeekSinceUsed } from "../../utils";
 import { ethers } from "ethers";
 import Link from "next/link";
+import { useExtention } from "../../hooks/useExtension";
+import { useApolloClient } from "@apollo/client";
 
 const DeityInfoContainer = styled.div``;
 
@@ -138,6 +140,10 @@ interface DeityInfoProps {
 }
 
 export const DeityInfo = ({ deity }: DeityInfoProps) => {
+  const { connectedAccount, harvestDeity } = useExtention();
+  const client = useApolloClient();
+
+  const [harvesting, setHarvesting] = useState(false);
   const imageHolderRef = useRef<HTMLDivElement>(null);
   const [imageHolderWidth, setImageHolderWidth] = useState(0);
 
@@ -211,13 +217,35 @@ export const DeityInfo = ({ deity }: DeityInfoProps) => {
                 {deity.tier.toUpperCase()}. {deity.metadata.name}{" "}
                 <DeityId>#{deity.tokenIdNumber}</DeityId>
               </DeityMainInfo>
-              <Button disabled={true} color="primary" variant="contained">
-                Withdraw{" "}
-                {Number(ethers.utils.formatEther(deity.withdrawable)).toFixed(
-                  3
-                )}{" "}
-                $LYX
-              </Button>
+              {connectedAccount.toLowerCase() ===
+              deity.owner.id.toLowerCase() ? (
+                <Button
+                  disabled={
+                    harvesting ||
+                    ethers.utils.parseEther(deity.withdrawable).eq(0)
+                  }
+                  onClick={async () => {
+                    try {
+                      setHarvesting(true);
+                      await harvestDeity(Number(deity.tokenIdNumber));
+                      client.resetStore();
+                      setHarvesting(false);
+                    } catch (err) {
+                      setHarvesting(false);
+                    }
+                  }}
+                  color="primary"
+                  variant="contained"
+                >
+                  {harvesting
+                    ? "Harvesting ..."
+                    : `Harvest 
+                  ${Number(
+                    ethers.utils.formatEther(deity.withdrawable)
+                  ).toFixed(3)} 
+                  $LYX`}
+                </Button>
+              ) : null}
             </DeityTopRow>
 
             <DeitySecondRow>
