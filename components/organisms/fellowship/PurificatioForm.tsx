@@ -141,7 +141,7 @@ export const PurificatioForm = ({ fellowship }: PurificatioFormProps) => {
               Your $HolyShit Balance: <Red>{Number(ethers.utils.formatEther(user.holyShitsBalance)).toFixed(0)} $HSHT</Red>
             </BalanceInfo>
             <BalanceInfo>
-              Purifiable Contributions: <Red>{targetBackerBuck.purifiable} $ALY</Red>
+              Purifiable Contributions: <Red>{targetBackerBuck.purifiable} ${fellowship.symbol}</Red>
             </BalanceInfo>
 
           </div>

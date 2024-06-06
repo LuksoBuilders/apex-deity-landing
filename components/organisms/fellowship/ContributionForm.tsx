@@ -127,7 +127,7 @@ export const ContributionForm = ({ fellowship }: ContributionFormProps) => {
         </Info>
         <ContributionSection>
           <BalanceInfo>
-            Your Balance: <Red>{targetBackerBuck.amount} $ALY</Red>
+            Your Balance: <Red>{targetBackerBuck.amount} ${fellowship.symbol}</Red>
           </BalanceInfo>
           <ValueSelector
             maxValue={Number(targetBackerBuck.amount)}
@@ -158,7 +158,7 @@ export const ContributionForm = ({ fellowship }: ContributionFormProps) => {
             }
           }}
         >
-          {contributing ? "Contributing" : amount <= 0 ? `Contribute` : `Contribute ${amount} $ALY`}
+          {contributing ? "Contributing" : amount <= 0 ? `Contribute` : `Contribute ${amount} $${fellowship.symbol}`}
         </Button>
       </ContributionAction>
     </ContributionFormContainer>
