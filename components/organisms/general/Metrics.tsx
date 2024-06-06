@@ -9,6 +9,7 @@ const GET_GLOBAL_VARS = gql`
     globalVars {
       totalFeeCollected
       totalRaisedAmount
+      divineDungDepotBalance
     }
   }
 `;
@@ -56,13 +57,13 @@ export const Metrics = ({}: MetricsProps) => {
         </Col>
         <Col md={6}>
           <MetricSquare>
-            <MetricTitle>Total Fee Collected</MetricTitle>
+            <MetricTitle>Divine Dung Depot</MetricTitle>
             <MetricValue>
               {" "}
               {Number(
-                ethers.utils.formatEther(globalVars.totalFeeCollected)
+                ethers.utils.formatEther(globalVars.divineDungDepotBalance)
               ).toFixed(0)}{" "}
-              $LYX
+              $HSHT
             </MetricValue>
           </MetricSquare>
         </Col>

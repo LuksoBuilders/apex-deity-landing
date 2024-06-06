@@ -74,6 +74,8 @@ const GET_FELLOWSHIP = gql`
       priceGrowth
       totalSupply
       raisedAmount
+      contributionAmount
+      endorsementAmount
     }
   }
 `;
@@ -99,6 +101,8 @@ const GET_USER = gql`
           id
         }
         amount
+        purifiable
+        contributions
       }
     }
   }
@@ -169,7 +173,7 @@ const ActionsList = styled.div`
   padding: 0.5em 1em;
 `;
 
-interface BackerBuckPanelProps {}
+interface BackerBuckPanelProps { }
 
 function getMintPrice(
   currentSupply: BigNumber,
@@ -238,7 +242,31 @@ export const UserBalance = ({ symbol }: UserBalanceProps) => {
   );
 };
 
-export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
+export const UserContributions = ({ symbol }: UserBalanceProps) => {
+  const { query } = useRouter();
+  const { connectedAccount, mintBackerBuck } = useExtention();
+
+  const { error, loading, data } = useQuery(GET_USER, {
+    variables: { userAddress: connectedAccount },
+  });
+
+  if (error || loading) return <span></span>;
+
+  const user: User = data.user;
+
+  const targetBackerBuck = user.backerBucks.find(
+    (backerBuck) => backerBuck.fellowship.id === query.id
+  );
+
+  if (!targetBackerBuck) return <Red>0 ${symbol}</Red>;
+  return (
+    <Red>
+      {targetBackerBuck.contributions} ${symbol}
+    </Red>
+  );
+}
+
+export const BackerBuckPanel = ({ }: BackerBuckPanelProps) => {
   const { query } = useRouter();
   const [minting, setMinting] = useState<boolean>(false);
   const [mintValue, setMintValue] = useState(0);
@@ -328,15 +356,15 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                     ? "Mint"
                     : ` Mint for
                   ${Number(
-                    ethers.utils.formatEther(
-                      getMintPrice(
-                        ethers.BigNumber.from(fellowship.totalSupply),
-                        BigNumber.from(mintValue),
-                        BigNumber.from(150),
-                        BigNumber.from(fellowship.initialPrice)
+                      ethers.utils.formatEther(
+                        getMintPrice(
+                          ethers.BigNumber.from(fellowship.totalSupply),
+                          BigNumber.from(mintValue),
+                          BigNumber.from(150),
+                          BigNumber.from(fellowship.initialPrice)
+                        )
                       )
-                    )
-                  ).toFixed(2)}
+                    ).toFixed(2)}
                   $LYX`}
                 </Button>
               </Minter>
@@ -360,9 +388,16 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
         <InfoDivider />
         <InfoRow>
           <InfoCol>
-            <Info>
-              Your Contributions: <Red>Soon</Red>
-            </Info>
+            {!connectedAccount ? (
+              <Info>
+                Connect to contribute
+              </Info>
+            ) : (
+              <Info>
+                Your Contributions:  <UserContributions symbol={fellowship.symbol} />
+              </Info>
+            )}
+
           </InfoCol>
           <InfoCol>
             <ActionsList>
@@ -370,7 +405,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                 onClick={() => setPurifyModal(true)}
                 variant="outlined"
                 color="black"
-                disabled
+                disabled={!connectedAccount}
               >
                 Purify
               </Button>
@@ -378,7 +413,7 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
                 onClick={() => setContributeModal(true)}
                 variant="contained"
                 color="black"
-                disabled
+                disabled={!connectedAccount}
               >
                 Contribute
               </Button>
@@ -435,14 +470,14 @@ export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
         open={contributeModal}
         onClose={() => setContributeModal(false)}
       >
-        <ContributionForm />
+        <ContributionForm fellowship={fellowship} />
       </Modal>
       <Modal
         title="Purification"
         open={purifyModal}
         onClose={() => setPurifyModal(false)}
       >
-        <PurificatioForm />
+        <PurificatioForm fellowship={fellowship} />
       </Modal>
       <Modal
         title="Endorsement"

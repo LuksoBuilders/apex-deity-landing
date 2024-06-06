@@ -139,6 +139,9 @@ const GET_USER = gql`
           id
         }
         amount
+        purifiable
+        contributions
+
       }
     }
   }

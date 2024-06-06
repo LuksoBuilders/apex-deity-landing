@@ -4,6 +4,45 @@ import { useState } from "react";
 import { Button } from "../../molecules";
 import { ValueSelector } from "../general";
 
+import { Fellowship, User, BackerBuck } from "../../types/remoteTypes";
+import { gql, useQuery } from "@apollo/client";
+import { useExtention } from "../../hooks/useExtension";
+
+
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const GET_USER = gql`
+  query User($userAddress: String!) {
+    user(userAddress: $userAddress) {
+      id
+      backerBucks {
+        id
+        fellowship {
+          id
+          name
+          symbol
+          metadata
+          info {
+            images {
+              url
+            }
+          }
+        }
+        owner {
+          id
+        }
+        amount
+        purifiable
+        contributions
+
+      }
+    }
+  }
+`;
+
+
 const ContributionFormContainer = styled.div``;
 
 const ContributionContent = styled.div`
@@ -43,12 +82,31 @@ const ContributionAction = styled.div`
   padding: 0.5em 1em;
 `;
 
-interface ContributionFormProps {}
+interface ContributionFormProps {
+  fellowship: Fellowship
+}
 
-export const ContributionForm = ({}: ContributionFormProps) => {
+export const ContributionForm = ({ fellowship }: ContributionFormProps) => {
+  const [contributing, setContributing] = useState(false)
+  const { connectedAccount, contribution } = useExtention();
+
+  const { error, loading, data, refetch } = useQuery(GET_USER, {
+    variables: { userAddress: connectedAccount },
+  });
+
   const [amount, setAmount] = useState(0);
 
-  const available = 5;
+  if (error || loading) return <span></span>;
+
+  const user: User = data.user;
+
+
+  let targetBackerBuck: BackerBuck = user.backerBucks.find(
+    (backerBuck) => backerBuck.fellowship.id === fellowship.id
+  );
+  if (!targetBackerBuck) {
+    targetBackerBuck = { amount: 0 } as unknown as BackerBuck
+  }
 
   return (
     <ContributionFormContainer>
@@ -69,10 +127,10 @@ export const ContributionForm = ({}: ContributionFormProps) => {
         </Info>
         <ContributionSection>
           <BalanceInfo>
-            Your Balance: <Red>{available} $ALY</Red>
+            Your Balance: <Red>{targetBackerBuck.amount} $ALY</Red>
           </BalanceInfo>
           <ValueSelector
-            maxValue={available}
+            maxValue={Number(targetBackerBuck.amount)}
             value={amount}
             setValue={setAmount}
           />
@@ -82,11 +140,25 @@ export const ContributionForm = ({}: ContributionFormProps) => {
       <ContributionAction>
         <Button
           size="small"
-          disabled={amount <= 0}
+          disabled={amount <= 0 || contributing}
           color="primary"
           variant="contained"
+          onClick={async () => {
+            console.log(fellowship)
+            try {
+              setContributing(true)
+              await contribution(fellowship.id, fellowship.contributionAddress, amount)
+              refetch();
+              await delay(2000)
+              refetch();
+              setAmount(0);
+              setContributing(false)
+            } catch (err) {
+              setContributing(false)
+            }
+          }}
         >
-          {amount <= 0 ? `Contribute` : `Contribute ${amount} $ALY`}
+          {contributing ? "Contributing" : amount <= 0 ? `Contribute` : `Contribute ${amount} $ALY`}
         </Button>
       </ContributionAction>
     </ContributionFormContainer>

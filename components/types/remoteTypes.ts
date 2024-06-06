@@ -123,6 +123,8 @@ export interface BackerBuck {
   owner: User;
   fellowship: Fellowship;
   amount: string;
+  contributions: string;
+  purifiable: string;
 }
 
 export interface Contribution {

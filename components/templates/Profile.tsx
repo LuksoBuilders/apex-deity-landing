@@ -31,6 +31,8 @@ const GET_USER = gql`
           symbol
         }
         amount
+        purifiable
+        contributions
       }
       fellowships {
         ...FellowshipBasicFields

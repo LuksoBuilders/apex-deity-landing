@@ -15,6 +15,8 @@ const GET_FELLOWSHIP = gql`
       backerBucks {
         id
         amount
+        purifiable
+        contributions
         owner {
           id
           profile {
@@ -71,13 +73,13 @@ const BackingAmount = styled.h3`
   justify-content: center;
 `;
 
-interface BackersListProps {}
+interface BackersListProps { }
 
 function shortenEthereumAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export const BackersList = ({}: BackersListProps) => {
+export const BackersList = ({ }: BackersListProps) => {
   const { query } = useRouter();
   const { error, loading, data } = useQuery(GET_FELLOWSHIP, {
     variables: { fellowshipId: query.id },

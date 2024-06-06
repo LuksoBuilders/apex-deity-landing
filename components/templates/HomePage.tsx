@@ -58,6 +58,9 @@ const GET_USERS = gql`
           id
           currentPrice
         }
+        purifiable
+        contributions
+
       }
     }
   }

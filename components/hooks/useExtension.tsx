@@ -4,11 +4,13 @@ import { DataProvider } from "./useData";
 import { LSPFactory } from "../lsp-tools";
 import { generateVerifiableURIFromIPFS } from "../utils";
 
+import UniversalProfile from "../abis/UniversalProfile.json"
 import ApexDeities from "../abis/ApexDeities.json";
 import HolyShit from "../abis/HolyShit.json";
 import ArtisanAlly from "../abis/ArtisanAlly.json";
 import Fellowship from "../abis//Fellowship.json";
 import FeeCollector from "../abis/FeeCollector.json";
+import Contribution from "../abis/Contribution.json"
 
 const testnetRPC = "https://4201.rpc.thirdweb.com";
 const mainnetRPC = "https://rpc.lukso.sigmacore.io";
@@ -16,6 +18,9 @@ const mainnetRPC = "https://rpc.lukso.sigmacore.io";
 const targetRPC = mainnetRPC;
 
 const targetChainId = 42;
+
+
+
 
 interface ExtentionContextType {
   provider: ethers.providers.Provider | null;
@@ -55,6 +60,8 @@ interface ExtentionContextType {
     gqlSupply: number
   ) => Promise<void>;
   harvestDeity: (deity: number) => Promise<void>;
+  contribution: (fellowshipAddress: string, contributionAddress: string, amount: number) => Promise<void>
+  purify: (contributionAddress: string, amount: number) => Promise<void>
 }
 
 export function bytes32ToNumber(bytes: string): bigint {
@@ -115,7 +122,7 @@ const ExtentionContext = createContext<ExtentionContextType>({
   provider: null,
   signer: null,
   accounts: [],
-  connect: async () => {},
+  connect: async () => { },
   connectedAccount: undefined,
   isConnected: false,
   availableBalances: [],
@@ -123,28 +130,31 @@ const ExtentionContext = createContext<ExtentionContextType>({
   totalShitsSupply: 0,
   lastShitTime: new Map(),
   shitBalance: ethers.BigNumber.from(0),
-  shit: async (tokenId: number) => {},
-  batchShit: async (tokenIds: Array<number>) => {},
-  mint: async (order: Array<Number>, value: ethers.BigNumber) => {},
-  foundFellowship: async (deity: number, slot: number, artisan: string) => {},
+  shit: async (tokenId: number) => { },
+  batchShit: async (tokenIds: Array<number>) => { },
+  mint: async (order: Array<Number>, value: ethers.BigNumber) => { },
+  foundFellowship: async (deity: number, slot: number, artisan: string) => { },
   initializeFellowship: async (
     fellowshiAddress: string,
     fellowshipName: string,
     fellowshipSymbol: string,
     fellowshipLogo: File,
     fellowshipDescription: string
-  ) => {},
+  ) => { },
   editFellowship: async (
     fellowshipSymbol: string,
     fellowshipLogo: File,
     fellowshipDescription: string
-  ) => {},
+  ) => { },
   mintBackerBuck: async (
     fellowshiAddress: string,
     amount: number,
     gqlSupply: number
-  ) => {},
-  harvestDeity: async (deity: number) => {},
+  ) => { },
+  harvestDeity: async (deity: number) => { },
+  contribution: async (fellowshipAddress: string, contributionAddress: string, amount: number) => { },
+  purify: async (contributionAddress: string, amount: number) => { }
+
 });
 
 export const useExtention = () => {
@@ -226,7 +236,7 @@ export const ExtentionProvider = ({ children }) => {
         // @ts-ignore
         window.lukso && window.lukso.isUniversalProfileExtension
           ? // @ts-ignore
-            new ethers.providers.Web3Provider(window.lukso)
+          new ethers.providers.Web3Provider(window.lukso)
           : new ethers.providers.JsonRpcProvider(targetRPC);
       // @ts-ignore
       setProvider(web3Provider);
@@ -624,6 +634,93 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
+  const contribution = async (fellowshipAddress: string, contributionAddress: string, amount: number) => {
+    if (signer && connectedAccount) {
+      const fellowship = new ethers.Contract(
+        fellowshipAddress,
+        Fellowship,
+        signer
+      );
+
+      const contributionContract = new ethers.Contract(
+        contributionAddress,
+        Contribution,
+        signer
+      );
+
+      const universalProfile = new ethers.Contract(
+        connectedAccount,
+        UniversalProfile,
+        signer
+      )
+
+
+      try {
+        //const authorizeOperatorTX = await fellowship.authorizeOperator(contributionAddress, amount, "0x")
+
+        const authorizeOperatorData = fellowship.interface.encodeFunctionData('authorizeOperator', [
+          contributionAddress, amount, "0x"
+        ])
+
+
+        const contributionContractData = contributionContract.interface.encodeFunctionData("contribute", [
+          amount, connectedAccount
+        ])
+
+
+        const tx = await universalProfile.executeBatch([0, 0], [fellowshipAddress, contributionAddress], [0, 0], [authorizeOperatorData, contributionContractData])
+        await tx.wait();
+        refetch();
+      } catch (err) {
+        throw err
+      }
+    }
+  }
+
+  const purify = async (contributionAddress: string, amount: number) => {
+    if (signer && connectedAccount) {
+      const holyShit = new ethers.Contract(
+        targetContractAddresses.holyShit,
+        HolyShit,
+        signer
+      );
+
+      const contributionContract = new ethers.Contract(
+        contributionAddress,
+        Contribution,
+        signer
+      );
+
+      const universalProfile = new ethers.Contract(
+        connectedAccount,
+        UniversalProfile,
+        signer
+      )
+
+
+      try {
+        //const authorizeOperatorTX = await fellowship.authorizeOperator(contributionAddress, amount, "0x")
+
+        const authorizeOperatorData = holyShit.interface.encodeFunctionData('authorizeOperator', [
+          contributionAddress, ethers.utils.parseEther(String(amount * 100)), "0x"
+        ])
+
+
+        const contributionContractData = contributionContract.interface.encodeFunctionData("purify", [
+          amount
+        ])
+
+
+        const tx = await universalProfile.executeBatch([0, 0], [targetContractAddresses.holyShit, contributionAddress], [0, 0], [authorizeOperatorData, contributionContractData])
+        await tx.wait();
+        refetch();
+      } catch (err) {
+        throw err
+      }
+    }
+  }
+
+
   return (
     <ExtentionContext.Provider
       value={{
@@ -646,6 +743,8 @@ export const ExtentionProvider = ({ children }) => {
         editFellowship,
         mintBackerBuck,
         harvestDeity,
+        contribution,
+        purify
       }}
     >
       <DataProvider>{children}</DataProvider>

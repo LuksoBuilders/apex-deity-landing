@@ -1,9 +1,48 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { ethers } from "ethers";
+import { gql, useQuery } from "@apollo/client";
+
 
 import { Button } from "../../molecules";
 import { ValueSelector } from "../general";
+import { useExtention } from "../../hooks/useExtension";
+import { useRouter } from "next/router";
+import { User, BackerBuck, Fellowship } from "../../types/remoteTypes";
+
+
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const GET_USER = gql`
+  query User($userAddress: String!) {
+    user(userAddress: $userAddress) {
+      id
+      backerBucks {
+        id
+        fellowship {
+          id
+          name
+          symbol
+          metadata
+          info {
+            images {
+              url
+            }
+          }
+        }
+        owner {
+          id
+        }
+        amount
+        purifiable
+        contributions
+      }
+      holyShitsBalance
+    }
+  }
+`;
 
 const PurificatioFormContainer = styled.div``;
 
@@ -49,13 +88,44 @@ const ErrorContainer = styled.div`
   color: ${({ theme }) => theme.error};
 `;
 
-interface PurificatioFormProps {}
+interface PurificatioFormProps {
+  fellowship: Fellowship
+}
 
-export const PurificatioForm = ({}: PurificatioFormProps) => {
+export const PurificatioForm = ({ fellowship }: PurificatioFormProps) => {
+  const [purifying, setPurifying] = useState(false)
+
+  const { query } = useRouter();
+  const { connectedAccount, purify } = useExtention();
+
+  const { error, loading, data, refetch } = useQuery(GET_USER, {
+    variables: { userAddress: connectedAccount },
+  });
+
   const [amount, setAmount] = useState(0);
 
-  const holyshitBalance = ethers.utils.parseEther("300");
-  const available = 5;
+
+
+  if (error || loading) return <span></span>;
+
+  const user: User = data.user;
+
+
+  let targetBackerBuck: BackerBuck = user.backerBucks.find(
+    (backerBuck) => backerBuck.fellowship.id === fellowship.id
+  );
+  if (!targetBackerBuck) {
+    targetBackerBuck = { amount: 0 } as unknown as BackerBuck
+  }
+
+
+  const holyshitBalance = ethers.BigNumber.from(user.holyShitsBalance);
+
+
+  const available = Number(targetBackerBuck.purifiable)
+
+
+  console.log(user)
 
   return (
     <PurificatioFormContainer>
@@ -66,9 +136,16 @@ export const PurificatioForm = ({}: PurificatioFormProps) => {
         </Info>
         <Info>You can only purify the tokens you contributed.</Info>
         <PurificatioSection>
-          <BalanceInfo>
-            Available Contributions: <Red>{available} $ALY</Red>
-          </BalanceInfo>
+          <div>
+            <BalanceInfo>
+              Your $HolyShit Balance: <Red>{Number(ethers.utils.formatEther(user.holyShitsBalance)).toFixed(0)} $HSHT</Red>
+            </BalanceInfo>
+            <BalanceInfo>
+              Purifiable Contributions: <Red>{targetBackerBuck.purifiable} $ALY</Red>
+            </BalanceInfo>
+
+          </div>
+
           <ValueSelector
             maxValue={available}
             value={amount}
@@ -81,13 +158,27 @@ export const PurificatioForm = ({}: PurificatioFormProps) => {
         <Button
           size="small"
           disabled={
+            purifying ||
             amount <= 0 ||
             holyshitBalance.lt(ethers.utils.parseEther(String(amount * 100)))
           }
           color="primary"
           variant="contained"
+          onClick={async () => {
+            try {
+              setPurifying(true)
+              await purify(fellowship.contributionAddress, amount)
+              refetch();
+              await delay(2000)
+              refetch();
+              setAmount(0);
+              setPurifying(false)
+            } catch (err) {
+              setPurifying(false)
+            }
+          }}
         >
-          {amount <= 0
+          {purifying ? "Purifying" : amount <= 0
             ? `Purify`
             : `Purify ${amount} $ALY for ${amount * 100} $HolyShit`}
         </Button>
