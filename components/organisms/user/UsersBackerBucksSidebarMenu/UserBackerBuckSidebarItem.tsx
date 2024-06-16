@@ -111,7 +111,7 @@ export const UserBackerBucksSidebarListItem = ({
         <BackerBuckImage
           src={ipfsURLtoNormal(
             targetImageUrl,
-            targetImageUrl?.replace("ipfs://", "").startsWith("b") ? 0 : 1
+            targetImageUrl?.replace("ipfs://", "").startsWith("b") ? 1 : 1
           )}
         />
       </ImageSection>
