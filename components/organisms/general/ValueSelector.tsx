@@ -40,12 +40,16 @@ interface ValueSelectorProps {
   value: number;
   setValue: Function;
   maxValue?: number;
+  steps?: number
+  renderHelper?: (v: string) => string
 }
 
 export const ValueSelector = ({
   value,
   setValue,
   maxValue = Infinity,
+  steps = 1,
+  renderHelper = (v: string) => v
 }: ValueSelectorProps) => {
   return (
     <ValueSelectorContainer>
@@ -53,18 +57,18 @@ export const ValueSelector = ({
         $disabled={value <= 0}
         onClick={() => {
           if (value > 0) {
-            setValue(value - 1);
+            setValue(value - steps);
           }
         }}
       >
         -
       </SelectorButton>
-      <SelectorValue>{value}</SelectorValue>
+      <SelectorValue>{renderHelper(String(value))}</SelectorValue>
       <SelectorButton
         $disabled={value >= maxValue}
         onClick={() => {
           if (value < maxValue) {
-            setValue(value + 1);
+            setValue(value + steps);
           }
         }}
       >

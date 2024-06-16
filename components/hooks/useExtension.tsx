@@ -4,13 +4,15 @@ import { DataProvider } from "./useData";
 import { LSPFactory } from "../lsp-tools";
 import { generateVerifiableURIFromIPFS } from "../utils";
 
-import UniversalProfile from "../abis/UniversalProfile.json"
+import UniversalProfile from "../abis/UniversalProfile.json";
 import ApexDeities from "../abis/ApexDeities.json";
 import HolyShit from "../abis/HolyShit.json";
 import ArtisanAlly from "../abis/ArtisanAlly.json";
+import ArtisanAllyV2 from "../abis/ArtisanAllyV2.json";
 import Fellowship from "../abis//Fellowship.json";
+import FellowshipV2 from "../abis//FellowshipV2.json";
 import FeeCollector from "../abis/FeeCollector.json";
-import Contribution from "../abis/Contribution.json"
+import Contribution from "../abis/Contribution.json";
 
 const testnetRPC = "https://4201.rpc.thirdweb.com";
 const mainnetRPC = "https://rpc.lukso.sigmacore.io";
@@ -18,9 +20,6 @@ const mainnetRPC = "https://rpc.lukso.sigmacore.io";
 const targetRPC = mainnetRPC;
 
 const targetChainId = 42;
-
-
-
 
 interface ExtentionContextType {
   provider: ethers.providers.Provider | null;
@@ -49,6 +48,17 @@ interface ExtentionContextType {
     fellowshipLogo: File,
     fellowshipDescription: string
   ) => Promise<void>;
+  initializeV2Fellowship: (
+    fellowshiAddress: string,
+    fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string,
+    initialPrice: string,
+    initialGrowthFactor: number,
+    eventualGrowthFactor: number,
+    diminishingFactor: number
+  ) => Promise<void>;
   editFellowship: (
     fellowshiAddress: string,
     fellowshipLogo: File,
@@ -60,8 +70,12 @@ interface ExtentionContextType {
     gqlSupply: number
   ) => Promise<void>;
   harvestDeity: (deity: number) => Promise<void>;
-  contribution: (fellowshipAddress: string, contributionAddress: string, amount: number) => Promise<void>
-  purify: (contributionAddress: string, amount: number) => Promise<void>
+  contribution: (
+    fellowshipAddress: string,
+    contributionAddress: string,
+    amount: number
+  ) => Promise<void>;
+  purify: (contributionAddress: string, amount: number) => Promise<void>;
 }
 
 export function bytes32ToNumber(bytes: string): bigint {
@@ -102,6 +116,7 @@ const mainnetContractAddresses = {
   apexDeities: "0xb4E32a20aa27B5891Bfa592c392c9858A1DD3945",
   holyShit: "0x2fF8dF5F47Cd67AfE425a2acb28d6506838495Ee",
   artisanAlly: "0x84d6022AeCb5d558Cb119A8632b79436f0575ee3",
+  artisanAllyV2: "0x050cbFFFAE8541A2154B40d4dD13F2d1F1a704F1",
   feeCollector: "0xd7cD9902ec51010b99c7577fDa2F4c335A17E75f",
 };
 
@@ -122,7 +137,7 @@ const ExtentionContext = createContext<ExtentionContextType>({
   provider: null,
   signer: null,
   accounts: [],
-  connect: async () => { },
+  connect: async () => {},
   connectedAccount: undefined,
   isConnected: false,
   availableBalances: [],
@@ -130,31 +145,45 @@ const ExtentionContext = createContext<ExtentionContextType>({
   totalShitsSupply: 0,
   lastShitTime: new Map(),
   shitBalance: ethers.BigNumber.from(0),
-  shit: async (tokenId: number) => { },
-  batchShit: async (tokenIds: Array<number>) => { },
-  mint: async (order: Array<Number>, value: ethers.BigNumber) => { },
-  foundFellowship: async (deity: number, slot: number, artisan: string) => { },
+  shit: async (tokenId: number) => {},
+  batchShit: async (tokenIds: Array<number>) => {},
+  mint: async (order: Array<Number>, value: ethers.BigNumber) => {},
+  foundFellowship: async (deity: number, slot: number, artisan: string) => {},
   initializeFellowship: async (
     fellowshiAddress: string,
     fellowshipName: string,
     fellowshipSymbol: string,
     fellowshipLogo: File,
     fellowshipDescription: string
-  ) => { },
+  ) => {},
+  initializeV2Fellowship: async (
+    fellowshiAddress: string,
+    fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string,
+    initialPrice: string,
+    initialGrowthFactor: number,
+    eventualGrowthFactor: number,
+    diminishingFactor: number
+  ) => {},
   editFellowship: async (
     fellowshipSymbol: string,
     fellowshipLogo: File,
     fellowshipDescription: string
-  ) => { },
+  ) => {},
   mintBackerBuck: async (
     fellowshiAddress: string,
     amount: number,
     gqlSupply: number
-  ) => { },
-  harvestDeity: async (deity: number) => { },
-  contribution: async (fellowshipAddress: string, contributionAddress: string, amount: number) => { },
-  purify: async (contributionAddress: string, amount: number) => { }
-
+  ) => {},
+  harvestDeity: async (deity: number) => {},
+  contribution: async (
+    fellowshipAddress: string,
+    contributionAddress: string,
+    amount: number
+  ) => {},
+  purify: async (contributionAddress: string, amount: number) => {},
 });
 
 export const useExtention = () => {
@@ -236,7 +265,7 @@ export const ExtentionProvider = ({ children }) => {
         // @ts-ignore
         window.lukso && window.lukso.isUniversalProfileExtension
           ? // @ts-ignore
-          new ethers.providers.Web3Provider(window.lukso)
+            new ethers.providers.Web3Provider(window.lukso)
           : new ethers.providers.JsonRpcProvider(targetRPC);
       // @ts-ignore
       setProvider(web3Provider);
@@ -464,7 +493,7 @@ export const ExtentionProvider = ({ children }) => {
   ) => {
     if (signer) {
       const artisanAlly = new ethers.Contract(
-        targetContractAddresses.artisanAlly,
+        targetContractAddresses.artisanAllyV2,
         ArtisanAlly,
         signer
       );
@@ -526,6 +555,60 @@ export const ExtentionProvider = ({ children }) => {
       }
     }
   };
+
+  const initializeV2Fellowship = async (
+    fellowshiAddress: string,
+    fellowshipName: string,
+    fellowshipSymbol: string,
+    fellowshipLogo: File,
+    fellowshipDescription: string,
+    initialPrice: string,
+    initialGrowthFactor: number,
+    eventualGrowthFactor: number,
+    diminishingFactor: number
+  ) => {
+    if (signer) {
+      const provider = targetRPC;
+
+      const lspFactory = new LSPFactory(provider, {
+        chainId: targetChainId,
+      });
+
+      const fellowship = new ethers.Contract(
+        fellowshiAddress,
+        FellowshipV2,
+        signer
+      );
+
+      try {
+        const metadata =
+          await lspFactory.LSP4DigitalAssetMetadata.uploadMetadata({
+            description: fellowshipDescription,
+            assets: [fellowshipLogo],
+            images: [fellowshipLogo],
+            links: [],
+          });
+
+        const verifiableURI = await generateVerifiableURIFromIPFS(metadata.url);
+
+        const tx = await fellowship.initialize(
+          fellowshipName,
+          fellowshipSymbol,
+          verifiableURI,
+          ethers.utils.parseEther(initialPrice),
+          initialGrowthFactor,
+          eventualGrowthFactor,
+          diminishingFactor
+        );
+
+        await tx.wait();
+
+        refetch();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
 
   const editFellowship = async (
     fellowshiAddress: string,
@@ -634,7 +717,11 @@ export const ExtentionProvider = ({ children }) => {
     }
   };
 
-  const contribution = async (fellowshipAddress: string, contributionAddress: string, amount: number) => {
+  const contribution = async (
+    fellowshipAddress: string,
+    contributionAddress: string,
+    amount: number
+  ) => {
     if (signer && connectedAccount) {
       const fellowship = new ethers.Contract(
         fellowshipAddress,
@@ -652,30 +739,35 @@ export const ExtentionProvider = ({ children }) => {
         connectedAccount,
         UniversalProfile,
         signer
-      )
-
+      );
 
       try {
         //const authorizeOperatorTX = await fellowship.authorizeOperator(contributionAddress, amount, "0x")
 
-        const authorizeOperatorData = fellowship.interface.encodeFunctionData('authorizeOperator', [
-          contributionAddress, amount, "0x"
-        ])
+        const authorizeOperatorData = fellowship.interface.encodeFunctionData(
+          "authorizeOperator",
+          [contributionAddress, amount, "0x"]
+        );
 
+        const contributionContractData =
+          contributionContract.interface.encodeFunctionData("contribute", [
+            amount,
+            connectedAccount,
+          ]);
 
-        const contributionContractData = contributionContract.interface.encodeFunctionData("contribute", [
-          amount, connectedAccount
-        ])
-
-
-        const tx = await universalProfile.executeBatch([0, 0], [fellowshipAddress, contributionAddress], [0, 0], [authorizeOperatorData, contributionContractData])
+        const tx = await universalProfile.executeBatch(
+          [0, 0],
+          [fellowshipAddress, contributionAddress],
+          [0, 0],
+          [authorizeOperatorData, contributionContractData]
+        );
         await tx.wait();
         refetch();
       } catch (err) {
-        throw err
+        throw err;
       }
     }
-  }
+  };
 
   const purify = async (contributionAddress: string, amount: number) => {
     if (signer && connectedAccount) {
@@ -695,31 +787,38 @@ export const ExtentionProvider = ({ children }) => {
         connectedAccount,
         UniversalProfile,
         signer
-      )
-
+      );
 
       try {
         //const authorizeOperatorTX = await fellowship.authorizeOperator(contributionAddress, amount, "0x")
 
-        const authorizeOperatorData = holyShit.interface.encodeFunctionData('authorizeOperator', [
-          contributionAddress, ethers.utils.parseEther(String(amount * 100)), "0x"
-        ])
+        const authorizeOperatorData = holyShit.interface.encodeFunctionData(
+          "authorizeOperator",
+          [
+            contributionAddress,
+            ethers.utils.parseEther(String(amount * 100)),
+            "0x",
+          ]
+        );
 
+        const contributionContractData =
+          contributionContract.interface.encodeFunctionData("purify", [amount]);
 
-        const contributionContractData = contributionContract.interface.encodeFunctionData("purify", [
-          amount
-        ])
-
-
-        const tx = await universalProfile.executeBatch([0, 0], [targetContractAddresses.holyShit, contributionAddress], [0, 0], [authorizeOperatorData, contributionContractData])
+        const tx = await universalProfile.executeBatch(
+          [0, 0],
+          [targetContractAddresses.holyShit, contributionAddress],
+          [0, 0],
+          [authorizeOperatorData, contributionContractData]
+        );
         await tx.wait();
         refetch();
       } catch (err) {
-        throw err
+        throw err;
       }
     }
-  }
+  };
 
+  
 
   return (
     <ExtentionContext.Provider
@@ -740,11 +839,12 @@ export const ExtentionProvider = ({ children }) => {
         shitBalance,
         foundFellowship,
         initializeFellowship,
+        initializeV2Fellowship,
         editFellowship,
         mintBackerBuck,
         harvestDeity,
         contribution,
-        purify
+        purify,
       }}
     >
       <DataProvider>{children}</DataProvider>

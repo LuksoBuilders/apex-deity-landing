@@ -8,3 +8,4 @@ export * from "./EndorsersList";
 export * from "./FellowshipsList";
 export * from "./BackersList";
 export * from "./FellowshipEditForm";
+export * from "./PriceConfiguration"

@@ -9,8 +9,10 @@ import { Spacing, CircledImage } from "../../atoms";
 import { TextField, Button } from "../../molecules";
 import { useExtention } from "../../hooks/useExtension";
 
-import { Fellowship } from "../../types/remoteTypes";
+import { Fellowship, FellowshipPrices } from "../../types/remoteTypes";
 import { gql, useQuery } from "@apollo/client";
+
+import { PriceConfiguration } from "./PriceConfiguration";
 
 const GET_FELLOWSHIP = gql`
   query Fellowship($fellowshipId: String!) {
@@ -21,6 +23,7 @@ const GET_FELLOWSHIP = gql`
           name
         }
       }
+      version
     }
   }
 `;
@@ -73,7 +76,7 @@ interface FellowshipInitializationFormProps {}
 export const FellowshipInitializationForm =
   ({}: FellowshipInitializationFormProps) => {
     const router = useRouter();
-    const { initializeFellowship } = useExtention();
+    const { initializeV2Fellowship } = useExtention();
 
     const [initializing, setInitializing] = useState<boolean>(false);
 
@@ -81,6 +84,11 @@ export const FellowshipInitializationForm =
     const [description, setDescription] = useState<string>("");
     const [avatar, setAvatar] = useState<File>();
     const [symbol, setSymbol] = useState<string>("");
+
+    const [initialPrice, setPrice] = useState("1");
+    const [diminishingFactor, setDiminishingFactor] = useState(1000);
+    const [initialGrowthRate, setIGR] = useState(100);
+    const [eventualGrowthRate, setEGR] = useState(10);
 
     const { query } = useRouter();
     const { error, loading, data } = useQuery(GET_FELLOWSHIP, {
@@ -154,7 +162,24 @@ export const FellowshipInitializationForm =
             />
           </Col>
         </Row>
-
+        <Spacing spacing="2em" />
+        {fellowship && fellowship.version === "2" ? (
+          <>
+            <SectionTitle>Price Configuration</SectionTitle>
+            <PriceConfiguration
+              initialPrice={initialPrice}
+              setPrice={setPrice}
+              diminishingFactor={diminishingFactor}
+              setDiminishingFactor={setDiminishingFactor}
+              initialGrowthRate={initialGrowthRate}
+              setIGR={setIGR}
+              eventualGrowthRate={eventualGrowthRate}
+              setEGR={setEGR}
+            />
+          </>
+        ) : (
+          <></>
+        )}
         <Spacing spacing="2em" />
         <SectionTitle>Metadata</SectionTitle>
         <Spacing spacing="0.5em" />
@@ -209,12 +234,16 @@ export const FellowshipInitializationForm =
             onClick={async () => {
               try {
                 setInitializing(true);
-                await initializeFellowship(
+                await initializeV2Fellowship(
                   String(fellowshipAddress),
                   name,
                   symbol,
                   avatar,
-                  description
+                  description,
+                  initialPrice,
+                  initialGrowthRate,
+                  eventualGrowthRate,
+                  diminishingFactor
                 );
                 router.push(`/fellowship/${query.id}`);
                 setInitializing(true);

@@ -14,6 +14,10 @@ import { ethers, BigNumber } from "ethers";
 import { Fellowship, User } from "../../types/remoteTypes";
 import { useExtention } from "../../hooks/useExtension";
 
+import { PriceHelpersFactory } from "./utils/PriceHelpersFactory";
+
+import { PriceChart } from "./PriceChart";
+
 const GET_FELLOWSHIP = gql`
   query Fellowship($fellowshipId: String!) {
     fellowship(id: $fellowshipId) {
@@ -76,6 +80,13 @@ const GET_FELLOWSHIP = gql`
       raisedAmount
       contributionAmount
       endorsementAmount
+      version
+      prices {
+        initialPrice
+        initialGrowthFactor
+        eventualGrowthFactor
+        diminishingFactor
+      }
     }
   }
 `;
@@ -173,7 +184,7 @@ const ActionsList = styled.div`
   padding: 0.5em 1em;
 `;
 
-interface BackerBuckPanelProps { }
+interface BackerBuckPanelProps {}
 
 function getMintPrice(
   currentSupply: BigNumber,
@@ -264,9 +275,9 @@ export const UserContributions = ({ symbol }: UserBalanceProps) => {
       {targetBackerBuck.contributions} ${symbol}
     </Red>
   );
-}
+};
 
-export const BackerBuckPanel = ({ }: BackerBuckPanelProps) => {
+export const BackerBuckPanel = ({}: BackerBuckPanelProps) => {
   const { query } = useRouter();
   const [minting, setMinting] = useState<boolean>(false);
   const [mintValue, setMintValue] = useState(0);
@@ -294,6 +305,28 @@ export const BackerBuckPanel = ({ }: BackerBuckPanelProps) => {
   return (
     <BackerBuckPanelContainer>
       <Overlay>
+        <PriceChart
+          initialPrice={
+            fellowship.version === "1"
+              ? "1"
+              : ethers.utils.formatEther(fellowship.prices.initialPrice)
+          }
+          initialGrowthRate={
+            fellowship.version === "1"
+              ? 150
+              : Number(fellowship.prices.initialGrowthFactor)
+          }
+          eventualGrowthRate={
+            fellowship.version === "1"
+              ? 150
+              : Number(fellowship.prices.eventualGrowthFactor)
+          }
+          diminishingFactor={
+            fellowship.version === "1"
+              ? 1000
+              : Number(fellowship.prices.diminishingFactor)
+          }
+        />
         <MintSection>
           <InfoRow>
             <InfoCol>
@@ -355,16 +388,67 @@ export const BackerBuckPanel = ({ }: BackerBuckPanelProps) => {
                   {mintValue === 0
                     ? "Mint"
                     : ` Mint for
-                  ${Number(
-                      ethers.utils.formatEther(
-                        getMintPrice(
-                          ethers.BigNumber.from(fellowship.totalSupply),
-                          BigNumber.from(mintValue),
-                          BigNumber.from(150),
-                          BigNumber.from(fellowship.initialPrice)
-                        )
-                      )
-                    ).toFixed(2)}
+                  ${
+                    fellowship.version === "1"
+                      ? Number(
+                          ethers.utils.formatEther(
+                            getMintPrice(
+                              ethers.BigNumber.from(fellowship.totalSupply),
+                              BigNumber.from(mintValue),
+                              BigNumber.from(150),
+                              BigNumber.from(fellowship.initialPrice)
+                            )
+                          )
+                        ).toFixed(2)
+                      : (() => {
+                          const { getMintPrice, getPriceAtIndex } =
+                            PriceHelpersFactory(
+                              ethers.BigNumber.from(
+                                fellowship.prices.initialPrice
+                              ),
+                              ethers.BigNumber.from(
+                                fellowship.prices.initialGrowthFactor
+                              ),
+                              ethers.BigNumber.from(
+                                fellowship.prices.eventualGrowthFactor
+                              ),
+                              ethers.BigNumber.from(
+                                fellowship.prices.diminishingFactor
+                              ),
+                              ethers.BigNumber.from(10000)
+                            );
+
+                          console.log(
+                            ethers.BigNumber.from(
+                              fellowship.prices.initialPrice
+                            ),
+                            ethers.BigNumber.from(
+                              fellowship.prices.initialGrowthFactor
+                            ),
+                            ethers.BigNumber.from(
+                              fellowship.prices.eventualGrowthFactor
+                            ),
+                            ethers.BigNumber.from(
+                              fellowship.prices.diminishingFactor
+                            ),
+                            ethers.BigNumber.from(10000)
+                          );
+
+                          const mintPrice = getMintPrice(
+                            ethers.BigNumber.from(fellowship.totalSupply),
+                            ethers.BigNumber.from(mintValue)
+                          );
+
+                          console.log(
+                            String(mintPrice[0]),
+                            String(mintPrice[1]),
+                            String(getPriceAtIndex(ethers.BigNumber.from(5)))
+                          );
+                          return Number(
+                            ethers.utils.formatEther(mintPrice[1])
+                          ).toFixed(2);
+                        })()
+                  }
                   $LYX`}
                 </Button>
               </Minter>
@@ -389,15 +473,13 @@ export const BackerBuckPanel = ({ }: BackerBuckPanelProps) => {
         <InfoRow>
           <InfoCol>
             {!connectedAccount ? (
-              <Info>
-                Connect to contribute
-              </Info>
+              <Info>Connect to contribute</Info>
             ) : (
               <Info>
-                Your Contributions:  <UserContributions symbol={fellowship.symbol} />
+                Your Contributions:{" "}
+                <UserContributions symbol={fellowship.symbol} />
               </Info>
             )}
-
           </InfoCol>
           <InfoCol>
             <ActionsList>

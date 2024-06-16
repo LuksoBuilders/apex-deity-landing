@@ -84,6 +84,13 @@ export interface User {
   holyShitsBalance: string;
 }
 
+export interface FellowshipPrices {
+  initialPrice: string;
+  initialGrowthFactor: string;
+  eventualGrowthFactor: string;
+  diminishingFactor: string;
+}
+
 export interface Fellowship {
   id: string;
   name: string;
@@ -103,6 +110,8 @@ export interface Fellowship {
   founder: Deity;
   artisan: User;
   raisedAmount: string;
+  version: string;
+  prices: FellowshipPrices;
 }
 
 export interface Deity {

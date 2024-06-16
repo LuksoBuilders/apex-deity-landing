@@ -10,6 +10,8 @@ import { Spacing } from "../atoms";
 import { gql, useQuery } from "@apollo/client";
 import { CenteredDiv } from "../atoms";
 import { BounceLoader } from "react-spinners";
+import { Fellowship } from "../types/remoteTypes";
+import { HighStatus } from "../organisms/user/HighStatus";
 
 const GET_FELLOWSHIPS = gql`
   query Fellowships {
@@ -60,7 +62,31 @@ const GET_USERS = gql`
         }
         purifiable
         contributions
+      }
+    }
+  }
+`;
 
+const GET_HIGH_STATUS_FEELOWSHIP = gql`
+  query Fellowship($fellowshipId: String!) {
+    fellowship(id: $fellowshipId) {
+      backerBucks {
+        amount
+        contributions
+        id
+        purifiable
+        owner {
+          id
+          profile {
+            name
+            profileImage {
+              url
+            }
+            avatar {
+              url
+            }
+          }
+        }
       }
     }
   }
@@ -106,6 +132,33 @@ const UsersListWrapper = () => {
   return <UsersList users={users.data?.users} />;
 };
 
+const HighStatusWrapper = () => {
+  const highStatusFellowship = useQuery(GET_HIGH_STATUS_FEELOWSHIP, {
+    variables: {
+      fellowshipId: "0x6c1561280751f60358443a102f6bb68f64bfe64b",
+    },
+  });
+
+  const { data, loading, error } = highStatusFellowship;
+
+  console.log(loading, error);
+
+  if (loading || error) {
+    return (
+      <div style={{ padding: "1em" }}>
+        <CenteredDiv>
+          <BounceLoader />
+        </CenteredDiv>
+      </div>
+    );
+  }
+
+  const fellowship: Fellowship = data.fellowship
+
+  //return <div></div>
+  return <HighStatus backerBucks={fellowship.backerBucks} />;
+};
+
 export const HomePage = () => {
   const fellowships = useQuery(GET_FELLOWSHIPS);
   const users = useQuery(GET_USERS);
@@ -132,7 +185,7 @@ export const HomePage = () => {
             label: "Top Backers",
             content: <UsersListWrapper />,
           },
-          { label: "High Status", content: <div></div>, disabled: true },
+          { label: "High Status", content: <HighStatusWrapper /> },
         ]}
       />
     </MainLayout>

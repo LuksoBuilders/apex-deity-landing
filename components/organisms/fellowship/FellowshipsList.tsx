@@ -157,7 +157,7 @@ export const FellowshipsList = ({ fellowships }: FellowshipListProps) => {
     <FellowshipListContainer>
       {fellowships.length > 0
         ? [...fellowships]
-            .sort((a, b) => Number(b.totalSupply) - Number(a.totalSupply))
+            .sort((a, b) => Number(b.raisedAmount) - Number(a.raisedAmount))
             .map((fellowship, i) => (
               <div key={fellowship.address}>
                 {renderFellowshipItem(fellowship, i == fellowships.length - 1)}
