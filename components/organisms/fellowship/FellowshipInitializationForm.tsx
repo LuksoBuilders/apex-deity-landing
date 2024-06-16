@@ -100,6 +100,8 @@ export const FellowshipInitializationForm =
 
     const isDisbaled = !name || !description || !symbol || !avatar;
 
+    console.log(fellowship.version)
+
     return (
       <FellowshipInitializationFormContainer>
         <Title>Fellowship Initialization</Title>

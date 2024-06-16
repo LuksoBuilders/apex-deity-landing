@@ -113,7 +113,7 @@ export const HighStatus = ({ backerBucks }: HighStatusProps) => {
 
   return (
     <BackersListContainer>
-      {leaderboard.map((item, i) => (
+      {leaderboard.sort((a, b) =>  b.points - a.points ).filter(a => a.points > 0).map((item, i) => (
         <div key={String(item.name)}>
           {renderBackerItem(
             item.avatar,
